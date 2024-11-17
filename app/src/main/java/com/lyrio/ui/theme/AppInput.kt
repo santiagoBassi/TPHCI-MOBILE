@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -40,6 +41,7 @@ fun AppInput(
     modifier: Modifier = Modifier,
     hint: String? = null,
     isPassword: Boolean = false,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default
 ) {
     var passwordVisible by remember { mutableStateOf(false) } // Estado para controlar la visibilidad de la contraseña
     val visualTransformation = if (isPassword && !passwordVisible) PasswordVisualTransformation() else VisualTransformation.None
@@ -51,6 +53,7 @@ fun AppInput(
             onValueChange = onValueChange,
             label = { Text(label) },
             modifier = modifier.onFocusChanged { isFocused = it.isFocused },
+            keyboardOptions = keyboardOptions,
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = Orange,
                 focusedLabelColor = Orange,
