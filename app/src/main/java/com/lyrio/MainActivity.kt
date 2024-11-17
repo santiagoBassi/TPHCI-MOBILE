@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.Text
 import com.lyrio.ui.theme.LyrioTheme
 import com.lyrio.ui.theme.DefaultLayout
+import com.lyrio.ui.theme.NavigationDrawer
 
 
 class MainActivity : ComponentActivity() {
@@ -15,7 +16,10 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             LyrioTheme {
-                DefaultLayout(){Text("Hola mundo")}
+
+                NavigationDrawer{
+                    Text("Hola mundoooooooooooooooo")
+                }
             }
         }
     }
