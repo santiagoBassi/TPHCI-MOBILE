@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.sp
 import com.lyrio.R
 
 @Composable
-fun Header() {
+fun Header(onButtonClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -36,8 +36,8 @@ fun Header() {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        // Botón del menú (izquierda)
-        IconButton(onClick = { /* Acción del menú */ }) {
+
+        IconButton(onClick = onButtonClick) {
             Icon(
                 Icons.Filled.Menu,
                 contentDescription = "Menu Icon",
@@ -51,7 +51,7 @@ fun Header() {
         ) {
 
             Icon(
-                painter = painterResource(id = R.drawable.logo), // Reemplaza con tu recurso de ícono
+                painter = painterResource(id = R.drawable.logo),
                 contentDescription = "Logo Icon",
                 tint = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.size(50.dp)
