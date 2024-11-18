@@ -41,7 +41,8 @@ fun AppInput(
     modifier: Modifier = Modifier,
     hint: String? = null,
     isPassword: Boolean = false,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    readOnly: Boolean = false
 ) {
     var passwordVisible by remember { mutableStateOf(false) } // Estado para controlar la visibilidad de la contraseña
     val visualTransformation = if (isPassword && !passwordVisible) PasswordVisualTransformation() else VisualTransformation.None
@@ -53,6 +54,7 @@ fun AppInput(
             onValueChange = onValueChange,
             label = { Text(label) },
             modifier = modifier.onFocusChanged { isFocused = it.isFocused },
+            readOnly = readOnly,
             keyboardOptions = keyboardOptions,
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = Orange,

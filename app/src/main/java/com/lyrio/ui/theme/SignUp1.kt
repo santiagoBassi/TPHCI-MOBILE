@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 fun SignUp1(){
     var dni by remember { mutableStateOf("") }
     var name by remember { mutableStateOf("") }
-    var surname by remember { mutableStateOf("") }
+    var lastname by remember { mutableStateOf("") }
     LyrioTheme {
         Column(
             modifier = Modifier
@@ -71,8 +71,8 @@ fun SignUp1(){
                             modifier = Modifier.fillMaxWidth(),
                         )
                         AppInput(
-                            value = surname,
-                            onValueChange = { surname = it },
+                            value = lastname,
+                            onValueChange = { lastname = it },
                             label = "Apellido/s",
                             modifier = Modifier.fillMaxWidth(),
                         )

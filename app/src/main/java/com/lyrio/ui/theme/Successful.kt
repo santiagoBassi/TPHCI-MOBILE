@@ -45,7 +45,6 @@ fun Successful(
                 ) {
                     Text(text = message, style = MaterialTheme.typography.titleLarge,
                         color = Green)
-                    Spacer(modifier = Modifier.height(16.dp))
                     content()
                     AppButton(text = buttonLabel, onClick = { /* TODO */ }, width = 0.8f)
                 }
