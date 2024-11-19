@@ -9,8 +9,13 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.platform.LocalContext
 
+
+private val localDimensions = staticCompositionLocalOf { DefaultDimens }
 
 private val DarkColorScheme = darkColorScheme(
     primary = Orange,
@@ -30,6 +35,15 @@ private val LightColorScheme = lightColorScheme(
     error = Red,
 
 )
+
+@Composable
+fun ProvideDimens(
+    dimensions: Dimens,
+    content: () -> Unit
+){
+    val dimensionSet = remember { dimensions }
+    CompositionLocalProvider(localDimensions provides dimensionSet, content = content)
+}
 
 @Composable
 fun LyrioTheme(

@@ -53,13 +53,13 @@ fun Header(onButtonClick: () -> Unit) {
             Icon(
                 painter = painterResource(id = R.drawable.logo),
                 contentDescription = "Logo Icon",
-                tint = MaterialTheme.colorScheme.onSurface,
+                tint = MaterialTheme.colorScheme.background,
                 modifier = Modifier.size(50.dp)
             )
             Text(
                 text = "Lyrio",
                 style = MaterialTheme.typography.titleMedium.copy(
-                    color = MaterialTheme.colorScheme.onSurface,
+                    color = MaterialTheme.colorScheme.background,
                     fontSize = 30.sp
                 ),
                 modifier = Modifier

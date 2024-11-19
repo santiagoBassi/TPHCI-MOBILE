@@ -1,8 +1,6 @@
 package com.lyrio.ui.theme
 
-import android.graphics.drawable.Icon
 import androidx.compose.foundation.background
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -20,7 +18,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Icon
@@ -29,11 +26,12 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import kotlinx.coroutines.launch
+import com.lyrio.R
 
 data class NavItem(
-    val icon: ImageVector,
+    val icon: Int,
     val title: String,
     val description: String,
     val selected: Boolean,
@@ -41,12 +39,12 @@ data class NavItem(
 )
 
 val items = listOf(
-    NavItem(Icons.Filled.Home, "Transferir", "Transfer Icon", false) { /* Acción Transferir */ },
-    NavItem(Icons.Filled.Home, "Mi dinero", "Transfer Icon", false) { /* Acción Mi dinero */ },
-    NavItem(Icons.Filled.Home, "Movimientos", "Transfer Icon", false) { /* Acción Movimientos */ },
-    NavItem(Icons.Filled.Home, "Inversiones", "Transfer Icon", false) { /* Acción Inversiones */ },
-    NavItem(Icons.Filled.Home, "Cobrar con link de pago", "Transfer Icon", false) { /* Acción Cobrar con link */ },
-    NavItem(Icons.Filled.Home, "Mis tarjetas", "Transfer Icon", false) { /* Acción Mis tarjetas */ },
+    NavItem(R.drawable.send_money_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Transferir", "Transfer Icon", false) { /* Acción Transferir */ },
+    NavItem(R.drawable.account_balance_wallet_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Mi dinero", "Transfer Icon", false) { /* Acción Mi dinero */ },
+    NavItem(R.drawable.list_alt_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Movimientos", "Transfer Icon", false) { /* Acción Movimientos */ },
+    NavItem(R.drawable.currency_exchange_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Inversiones", "Transfer Icon", false) { /* Acción Inversiones */ },
+    NavItem(R.drawable.link_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Cobrar con link de pago", "Transfer Icon", false) { /* Acción Cobrar con link */ },
+    NavItem(R.drawable.credit_card_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Mis tarjetas", "Transfer Icon", false) { /* Acción Mis tarjetas */ },
 )
 
 @Composable
@@ -88,7 +86,7 @@ fun NavigationDrawer(content: @Composable () -> Unit){
 
                                 ){
                                     Icon(
-                                        imageVector = item.icon,
+                                        painter = painterResource(id = item.icon),
                                         contentDescription = item.title,
                                         modifier = Modifier.size(24.dp),
                                         tint = Color.Black
