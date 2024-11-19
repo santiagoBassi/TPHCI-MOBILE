@@ -23,8 +23,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.lyrio.R
 import java.util.Calendar
 import java.util.Date
@@ -62,11 +64,30 @@ fun Home() {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 8.dp),
+                        .padding(top = 20.dp).padding(bottom = 25.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ){
-                    Text(if (showBalance) "$120367" else "****") // Mostrar u ocultar saldo
+                    Row(
+                        modifier = Modifier.weight(1f),
+                        verticalAlignment = Alignment.Top,
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        Text(
+                            text = if (showBalance) "$120367" else "****",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 38.sp,
+                            modifier = Modifier.padding(end = 4.dp),
+                        )
+                        if(showBalance) {
+                            Text(
+                                text = "58",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 18.sp,
+                                modifier = Modifier.padding(top = 2.dp)
+                            )
+                        }
+                    }
                     IconButton(onClick = { showBalance = !showBalance }) { // Cambiar estado
                         Icon(
                             painter = if (showBalance) eyeIconPainter() else eyeOffIconPainter(),
