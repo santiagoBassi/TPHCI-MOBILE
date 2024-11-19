@@ -49,12 +49,12 @@ fun Profile() {
         modifier = Modifier
             .fillMaxSize() // Ocupa todo el espacio disponible
             .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item {
             AppWindow(
-                modifier = Modifier.wrapContentWidth(),
+                modifier = Modifier.wrapContentWidth().padding(bottom = 16.dp),
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -69,7 +69,7 @@ fun Profile() {
             }
         }
         item {
-            AppWindow(title = "CVU y Alias") {
+            AppWindow(title = "CVU y Alias", modifier = Modifier.padding(bottom = 16.dp)) {
                 Column(
                     modifier = Modifier
                         .padding(12.dp)
@@ -126,11 +126,8 @@ fun Profile() {
                     ) {
                     AppInput(value = firstName, onValueChange = { firstName = it }, label = "Nombre", readOnly = !isEditing, modifier = Modifier.fillMaxWidth())
                     AppInput(value = lastName, onValueChange = { lastName = it }, label = "Apellido", readOnly = !isEditing, modifier = Modifier.fillMaxWidth())
-                    AppInput(value = dni, onValueChange = { dni = it }, label = "DNI", readOnly = !isEditing, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number), modifier = Modifier.fillMaxWidth())
                     AppInput(value = email, onValueChange = { email = it }, label = "Email", readOnly = !isEditing, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email), modifier = Modifier.fillMaxWidth())
-                    AppInput(value = phone, onValueChange = { phone = it }, label = "Teléfono", readOnly = !isEditing, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone), modifier = Modifier.fillMaxWidth())
-                    AppInput(value = address, onValueChange = { address = it }, label = "Dirección", readOnly = !isEditing, modifier = Modifier.fillMaxWidth())
-                    AppInput(value = birthDate, onValueChange = { birthDate = it }, label = "Fecha de nacimiento", readOnly = !isEditing, modifier = Modifier.fillMaxWidth())
+                    AppInput(value = birthDate, onValueChange = { birthDate = it }, label = "Fecha de nacimiento", placeholder = "DD/MM/YYYY", readOnly = !isEditing, modifier = Modifier.fillMaxWidth())
                     Spacer(modifier = Modifier.height(16.dp))
                 }
                 Row(

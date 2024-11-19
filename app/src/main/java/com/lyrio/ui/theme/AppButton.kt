@@ -12,12 +12,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun AppButton(text: String, modifier: Modifier = Modifier, onClick: () -> Unit, width: Float = 1f) {
+fun AppButton(text: String, modifier: Modifier = Modifier, onClick: () -> Unit, width: Float = 1f, background: Color = Orange) {
     Button(
         onClick = onClick,
         modifier = modifier.fillMaxWidth(width).height(55.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = Orange,
+            containerColor = background,
             contentColor = Color.Black
         )
     ) {

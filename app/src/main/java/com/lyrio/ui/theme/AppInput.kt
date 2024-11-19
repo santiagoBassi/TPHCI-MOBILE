@@ -39,13 +39,16 @@ fun AppInput(
     onValueChange: (String) -> Unit,
     label: String,
     modifier: Modifier = Modifier,
+    placeholder: String? = null,
     hint: String? = null,
     isPassword: Boolean = false,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    readOnly: Boolean = false
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    readOnly: Boolean = false,
+    onFocusAction: (Boolean) -> Unit = {}
 ) {
     var passwordVisible by remember { mutableStateOf(false) } // Estado para controlar la visibilidad de la contraseña
-    val visualTransformation = if (isPassword && !passwordVisible) PasswordVisualTransformation() else VisualTransformation.None
+    val myVisualTransformation = if (isPassword && !passwordVisible) PasswordVisualTransformation() else visualTransformation
     var isFocused by remember { mutableStateOf(false) }
 
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) { // Usa un Column para colocar el hint encima del TextField
@@ -53,17 +56,23 @@ fun AppInput(
             value = value,
             onValueChange = onValueChange,
             label = { Text(label) },
-            modifier = modifier.onFocusChanged { isFocused = it.isFocused },
+            placeholder = { if (placeholder != null) Text(placeholder) },
+            modifier = modifier.onFocusChanged {
+                isFocused = it.isFocused
+                onFocusAction(it.isFocused)
+                                               },
             readOnly = readOnly,
             keyboardOptions = keyboardOptions,
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Orange,
-                focusedLabelColor = Orange,
-                cursorColor = Orange,
-                unfocusedLabelColor = Color.Gray
+                focusedBorderColor = if(readOnly) Color.Gray else Orange,
+                focusedLabelColor = if(readOnly) Color.Gray else Orange,
+                cursorColor = if(readOnly) Color.Gray else Orange,
+                unfocusedLabelColor = Color.Gray,
+                focusedPlaceholderColor = Color.Gray,
+
             ),
             shape = RoundedCornerShape(16.dp),
-            visualTransformation = visualTransformation,
+            visualTransformation = myVisualTransformation,
             trailingIcon = {
                 if (isPassword) { // Solo muestra el icono en campos de contraseña
                     IconButton(onClick = { passwordVisible = !passwordVisible }) {
