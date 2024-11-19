@@ -15,15 +15,21 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.lyrio.R
 
+@Preview(showBackground = true)
 @Composable
-fun LandingPage(){
+fun LandingPage() {
     Column(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
@@ -33,43 +39,85 @@ fun LandingPage(){
             Icon(
                 painter = painterResource(id = R.drawable.logo),
                 contentDescription = "Logo",
-                modifier = Modifier.size(48.dp)
+                modifier = Modifier.size(80.dp),
+                tint = DarkGray
             )
-            Text(text = "Lyrio")
+            Text(
+                text = "Lyrio",
+                modifier = Modifier.padding(start = 8.dp),
+                fontSize = 60.sp,
+                fontWeight = FontWeight.Bold,
+                color = DarkGray
+            )
         }
-        Spacer(modifier = Modifier.height(16.dp))
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = 25.dp),
             horizontalAlignment = Alignment.Start
         ) {
-            Text(text = "La nueva forma de")
-            Text(text = "administrar tu dinero")
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(text = "Ahorrá, cobrá y pagá.")
-            Text(text = "Lyrio te permite manejar tu dinero de")
-            Text(text = "forma fácil y segura.")
-            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = "La nueva forma de",
+                fontWeight = FontWeight.Medium,
+                fontSize = 24.sp,
+                color = DarkGray
+            )
+            Text(
+                text = "administrar tu dinero",
+                fontWeight = FontWeight.Black,
+                fontSize = 26.sp,
+                color = DarkGray
+            )
+            Spacer(modifier = Modifier.height(26.dp))
+            Text(
+                text = "Ahorrá, cobrá y pagá.",
+                fontWeight = FontWeight.Medium,
+                fontSize = 18.sp,
+                color = Color.Gray,
+                fontStyle = FontStyle.Italic
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "Lyrio te permite manejar tu dinero de",
+                fontWeight = FontWeight.Medium,
+                fontSize = 18.sp,
+                color = Color.Gray,
+                fontStyle = FontStyle.Italic
+            )
+            Text(
+                text = "forma fácil y segura.",
+                fontWeight = FontWeight.Medium,
+                fontSize = 18.sp,
+                color = Color.Gray,
+                fontStyle = FontStyle.Italic
+            )
         }
         Image(
             painter = painterResource(id = R.drawable.landing_logo),
             contentDescription = "Landing page",
             modifier = Modifier
-                .size(200.dp)
+                .size(320.dp)
                 .padding(vertical = 16.dp)
         )
-        AppButton(
-            text = "Iniciar Sesión",
-            onClick = { /*TODO*/ },
-            width = 0.5f
+        Column(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         )
-        Spacer(modifier = Modifier.height(10.dp))
-        AppButton(
-            text = "Registrarse",
-            onClick = { /*TODO*/ },
-            width = 0.5f
-        )
+        {
+            AppButton(
+                text = "Iniciar Sesión",
+                onClick = { /*TODO*/ },
+                width = 0.7f
+            )
+            AppButton(
+                text = "Registrarse",
+                onClick = { /*TODO*/ },
+                width = 0.7f,
+                background = LightGray
+            )
+        }
     }
 
 }
