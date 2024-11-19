@@ -127,7 +127,7 @@ fun Profile() {
                     AppInput(value = firstName, onValueChange = { firstName = it }, label = "Nombre", readOnly = !isEditing, modifier = Modifier.fillMaxWidth())
                     AppInput(value = lastName, onValueChange = { lastName = it }, label = "Apellido", readOnly = !isEditing, modifier = Modifier.fillMaxWidth())
                     AppInput(value = email, onValueChange = { email = it }, label = "Email", readOnly = !isEditing, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email), modifier = Modifier.fillMaxWidth())
-                    AppInput(value = birthDate, onValueChange = { birthDate = it }, label = "Fecha de nacimiento", placeholder = "DD/MM/YYYY", readOnly = !isEditing, modifier = Modifier.fillMaxWidth())
+                    AppInput(value = birthDate, onValueChange = { birthDate = it }, label = "Fecha de nacimiento", placeholder = "DD/MM/AAAA", readOnly = !isEditing, modifier = Modifier.fillMaxWidth())
                     Spacer(modifier = Modifier.height(16.dp))
                 }
                 Row(

@@ -17,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 
@@ -27,13 +28,14 @@ fun AppWindow(
     title: String? = null,
     showChevron: Boolean = false,
     shape: Shape = CardDefaults.shape,
+    background: Color = White,
     content: @Composable () -> Unit
 ) {
     Card(
         modifier = modifier,
         shape = shape,
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        colors = CardDefaults.cardColors(containerColor = White)
+        colors = CardDefaults.cardColors(containerColor = background)
     ) {
         Column(modifier = Modifier
             .padding(16.dp)

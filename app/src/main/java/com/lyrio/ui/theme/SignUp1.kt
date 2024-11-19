@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 @Preview(showBackground = true)
 @Composable
 fun SignUp1(){
-    var dni by remember { mutableStateOf("") }
+    var birthDate by remember { mutableStateOf("") }
     var name by remember { mutableStateOf("") }
     var lastname by remember { mutableStateOf("") }
     LyrioTheme {
@@ -58,13 +58,6 @@ fun SignUp1(){
                         verticalArrangement = Arrangement.spacedBy(15.dp)
                     ) {
                         AppInput(
-                            value = dni,
-                            onValueChange = { dni = it },
-                            label = "DNI o CUIT",
-                            modifier = Modifier.fillMaxWidth(),
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                        )
-                        AppInput(
                             value = name,
                             onValueChange = { name = it },
                             label = "Nombre/s",
@@ -74,6 +67,13 @@ fun SignUp1(){
                             value = lastname,
                             onValueChange = { lastname = it },
                             label = "Apellido/s",
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                        AppInput(
+                            value = birthDate,
+                            onValueChange = { birthDate = it },
+                            label = "Fecha de nacimiento",
+                            placeholder = "DD/MM/AAAA",
                             modifier = Modifier.fillMaxWidth(),
                         )
                     }
