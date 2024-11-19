@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 fun Successful(
     message: String,
     buttonLabel: String,
+    variant: String = "",
     content: @Composable () -> Unit = {}
 ){
 
@@ -46,25 +47,12 @@ fun Successful(
                     Text(text = message, style = MaterialTheme.typography.titleLarge,
                         color = Green)
                     content()
-                    AppButton(text = buttonLabel, onClick = { /* TODO */ }, width = 0.8f)
+                    AppButton(text = buttonLabel, onClick = { /* TODO */ }, width = 0.8f,
+                        background = if(variant == "secondary") LightGray else Orange)
                 }
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun SuccessfulTest(){
-    Successful(
-        message = "Mensaje de éxito",
-        buttonLabel = "Volver al Inicio",
-        content = {
-            Text("Este es un texto adicional")
-            Spacer(modifier = Modifier.height(8.dp))
-        }
-    )
-
 }
 
 

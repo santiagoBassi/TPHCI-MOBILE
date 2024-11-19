@@ -34,7 +34,7 @@ fun AppWindow(
     Card(
         modifier = modifier,
         shape = shape,
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
         colors = CardDefaults.cardColors(containerColor = background)
     ) {
         Column(modifier = Modifier

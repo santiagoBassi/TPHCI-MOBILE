@@ -41,6 +41,7 @@ fun AppInput(
     modifier: Modifier = Modifier,
     placeholder: String? = null,
     hint: String? = null,
+    leadingIcon: Int = 0,
     isPassword: Boolean = false,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     visualTransformation: VisualTransformation = VisualTransformation.None,
@@ -73,6 +74,16 @@ fun AppInput(
             ),
             shape = RoundedCornerShape(16.dp),
             visualTransformation = myVisualTransformation,
+            leadingIcon = {
+                if (leadingIcon != 0) {
+                    Icon(
+                        painter = painterResource(id = leadingIcon),
+                        contentDescription = null,
+                        modifier = Modifier.size(24.dp),
+                        tint = Color.Gray
+                    )
+                }
+            },
             trailingIcon = {
                 if (isPassword) { // Solo muestra el icono en campos de contraseña
                     IconButton(onClick = { passwordVisible = !passwordVisible }) {
