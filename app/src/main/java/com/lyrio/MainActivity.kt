@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import com.lyrio.ui.theme.styles.LyrioTheme
 import com.lyrio.ui.theme.pages.Movements
 import com.lyrio.ui.theme.layout.NavigationDrawer
+import com.lyrio.ui.theme.pages.Invest
 import com.lyrio.ui.theme.styles.OffWhite
 
 
@@ -25,7 +26,7 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.fillMaxSize()
                             .background(OffWhite)
                     ){
-                        Movements()
+                        Invest()
                     }
                 }
             }

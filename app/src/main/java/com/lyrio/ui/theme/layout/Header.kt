@@ -32,7 +32,7 @@ fun Header(onButtonClick: () -> Unit) {
             .height(100.dp)
             .background(MaterialTheme.colorScheme.secondary)
             .windowInsetsPadding(WindowInsets.statusBars)
-            .padding(10.dp, 0.dp),
+            .padding(14.dp, 0.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {

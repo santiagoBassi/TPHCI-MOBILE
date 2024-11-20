@@ -22,18 +22,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.lyrio.ui.theme.components.AppButton
 import com.lyrio.ui.theme.components.AppWindow
 import com.lyrio.ui.theme.components.BarChart
 import com.lyrio.ui.theme.components.BarChartData
 import com.lyrio.ui.theme.components.eyeIconPainter
 import com.lyrio.ui.theme.components.eyeOffIconPainter
+import com.lyrio.ui.theme.styles.Green
 import com.lyrio.ui.theme.styles.LyrioTheme
-import com.lyrio.ui.theme.styles.Red
 
 
 @Preview(showBackground = true)
 @Composable
-fun Money() {
+fun Invest() {
     var showBalance by remember { mutableStateOf(true) }
 
     LyrioTheme {
@@ -45,49 +46,62 @@ fun Money() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             AppWindow(
-                title = "Dinero",
+                title = "Dinero invertido",
                 modifier = Modifier.fillMaxWidth(0.95f).padding(bottom = 16.dp),
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Start
+                Column(
+
                 ) {
                     Row(
-                        modifier = Modifier.weight(1f),
-                        verticalAlignment = Alignment.Top,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 20.dp, bottom = 24.dp),
+                        verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Start
                     ) {
-                        Text(
-                            text = if (showBalance) "$120367" else "****",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 38.sp,
-                            modifier = Modifier.padding(end = 4.dp),
-                        )
-                        if(showBalance) {
+                        Row(
+                            modifier = Modifier.weight(1f),
+                            verticalAlignment = Alignment.Top,
+                            horizontalArrangement = Arrangement.Start
+                        ) {
                             Text(
-                                text = "58",
+                                text = if (showBalance) "$120367" else "****",
                                 fontWeight = FontWeight.Bold,
-                                fontSize = 18.sp,
-                                modifier = Modifier.padding(top = 2.dp)
+                                fontSize = 38.sp,
+                                modifier = Modifier.padding(end = 4.dp),
+                            )
+                            if (showBalance) {
+                                Text(
+                                    text = "58",
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 18.sp,
+                                    modifier = Modifier.padding(top = 2.dp)
+                                )
+                            }
+                        }
+                        IconButton(onClick = { showBalance = !showBalance }) { // Cambiar estado
+                            Icon(
+                                painter = if (showBalance) eyeIconPainter() else eyeOffIconPainter(),
+                                contentDescription = if (showBalance) "Ocultar saldo" else "Mostrar saldo",
+                                modifier = Modifier.size(24.dp)
                             )
                         }
                     }
-                    IconButton(onClick = { showBalance = !showBalance }) { 
-                        Icon(
-                            painter = if (showBalance) eyeIconPainter() else eyeOffIconPainter(),
-                            contentDescription = if (showBalance) "Ocultar saldo" else "Mostrar saldo",
-                            modifier = Modifier.size(24.dp)
-                        )
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp).padding(bottom = 8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(20.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ){
+                        AppButton(text = "Invertir", onClick = { /* TODO */ }, modifier = Modifier.weight(1f))
+                        AppButton(text = "Retirar", onClick = { /* TODO */ }, modifier = Modifier.weight(1f))
                     }
                 }
             }
+
             AppWindow(
                 modifier = Modifier
                     .fillMaxWidth(0.95f),
-                title = "Gastos"
+                title = "Ganancias"
             ){
                 Row(
                     modifier = Modifier.padding(vertical = 16.dp).padding(start = 2.dp)
@@ -99,20 +113,20 @@ fun Money() {
                         color = Color.Gray
                     )
                     Text(
-                        text = "$${expensesData[5].expense}",
+                        text = "$${investData[5].expense}",
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp,
-                        color = Red
+                        color = Green
                     )
                 }
 
-                BarChart(expensesData)
+                BarChart(investData)
             }
         }
     }
 }
 
-val expensesData = listOf(
+val investData = listOf(
     BarChartData("Jun", 250f),
     BarChartData("Jul", 100f),
     BarChartData("Ago", 200f),

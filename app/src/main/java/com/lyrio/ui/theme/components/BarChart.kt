@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.times
 import com.lyrio.ui.theme.styles.Orange
 
 @Composable
-fun BarChart(data: List<ExpenseData>) {
+fun BarChart(data: List<BarChartData>) {
     val maxValue = data.maxOfOrNull { it.expense } ?: 0f
     val barWidth = 40.dp
 
@@ -50,4 +50,4 @@ fun BarChart(data: List<ExpenseData>) {
     }
 }
 
-data class ExpenseData(val label: String, val expense: Float)
+data class BarChartData(val label: String, val expense: Float)
