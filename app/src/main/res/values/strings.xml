@@ -1,3 +1,12 @@
 <resources>
-    <string name="app_name">Lyrio</string>
+    <string name="app_name" translatable="false">Lyrio</string>
+    <string name="home">Home</string>
+    <string name="profile">Profile</string>
+    <string name="transfer">Transfer</string>
+    <string name="invest">Invest</string>
+    <string name="money">Money</string>
+    <string name="activity">Activity</string>
+    <string name="pay_link">Receive with payment link</string>
+    <string name="add_card">Add Card</string>
+    <string name="cards">Cards</string>
 </resources>
