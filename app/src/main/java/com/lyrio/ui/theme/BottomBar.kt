@@ -24,8 +24,8 @@ fun BottomBar(){
         modifier = Modifier.shadow(
             elevation = 15.dp,
         ),
-        containerColor = MaterialTheme.colorScheme.background,
-        contentColor = MaterialTheme.colorScheme.secondary
+        containerColor = MaterialTheme.colorScheme.secondary,
+        contentColor = MaterialTheme.colorScheme.background
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -52,7 +52,8 @@ fun BottomBar(){
                 Icon(
                     painter = painterResource(id = R.drawable.qr_code_2_24dp_e8eaed_fill0_wght400_grad0_opsz24),
                     contentDescription = "Qr code icon",
-                    modifier = Modifier.size(40.dp)
+                    modifier = Modifier.size(40.dp),
+                    tint = MaterialTheme.colorScheme.secondary
                 )
             }
             IconButton(onClick = { /* Acción del tercer icono */ }) {

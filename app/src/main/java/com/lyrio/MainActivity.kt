@@ -1,14 +1,16 @@
 package com.lyrio
 
+import android.R
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
 import androidx.compose.material3.Text
-import com.lyrio.ui.theme.LyrioTheme
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import com.lyrio.ui.theme.DefaultLayout
-import com.lyrio.ui.theme.NavigationDrawer
-
+import com.lyrio.ui.theme.LyrioTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -16,9 +18,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             LyrioTheme {
-
-                NavigationDrawer{
-                    Text("Hola mundoooooooooooooooo")
+                DefaultLayout{
+                    Text("Puto el que lee", modifier = Modifier.background(Color.Red))
                 }
             }
         }

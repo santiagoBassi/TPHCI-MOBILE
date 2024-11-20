@@ -1,10 +1,16 @@
 package com.lyrio.ui.theme
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ModalDrawerSheet
@@ -18,15 +24,20 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.VerticalAlignmentLine
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.zIndex
 import kotlinx.coroutines.launch
 import com.lyrio.R
 
@@ -48,86 +59,65 @@ val items = listOf(
 )
 
 @Composable
-fun NavigationDrawer(content: @Composable () -> Unit){
-    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-    val scope = rememberCoroutineScope()
+fun NavigationDrawer(modifier: Modifier = Modifier, content: @Composable () -> Unit, drawerState: DrawerState) {
 
     ModalNavigationDrawer(
         drawerState = drawerState,
+        modifier = modifier,
         drawerContent = {
-            ModalDrawerSheet(
-                modifier = Modifier
-                    .background(MaterialTheme.colorScheme.surface),
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                    ,
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Close,
-                        contentDescription = "close icon",
-                        modifier = Modifier.size(35.dp),
-                        tint = Color.Black
-                    )
-                }
-                items.forEach { item ->
-                    NavigationDrawerItem(
-                        label = {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 16.dp),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                Row(
-
-                                ){
-                                    Icon(
-                                        painter = painterResource(id = item.icon),
-                                        contentDescription = item.title,
-                                        modifier = Modifier.size(24.dp),
-                                        tint = Color.Black
-                                    )
-                                    Spacer(modifier = Modifier.width(16.dp))
-                                    Text(
-                                        text = item.title,
-                                        style = MaterialTheme.typography.titleMedium.copy(
-                                            color = Color.Black,
-                                    ),)
-                                }
-
-                                Icon(
-                                    imageVector = Icons.Filled.PlayArrow, // Ícono de flecha
-                                    contentDescription = "Arrow",
-                                    modifier = Modifier.size(24.dp),
-                                    tint = Color.Black
-                                )
-                            }
-                        },
-                        selected = item.selected,
-                        onClick = item.onClick
-                        )
-                    HorizontalDivider()
-                }
-
-
+            ModalDrawerSheet {
+                NavigationDrawerContent()
             }
         }
     ) {
+        content()
+    }
 
-        DefaultLayout(
-            onButtonClick = {
-                scope.launch {
-                    drawerState.apply {
-                        if (isClosed) open() else close()
+}
+
+@Composable
+fun NavigationDrawerContent(){
+    Column{
+        HorizontalDivider()
+        items.forEach { item ->
+            NavigationDrawerItem(
+                label = {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Row {
+                            Icon(
+                                painter = painterResource(id = item.icon),
+                                contentDescription = item.title,
+                                modifier = Modifier.size(24.dp),
+                                tint = Color.Black
+                            )
+                            Spacer(modifier = Modifier.width(16.dp))
+                            Text(
+                                text = item.title,
+                                style = MaterialTheme.typography.titleMedium.copy(
+                                    color = Color.Black,
+                                )
+                            )
+                        }
+                        Icon(
+                            imageVector = Icons.Filled.PlayArrow, // Ícono de flecha
+                            contentDescription = "Arrow",
+                            modifier = Modifier.size(24.dp),
+                            tint = Color.Black
+                        )
                     }
-                }
-            },
-            content = content
-        )
+                },
+                selected = item.selected,
+                onClick = item.onClick
+            )
+            HorizontalDivider()
+        }
+
     }
 }
 
