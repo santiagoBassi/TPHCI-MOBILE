@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -25,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -60,19 +60,15 @@ fun Transfer2() {
         )
     )
     var selectedMethod by remember { mutableIntStateOf(0) }
-    var amount by remember { mutableIntStateOf(0) }
+    var amount by remember { mutableLongStateOf(0) }
     val recipient = "Ezequiel Testoni"
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().padding(16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ){
-        AppWindow(
-            modifier = Modifier
-                .fillMaxWidth(0.95f)
-                .fillMaxHeight(0.95f),
-        ) {
+        AppWindow {
             Column(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.SpaceEvenly,
@@ -86,10 +82,9 @@ fun Transfer2() {
                 ){
                     Text("$$amount", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold, color = Color.Black)
                     AppInput(
-                        value = if(amount == 0) "" else amount.toString(),
-                        onValueChange = { amount = it.toIntOrNull() ?: 0 },
+                        value = if(amount.toInt() == 0) "" else amount.toString(),
+                        onValueChange = { amount = it.toLongOrNull() ?: 0 },
                         label = "Monto",
-                        leadingIcon = R.drawable.dolar,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     )
                     Text("a $recipient", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold, color = Color.Gray,

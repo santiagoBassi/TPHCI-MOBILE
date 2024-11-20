@@ -42,7 +42,7 @@ fun Transfer1() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             AppWindow(
-                modifier = Modifier.fillMaxWidth(0.95f).fillMaxHeight(0.35f).padding(bottom = 16.dp)
+                modifier = Modifier.fillMaxWidth(0.9f).fillMaxHeight(0.45f).padding(bottom = 16.dp)
             ) {
                 Column(
                     modifier = Modifier.fillMaxSize(),
@@ -66,7 +66,7 @@ fun Transfer1() {
 
             AppWindow(
                 title = "Contactos Recientes",
-                modifier = Modifier.fillMaxWidth(0.95f).fillMaxHeight()
+                modifier = Modifier.fillMaxWidth(0.9f).weight(1f)
             ) {
                 LazyColumn(
                     modifier = Modifier.padding(top = 5.dp)

@@ -3,7 +3,6 @@ package com.lyrio.ui.theme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -15,8 +14,11 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -46,18 +48,36 @@ fun CreditCards() {
         )
     ) }
 
+    var openAlertDialog by remember { mutableStateOf(false) }
+    var cardToDelete by remember { mutableStateOf<CreditCardData?>(null) }
+
+    when {
+        openAlertDialog -> {
+            AlertDialog(
+                onDismissRequest = { openAlertDialog = false },
+                onConfirmation = {
+                    cards.remove(cardToDelete)
+                    openAlertDialog = false
+                },
+                dialogTitle = "Eliminar tarjeta?",
+                dialogText = "La tarjeta será eliminada de tu cuenta y cualquier dispositivo asociado.",
+                dismissText = "Cancelar",
+                confirmText = "Eliminar"
+            )
+        }
+    }
+
     LyrioTheme {
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize().padding(16.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             AppWindow(
-                title = "Tarjetas",
-                modifier = Modifier.fillMaxWidth(0.95f).fillMaxHeight(0.95f),
+                title = "Tarjetas de crédito",
                 ) {
                 Column(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier.fillMaxSize().weight(1f),
                     verticalArrangement = Arrangement.SpaceEvenly,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
@@ -67,7 +87,9 @@ fun CreditCards() {
                                 .fillMaxWidth()
                         ) {
                             items(cards) { card ->
-                                CardRow(card = card, onDelete = { cards.remove(card) })
+                                CardRow(card = card, onDelete = {
+                                    cardToDelete = card
+                                    openAlertDialog = true })
                             }
                         }
                     } else {

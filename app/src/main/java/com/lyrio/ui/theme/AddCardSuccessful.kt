@@ -15,7 +15,7 @@ fun AddCardSuccessful() {
         buttonLabel = "Volver al Inicio",
         variant = "secondary"
     ) {
-        Spacer(Modifier.height(80.dp))
+        Spacer(Modifier.height(40.dp))
         AppButton(text = "Agregar otra tarjeta", onClick = {}, width = 0.8f)
     }
 }

@@ -3,7 +3,6 @@ package com.lyrio.ui.theme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -59,15 +58,14 @@ fun Movements() {
     }
     LyrioTheme {
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize().padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
             AppWindow(
                 title = "Movimientos",
-                modifier = Modifier.fillMaxWidth(fraction = 0.95f).fillMaxHeight(fraction = 0.95f)
             ) {
-                Column(modifier = Modifier.padding(10.dp)) {
+                Column(modifier = Modifier.padding(horizontal = 10.dp)) {
                     SearchBar(
                         query = searchText,
                         onQueryChange = { searchText = it },

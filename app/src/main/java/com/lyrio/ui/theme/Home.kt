@@ -3,6 +3,7 @@ package com.lyrio.ui.theme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -21,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -50,6 +52,40 @@ data class TransferData(
 @Preview(showBackground = true)
 @Composable
 fun Home() {
+    val transfers = listOf(
+        TransferData("Recibiste", 1234.56, "Juan Pérez", Date()),
+        TransferData(
+            "Enviaste",
+            -567.89,
+            "María García",
+            Calendar.getInstance().apply {
+                add(
+                    Calendar.HOUR_OF_DAY,
+                    -3
+                ) // Resta 3 horas a la hora actual
+            }.time
+        ),
+        TransferData(
+            "Recibiste",
+            345.67,
+            "Pedro López",
+            Calendar.getInstance().apply {
+                add(Calendar.DAY_OF_MONTH, -5) // Resta 5 días al día actual
+            }.time
+        ),
+        TransferData(
+            "Enviaste",
+            -567.89,
+            "María García",
+            Calendar.getInstance().apply {
+                add(
+                    Calendar.HOUR_OF_DAY,
+                    -3
+                ) // Resta 3 horas a la hora actual
+            }.time
+        )
+    )
+
     var showBalance by remember { mutableStateOf(true) } // Estado para mostrar/ocultar
 
     LyrioTheme {
@@ -106,40 +142,61 @@ fun Home() {
                     CircularIconButton(icon = cvuAliasIconPainter(), text = "CVU y Alias")
                 }
             }
-            AppWindow(title = "Movimientos", showChevron = false) {
-                LazyColumn (
-                    modifier = Modifier.padding(vertical = 10.dp)
-                ){
-                    items(
-                        listOf(
-                            TransferData("Recibiste", 1234.56, "Juan Pérez", Date()),
-                            TransferData("Enviaste", -567.89, "María García", Calendar.getInstance().apply {
-                                add(Calendar.HOUR_OF_DAY, -3) // Resta 3 horas a la hora actual
-                            }.time),
-                            TransferData("Recibiste", 345.67, "Pedro López", Calendar.getInstance().apply {
-                                add(Calendar.DAY_OF_MONTH, -5) // Resta 5 días al día actual
-                            }.time)
-                        )
-                    ) { transferData ->
-                        TransferItem(
-                            transactionType = transferData.transactionType,
-                            amount = transferData.amount,
-                            recipient = transferData.recipient,
-                            date = transferData.date
-                        )
+            AppWindow(
+                title = "Movimientos",
+                modifier = Modifier.fillMaxHeight().weight(1f),
+                ) {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.SpaceBetween,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    if (false) {
+                        Column(
+                            modifier = Modifier.fillMaxSize().padding(bottom = 20.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                text = "No hay movimientos disponibles",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 16.sp,
+                                modifier = Modifier.padding(start = 4.dp),
+                                color = LightGray
+                            )
+                        }
+                    } else {
+                        LazyColumn(
+                            modifier = Modifier.padding(vertical = 10.dp).weight(1f),
+                        ) {
+                            items(transfers.take(4)) { transferData ->
+                                TransferItem(
+                                    transactionType = transferData.transactionType,
+                                    amount = transferData.amount,
+                                    recipient = transferData.recipient,
+                                    date = transferData.date
+                                )
+                            }
+                        }
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Text(
+                                "Ver todos mis movimientos ",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 16.sp,
+                                modifier = Modifier.padding(start = 4.dp),
+                                color = Color.Gray
+                            )
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                                contentDescription = "Chevron",
+                                tint = Color.Gray,
+                            )
+                        }
                     }
                 }
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Text("Ver todos mis movimientos ")
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                        contentDescription = "Chevron"
-                    )
-                }
-
             }
         }
     }

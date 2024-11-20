@@ -15,17 +15,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.lyrio.R
-
-@Preview(showBackground = true)
-@Composable
-fun PaylinkPreview(){
-    Paylink(context = LocalContext.current)
-}
 
 @Composable
 fun Paylink(context: Context) {
@@ -35,7 +27,8 @@ fun Paylink(context: Context) {
     LyrioTheme {
         Successful(
             message = "¡Link generado!",
-            buttonLabel = "Volver al Inicio"
+            buttonLabel = "Volver al Inicio",
+            variant = "secondary"
         ){
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -54,7 +47,7 @@ fun Paylink(context: Context) {
                     )
                 }
             }
-            AppButton(text = "Generar otro link", onClick = {}, width = 0.8f, background = LightGray)
+            AppButton(text = "Generar otro link", onClick = {}, width = 0.8f, background = Orange)
         }
     }
 }

@@ -28,10 +28,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Preview(showBackground = true)
 @Composable
@@ -60,11 +62,15 @@ fun Profile() {
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center,
                 ){
-                    Text(
-                        text = "Bienvenido, $firstName!",
-                        style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier.padding(16.dp)
-                    )
+                    Row(
+                        modifier = Modifier.padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ){
+                        Text(text = "Bienvenido, ", fontSize = 22.sp, fontWeight = FontWeight.SemiBold)
+                        Text(text = firstName, fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Orange)
+                        Text(text = "!", fontSize = 22.sp, fontWeight = FontWeight.Medium)
+                    }
+
                 }
             }
         }
@@ -138,6 +144,7 @@ fun Profile() {
                         text = if (isEditing) "Guardar cambios" else "Editar perfil",
                         onClick = { isEditing = !isEditing },
                         width = 0.8f,
+                        background = if (isEditing) Orange else LightGray
                     )
                 }
             }
