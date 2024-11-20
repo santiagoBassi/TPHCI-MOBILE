@@ -32,10 +32,9 @@ import com.lyrio.ui.theme.styles.OffWhite
 
 @Preview(showBackground = true)
 @Composable
-fun SignUp2(){
+fun RecoverPass1(){
     var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
+
     LyrioTheme {
         AuthHeader {
             Column(
@@ -60,10 +59,19 @@ fun SignUp2(){
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "Creá tu cuenta", style = MaterialTheme.typography.titleLarge,
+                            text = "Recuperá tu contraseña",
+                            style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.SemiBold
                         )
-                        Spacer(modifier = Modifier.height(16.dp))
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                        ) {
+                            Text("Ingresá tu cuenta de e-mail y")
+                            Text("te enviaremos un correo para")
+                            Text("reestablecer tu contraseña")
+                        }
+
                         Column(
                             modifier = Modifier.fillMaxWidth(),
                             verticalArrangement = Arrangement.spacedBy(15.dp)
@@ -75,27 +83,13 @@ fun SignUp2(){
                                 modifier = Modifier.fillMaxWidth(),
                                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
                             )
-                            AppInput(
-                                value = password,
-                                onValueChange = { password = it },
-                                label = "Contraseña",
-                                hint = "Debe tener al menos 8 caracteres.",
-                                modifier = Modifier.fillMaxWidth(),
-                                isPassword = true
-                            )
-                            AppInput(
-                                value = confirmPassword,
-                                onValueChange = { confirmPassword = it },
-                                label = "Confirmá tu contraseña",
-                                modifier = Modifier.fillMaxWidth(),
-                                isPassword = true
-                            )
                         }
                         Spacer(modifier = Modifier.height(16.dp))
-                        AppButton(text = "Crear cuenta", onClick = { /* TODO */ }, width = 0.8f)
+                        AppButton(text = "Enviar correo", onClick = { /* TODO */ }, width = 0.8f)
                     }
                 }
             }
         }
     }
 }
+
