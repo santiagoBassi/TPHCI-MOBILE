@@ -1,4 +1,4 @@
-package com.lyrio.navigation
+package com.lyrio.ui.theme.navigation
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons

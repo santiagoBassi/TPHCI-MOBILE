@@ -1,7 +1,7 @@
-package com.lyrio.api.network
+package com.lyrio.data.network.api
 
-import com.lyrio.api.models.Payment
-import com.lyrio.api.models.User
+import com.lyrio.data.models.Payment
+import com.lyrio.data.models.User
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient

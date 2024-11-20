@@ -41,7 +41,7 @@ import androidx.window.core.layout.WindowSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
 
 @Composable
-fun isMobil(): Boolean {
+fun isMobile(): Boolean {
     val configuration = LocalConfiguration.current
     return if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
         configuration.screenWidthDp < 1000
@@ -68,7 +68,7 @@ val itemsNavBar = listOf(
 
 
 @Composable
-fun LeftBarMobil(onButtonClick: () -> Unit, state: DrawerState, windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo().windowSizeClass) {
+fun LeftBarMobile(onButtonClick: () -> Unit, state: DrawerState, windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo().windowSizeClass) {
     var selectedItem by remember { mutableIntStateOf(0) }
 
     NavigationRail(
