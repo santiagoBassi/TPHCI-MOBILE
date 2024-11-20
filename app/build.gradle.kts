@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -50,8 +51,14 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation("androidx.window:window-java:1.3.0")
-    implementation("androidx.compose.material3.adaptive:adaptive:1.1.0-alpha07")
+    implementation(libs.androidx.window.java)
+    implementation(libs.androidx.adaptive)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.logging.interceptor)
+    implementation(libs.retrofit)
+    implementation(libs.converter.kotlinx.serialization)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.navigation.compose)
     implementation("androidx.compose.foundation:foundation:1.4.3")
     implementation("com.google.accompanist:accompanist-pager-indicators:0.30.1")
     testImplementation(libs.junit)
