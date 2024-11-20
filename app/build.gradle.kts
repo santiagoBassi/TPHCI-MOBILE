@@ -52,6 +52,8 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation("androidx.window:window-java:1.3.0")
     implementation("androidx.compose.material3.adaptive:adaptive:1.1.0-alpha07")
+    implementation("androidx.compose.foundation:foundation:1.4.3")
+    implementation("com.google.accompanist:accompanist-pager-indicators:0.30.1")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
