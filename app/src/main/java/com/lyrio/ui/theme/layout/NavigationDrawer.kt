@@ -1,16 +1,13 @@
 package com.lyrio.ui.theme.layout
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ModalDrawerSheet
@@ -23,23 +20,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
-import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.DrawerState
-import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.rememberDrawerState
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.VerticalAlignmentLine
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.zIndex
-import kotlinx.coroutines.launch
 import com.lyrio.R
+import com.lyrio.ui.theme.components.AlertDialog
 
 data class NavItem(
     val icon: Int,
@@ -77,47 +70,94 @@ fun NavigationDrawer(modifier: Modifier = Modifier, content: @Composable () -> U
 
 @Composable
 fun NavigationDrawerContent(){
-    Column{
-        HorizontalDivider()
-        items.forEach { item ->
-            NavigationDrawerItem(
-                label = {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Row {
+    var openAlertDialog by remember { mutableStateOf(false) }
+    when {
+        openAlertDialog -> {
+            AlertDialog(
+                onDismissRequest = { openAlertDialog = false },
+                onConfirmation = {
+                    /* TODO */ // Cerrar sesión
+                    openAlertDialog = false
+                },
+                dialogTitle = "Cerrar sesión",
+                dialogText = "¿Estás seguro de que querés cerrar sesión?",
+                dismissText = "Cancelar",
+                confirmText = "Cerrar sesión"
+            )
+        }
+    }
+
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.SpaceBetween
+    ) {
+        Column {
+            HorizontalDivider()
+            items.forEach { item ->
+                Spacer(modifier = Modifier.height(10.dp))
+                NavigationDrawerItem(
+                    label = {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(start = 16.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Row {
+                                Icon(
+                                    painter = painterResource(id = item.icon),
+                                    contentDescription = item.title,
+                                    modifier = Modifier.size(24.dp),
+                                    tint = Color.Black
+                                )
+                                Spacer(modifier = Modifier.width(16.dp))
+                                Text(
+                                    text = item.title,
+                                    style = MaterialTheme.typography.titleMedium.copy(
+                                        color = Color.Black,
+                                    )
+                                )
+                            }
                             Icon(
-                                painter = painterResource(id = item.icon),
-                                contentDescription = item.title,
+                                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                                contentDescription = "Chevron",
                                 modifier = Modifier.size(24.dp),
                                 tint = Color.Black
                             )
-                            Spacer(modifier = Modifier.width(16.dp))
-                            Text(
-                                text = item.title,
-                                style = MaterialTheme.typography.titleMedium.copy(
-                                    color = Color.Black,
-                                )
-                            )
                         }
-                        Icon(
-                            imageVector = Icons.Filled.PlayArrow, // Ícono de flecha
-                            contentDescription = "Arrow",
-                            modifier = Modifier.size(24.dp),
-                            tint = Color.Black
-                        )
-                    }
-                },
-                selected = item.selected,
-                onClick = item.onClick
-            )
-            HorizontalDivider()
+                    },
+                    selected = item.selected,
+                    onClick = item.onClick
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+                HorizontalDivider()
+            }
         }
 
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 35.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.logout),
+                contentDescription = "Cerrar sesión",
+                modifier = Modifier.size(24.dp),
+                tint = Color.Black
+            )
+            Spacer(modifier = Modifier.width(16.dp))
+            Text(
+                text = "Cerrar sesión",
+                style = MaterialTheme.typography.titleMedium.copy(
+                    color = Color.Black,
+                ),
+                modifier = Modifier.clickable {
+                    openAlertDialog = true
+                }
+            )
+        }
     }
 }
 

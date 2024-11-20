@@ -21,13 +21,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lyrio.R
+import com.lyrio.ui.theme.styles.White
 
 @Composable
 fun Header(onButtonClick: () -> Unit, state: DrawerState) {
@@ -50,7 +48,8 @@ fun Header(onButtonClick: () -> Unit, state: DrawerState) {
                 imageVector = if (state.isOpen) Icons.Filled.Close else Icons.Filled.Menu,
                 contentDescription = "Menu Icon",
                 modifier = Modifier
-                    .size(35.dp)
+                    .size(35.dp),
+                tint = White
 
             )
         }
@@ -63,7 +62,8 @@ fun Header(onButtonClick: () -> Unit, state: DrawerState) {
             Icon(
                 painter = painterResource(id = R.drawable.logo),
                 contentDescription = "Logo Icon",
-                modifier = Modifier.size(50.dp)
+                modifier = Modifier.size(40.dp),
+                tint = White
             )
             Text(
                 text = "Lyrio",
@@ -71,8 +71,8 @@ fun Header(onButtonClick: () -> Unit, state: DrawerState) {
                     fontSize = 30.sp
                 ),
                 modifier = Modifier
-                    .padding(8.dp,0.dp)
-
+                    .padding(8.dp,0.dp),
+                color = White
             )
         }
 
