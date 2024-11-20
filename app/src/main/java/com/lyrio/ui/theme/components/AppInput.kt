@@ -17,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
@@ -48,11 +49,14 @@ fun AppInput(
     readOnly: Boolean = false,
     onFocusAction: (Boolean) -> Unit = {}
 ) {
-    var passwordVisible by remember { mutableStateOf(false) } // Estado para controlar la visibilidad de la contraseña
+    var passwordVisible by remember { mutableStateOf(false) }
     val myVisualTransformation = if (isPassword && !passwordVisible) PasswordVisualTransformation() else visualTransformation
     var isFocused by remember { mutableStateOf(false) }
 
-    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) { // Usa un Column para colocar el hint encima del TextField
+    Column(
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         OutlinedTextField(
             value = value,
             onValueChange = onValueChange,
