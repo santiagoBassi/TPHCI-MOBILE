@@ -1,4 +1,4 @@
-package com.lyrio.api.models
+package com.lyrio.data.model
 
 import kotlinx.serialization.Serializable
 
