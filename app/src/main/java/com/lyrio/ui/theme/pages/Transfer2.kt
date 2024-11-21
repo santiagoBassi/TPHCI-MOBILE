@@ -1,21 +1,25 @@
 package com.lyrio.ui.theme.pages
 
-import androidx.compose.foundation.ExperimentalFoundationApi
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -25,13 +29,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,70 +47,199 @@ import com.lyrio.ui.theme.components.AppButton
 import com.lyrio.ui.theme.components.AppInput
 import com.lyrio.ui.theme.components.AppWindow
 import com.lyrio.ui.theme.components.CreditCard
+import com.lyrio.ui.theme.styles.Orange
 import kotlinx.coroutines.launch
 
 @Preview(showBackground = true)
 @Composable
 fun Transfer2() {
-    val cards = listOf(
-        CreditCardData(
-            cardNumber = "4734 5678 9012 3456",
-            logo = R.drawable.visa_white,
-            primaryColor = Color(0xFF120269),
-            secondaryColor = Color(0xFF2204C6),
-            logoSize = 80.dp
-        ),
-        CreditCardData(
-            cardNumber = "2345 5678 9012 3456",
-            logo = R.drawable.mastercard,
-            primaryColor = Color(0xFF000000),
-            secondaryColor = Color(0xFF5f5f5f),
-            logoSize = 80.dp
-        )
-    )
-    var selectedMethod by remember { mutableIntStateOf(0) }
-    var amount by remember { mutableLongStateOf(0) }
-    val recipient = "Ezequiel Testoni"
+    var amount by rememberSaveable (key = "transferAmount") { mutableLongStateOf(0L) }
+    var selectedMethod by rememberSaveable (key = "selectedMethod") { mutableIntStateOf(0) }
 
-    Column(
-        modifier = Modifier.fillMaxSize().padding(16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ){
-        AppWindow {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.SpaceEvenly,
-                horizontalAlignment = Alignment.CenterHorizontally
+    val configuration = LocalConfiguration.current
+
+    when (configuration.orientation) {
+        Configuration.ORIENTATION_LANDSCAPE -> { // Modo horizontal
+            Transfer2ContentH(
+                recipient = "Ezequiel Testoni",
+                amount = amount,
+                onAmountChange = { amount = it },
+                selectedMethod = selectedMethod,
             ){
-                Text("¿Cuánto querés transferir?", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold, color = Color.Black)
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                PaymentMethodsCarousel(cards,  selectedMethod, onCurrentPageChanged = { selectedMethod = it })
+            }
+
+        }
+
+        else -> { // Modo vertical u otras orientaciones
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Transfer2ContentV(
+                    recipient = "Ezequiel Testoni",
+                    amount = amount,
+                    onAmountChange = { amount = it },
+                    selectedMethod = selectedMethod,
                 ){
-                    Text("$$amount", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold, color = Color.Black)
-                    AppInput(
-                        value = if(amount.toInt() == 0) "" else amount.toString(),
-                        onValueChange = { amount = it.toLongOrNull() ?: 0 },
-                        label = "Monto",
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    )
-                    Text("a $recipient", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold, color = Color.Gray,
-                        modifier = Modifier.padding(top = 10.dp))
+                    PaymentMethodsCarousel(cards, selectedMethod, onCurrentPageChanged = { selectedMethod = it })
                 }
-                PaymentMethodsCarousel(cards, onCurrentPageChanged = { selectedMethod = it })
-                AppButton(text = "Transferir", onClick = { /*TODO*/ }, modifier = Modifier.fillMaxWidth(0.75f))
             }
         }
     }
-
 }
 
-@OptIn(ExperimentalFoundationApi::class)
+val cards = listOf(
+    CreditCardData(
+        cardNumber = "4734 5678 9012 3456",
+        logo = R.drawable.visa_white,
+        primaryColor = Color(0xFF120269),
+        secondaryColor = Color(0xFF2204C6),
+        logoSize = 80.dp
+    ),
+    CreditCardData(
+        cardNumber = "2345 5678 9012 3456",
+        logo = R.drawable.mastercard,
+        primaryColor = Color(0xFF000000),
+        secondaryColor = Color(0xFF5f5f5f),
+        logoSize = 80.dp
+    )
+)
+
 @Composable
-fun PaymentMethodsCarousel(cards: List<CreditCardData>, onCurrentPageChanged: (Int) -> Unit = {}) {
-    val pagerState = rememberPagerState{ cards.size + 1 }
+fun Transfer2ContentH(
+    recipient: String = "",
+    amount: Long = 0L,
+    onAmountChange: (Long) -> Unit = {},
+    selectedMethod: Int = 0,
+    carousel: @Composable () -> Unit = {},
+) {
+    AppWindow(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(20.dp, 25.dp, 70.dp, 10.dp)
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth().weight(1f),
+                horizontalArrangement = Arrangement.spacedBy(15.dp),
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxSize().weight(1f).padding(top = 20.dp),
+                    verticalArrangement = Arrangement.spacedBy(25.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        "¿Cuánto querés transferir?",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color.Black
+                    )
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.spacedBy(12.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            "$$amount",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.SemiBold,
+                            color = Orange
+                        )
+                        AppInput(
+                            value = if (amount == 0L) "" else amount.toString(),
+                            onValueChange = { onAmountChange(it.toLongOrNull() ?: 0L) },
+                            label = "Monto",
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        )
+                        Text(
+                            "a $recipient   $selectedMethod",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.SemiBold,
+                            color = Color.Gray,
+                            modifier = Modifier.padding(top = 10.dp)
+                        )
+                    }
+                }
+                Divider(color = Orange, modifier = Modifier.fillMaxHeight().width(1.dp).padding(vertical = 15.dp))
+                Column(
+                    modifier = Modifier.fillMaxSize().weight(1f),
+                    verticalArrangement = Arrangement.SpaceEvenly,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        "Método de pago",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color.Black,
+                        modifier = Modifier.padding(top = 12.dp)
+                    )
+                    carousel()
+                }
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                AppButton(
+                    text = "Transferir",
+                    onClick = { /*TODO*/ },
+                    modifier = Modifier.fillMaxWidth(0.35f)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun Transfer2ContentV(
+    recipient: String = "",
+    amount: Long = 0L,
+    onAmountChange: (Long) -> Unit = {},
+    selectedMethod: Int = 0,
+    carousel: @Composable () -> Unit = {},
+) {
+    AppWindow (
+        modifier = Modifier
+            .padding(vertical = 8.dp)
+    ){
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceEvenly,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ){
+            Text("¿Cuánto querés transferir?", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold, color = Color.Black)
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ){
+                Text("$$amount", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold, color = Orange)
+                AppInput(
+                    value = if(amount == 0L) "" else amount.toString(),
+                    onValueChange = { onAmountChange(it.toLongOrNull() ?: 0L) },
+                    label = "Monto",
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                )
+                Text("a $recipient   $selectedMethod", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold, color = Color.Gray,
+                    modifier = Modifier.padding(top = 10.dp))
+            }
+            carousel()
+            AppButton(text = "Transferir", onClick = { /*TODO*/ }, modifier = Modifier.fillMaxWidth(0.75f))
+        }
+    }
+}
+@Composable
+fun PaymentMethodsCarousel(cards: List<CreditCardData>, initialPage: Int = 0, onCurrentPageChanged: (Int) -> Unit = {}) {
+    val pagerState = rememberPagerState(initialPage = initialPage ){ cards.size + 1 }
     val coroutineScope = rememberCoroutineScope()
 
     Column {
@@ -124,6 +258,7 @@ fun PaymentMethodsCarousel(cards: List<CreditCardData>, onCurrentPageChanged: (I
                     primaryColor = cards[page - 1].primaryColor,
                     secondaryColor = cards[page - 1].secondaryColor,
                     logoSize = cards[page - 1].logoSize,
+                    clickEnabled = false,
                 )
             }
         }
@@ -142,6 +277,7 @@ fun PaymentMethodsCarousel(cards: List<CreditCardData>, onCurrentPageChanged: (I
                 }
         )
     }
+
     LaunchedEffect(key1 = pagerState.currentPage) {
         onCurrentPageChanged(pagerState.currentPage)
     }
@@ -150,11 +286,10 @@ fun PaymentMethodsCarousel(cards: List<CreditCardData>, onCurrentPageChanged: (I
 @Composable
 fun AccountBalanceOption(
     balance: Double = 100000.0,
-    onClick: () -> Unit = {}
 ) {
     Card(
         modifier = Modifier
-            .clickable { onClick() }
+            .clickable(enabled = false){}
             .fillMaxWidth()
             .height(180.dp)
             .padding(16.dp),

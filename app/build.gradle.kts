@@ -60,7 +60,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.navigation.compose)
     implementation("androidx.compose.foundation:foundation:1.4.3")
-    implementation("com.google.accompanist:accompanist-pager-indicators:0.30.1")
+    implementation(libs.accompanist.pager.indicators)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

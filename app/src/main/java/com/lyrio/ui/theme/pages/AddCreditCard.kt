@@ -1,5 +1,6 @@
 package com.lyrio.ui.theme.pages
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,9 +18,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -33,109 +36,240 @@ import com.lyrio.ui.theme.components.FlippableCard
 import com.lyrio.ui.theme.components.NewCreditCardBack
 import com.lyrio.ui.theme.components.NewCreditCardFront
 import com.lyrio.ui.theme.components.RotationAxis
-import com.lyrio.ui.theme.styles.LyrioTheme
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
 fun AddCreditCard(){
-    var cardNumber by remember { mutableStateOf("") }
-    var holderName by remember { mutableStateOf("") }
-    var expiryDate by remember { mutableStateOf("") }
-    var cvv by remember { mutableStateOf("") }
+    var cardNumber by rememberSaveable(key = "addCardNumber"){ mutableStateOf("") }
+    var holderName by rememberSaveable(key = "addCardHolderName"){ mutableStateOf("") }
+    var expiryDate by rememberSaveable(key = "addCardExpiryDate"){ mutableStateOf("") }
+    var cvv by rememberSaveable(key = "addCardCvv"){ mutableStateOf("") }
 
     var state by remember {
         mutableStateOf(CardFace.Front)
     }
 
-    LyrioTheme {
-        Column(
-            modifier = Modifier.fillMaxSize().padding(16.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            AppWindow {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.SpaceEvenly,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        "Agregar tarjeta",
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalArrangement = Arrangement.spacedBy(12.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(200.dp),
-                        ) {
-                            FlippableCard(
-                                cardFace = state,
-                                onClick = {
-                                    state = it.next
-                                },
-                                axis = RotationAxis.AxisY,
-                                back = { NewCreditCardBack(cvv = cvv) },
-                                front = {
-                                    NewCreditCardFront(
-                                        cardNumber = formatNumber(cardNumber),
-                                        holderName = formatName(holderName),
-                                        expiryDate = expiryDate,
-                                        logo = getCardType(cardNumber)
-                                    )
-                                }
-                            )
-                        }
-                        AppInput(
-                            label = "Número de tarjeta",
-                            value = cardNumber,
-                            onValueChange = { if (it.length <= 16) cardNumber = it },
-                            modifier = Modifier.fillMaxWidth(),
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                            onFocusAction = {state = if(it) CardFace.Front else CardFace.Back }
+    val configuration = LocalConfiguration.current
+
+    when (configuration.orientation) {
+        Configuration.ORIENTATION_LANDSCAPE -> { // Modo horizontal
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(20.dp,20.dp,70.dp,10.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+
+                AddCardContentH(
+                    flippableCard = {
+                        FlippableCard(
+                            cardFace = state,
+                            onClick = {
+                                state = it.next
+                            },
+                            axis = RotationAxis.AxisY,
+                            back = { NewCreditCardBack(cvv = cvv) },
+                            front = {
+                                NewCreditCardFront(
+                                    cardNumber = formatNumber(cardNumber),
+                                    holderName = formatName(holderName),
+                                    expiryDate = expiryDate,
+                                    logo = getCardType(cardNumber)
+                                )
+                            }
                         )
-                        AppInput(
-                            label = "Nombre del titular",
-                            value = holderName,
-                            onValueChange = {if (it.length <= 25) holderName = it},
-                            modifier = Modifier.fillMaxWidth(),
-                            onFocusAction = {state = if(it) CardFace.Front else CardFace.Back }
+                    },
+                    cardInputs = {
+                        CardInputs(
+                            cardNumber = cardNumber,
+                            onCardNumberChange = { cardNumber = it },
+                            holderName = holderName,
+                            onHolderNameChange = { holderName = it },
+                            expiryDate = expiryDate,
+                            onExpiryDateChange = { expiryDate = it },
+                            cvv = cvv,
+                            onCvvChange = { cvv = it },
+                            onStateChange = {state = it}
                         )
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(12.dp)
-                        ){
-                            AppInput(
-                                label = "Vencimiento",
-                                value = expiryDate,
-                                onValueChange = { if(it.length <= 5) expiryDate = it },
-                                modifier = Modifier.fillMaxWidth(0.6f),
-                                placeholder = "MM/YY",
-                                onFocusAction = {state = if(it) CardFace.Front else CardFace.Back }
-                            )
-                            AppInput(
-                                label = "CVV",
-                                value = cvv,
-                                onValueChange = {if(it.length <= 3) cvv = it},
-                                modifier = Modifier.fillMaxWidth(),
-                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                                onFocusAction = { state = if(it) CardFace.Back else CardFace.Front }
-                            )
-                        }
-                        Spacer(Modifier.height(6.dp))
                     }
-                    AppButton(text = "Continuar", width = 0.8f, onClick = {})
-                }
+                )
 
             }
         }
+
+        else -> { // Modo vertical u otras orientaciones
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                AddCardContentV(
+                    flippableCard = {
+                        FlippableCard(
+                            cardFace = state,
+                            onClick = {
+                                state = it.next
+                            },
+                            axis = RotationAxis.AxisY,
+                            back = { NewCreditCardBack(cvv = cvv) },
+                            front = {
+                                NewCreditCardFront(
+                                    cardNumber = formatNumber(cardNumber),
+                                    holderName = formatName(holderName),
+                                    expiryDate = expiryDate,
+                                    logo = getCardType(cardNumber)
+                                )
+                            }
+                        )
+                    },
+                    cardInputs = { CardInputs(
+                        cardNumber = cardNumber,
+                        onCardNumberChange = { cardNumber = it },
+                        holderName = holderName,
+                        onHolderNameChange = { holderName = it },
+                        expiryDate = expiryDate,
+                        onExpiryDateChange = { expiryDate = it },
+                        cvv = cvv,
+                        onCvvChange = { cvv = it },
+                        onStateChange = {state = it}
+                    )
+                })
+            }
+        }
+    }
+}
+
+@Composable
+fun AddCardContentH(
+    flippableCard: @Composable () -> Unit = {},
+    cardInputs: @Composable () -> Unit = {},
+) {
+    AppWindow (
+        modifier = Modifier.fillMaxSize()
+    ){
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceBetween,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                "Agregar tarjeta",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.SemiBold
+            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(15.dp),
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth().weight(1f)
+                        .height(200.dp),
+                ) {
+                    flippableCard()
+                }
+                Column(
+                    modifier = Modifier.fillMaxWidth().weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    cardInputs()
+                }
+            }
+            AppButton(text = "Continuar", width = 0.5f, onClick = {})
+        }
+    }
+}
+
+@Composable
+fun AddCardContentV(
+    flippableCard: @Composable () -> Unit = {},
+    cardInputs: @Composable () -> Unit = {},
+) {
+    AppWindow {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceEvenly,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                "Agregar tarjeta",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.SemiBold
+            )
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp),
+                ) {
+                    flippableCard()
+                }
+                cardInputs()
+            }
+            Spacer(Modifier.height(6.dp))
+            AppButton(text = "Agregar", width = 0.8f, onClick = {})
+        }
+    }
+}
+
+
+@Composable
+fun CardInputs(
+    cardNumber: String,
+    onCardNumberChange: (String) -> Unit,
+    holderName: String,
+    onHolderNameChange: (String) -> Unit,
+    expiryDate: String,
+    onExpiryDateChange: (String) -> Unit,
+    cvv: String,
+    onCvvChange: (String) -> Unit,
+    onStateChange: (CardFace) -> Unit
+){
+    AppInput(
+        label = "Número de tarjeta",
+        value = cardNumber,
+        onValueChange = { if (it.length <= 16) onCardNumberChange(it) },
+        modifier = Modifier.fillMaxWidth(),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        onFocusAction = {onStateChange(if(it) CardFace.Front else CardFace.Back)}
+    )
+    AppInput(
+        label = "Nombre del titular",
+        value = holderName,
+        onValueChange = {if (it.length <= 25) onHolderNameChange(it)},
+        modifier = Modifier.fillMaxWidth(),
+        onFocusAction = {onStateChange(if(it) CardFace.Front else CardFace.Back)}
+    )
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        AppInput(
+            label = "Vencimiento",
+            value = expiryDate,
+            onValueChange = { if (it.length <= 5) onExpiryDateChange(it) },
+            modifier = Modifier.fillMaxWidth(0.6f),
+            placeholder = "MM/YY",
+            onFocusAction = { onStateChange(if (it) CardFace.Front else CardFace.Back) }
+        )
+        AppInput(
+            label = "CVV",
+            value = cvv,
+            onValueChange = { if (it.length <= 3) onCvvChange(it) },
+            modifier = Modifier.fillMaxWidth(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            onFocusAction = { onStateChange(if (it) CardFace.Back else CardFace.Front) }
+        )
     }
 }
 

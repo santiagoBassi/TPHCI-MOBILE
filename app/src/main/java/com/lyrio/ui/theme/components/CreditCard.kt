@@ -42,13 +42,14 @@ fun CreditCard(
     primaryColor: Color = Color(0xFF000000),
     secondaryColor: Color = Color(0xFF5f5f5f),
     logoSize: Dp = 80.dp,
+    clickEnabled: Boolean = true,
     onClick: () -> Unit = {}
 ){
     var cardWidth by remember { mutableStateOf(0.dp) }
 
     Card(
         modifier = modifier
-            .clickable { onClick() }
+            .clickable (enabled = clickEnabled){ onClick() }
             .height(180.dp) // Ajusta la altura según tus necesidades
             .padding(16.dp)
             .onGloballyPositioned { coordinates ->

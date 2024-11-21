@@ -16,12 +16,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import com.lyrio.ui.theme.styles.Orange
 
 @Composable
-fun BarChart(data: List<BarChartData>) {
+fun BarChart(data: List<BarChartData>, maxBarHeight: Dp) {
     val maxValue = data.maxOfOrNull { it.expense } ?: 0f
     val barWidth = 40.dp
 
@@ -40,7 +41,7 @@ fun BarChart(data: List<BarChartData>) {
                 Box(
                     modifier = Modifier
                         .width(barWidth)
-                        .height(item.expense / maxValue * 200.dp)
+                        .height(item.expense * maxBarHeight / maxValue)
                         .background(Orange, RoundedCornerShape(8.dp))
                 )
                 Spacer(modifier = Modifier.height(8.dp))

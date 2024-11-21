@@ -1,5 +1,6 @@
 package com.lyrio.ui.theme.pages
 
+import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -30,78 +32,96 @@ import com.lyrio.ui.theme.styles.LightGray
 @Preview(showBackground = true)
 @Composable
 fun LandingPage() {
+    val configuration = LocalConfiguration.current
+
+    when (configuration.orientation) {
+        Configuration.ORIENTATION_LANDSCAPE -> { // Modo horizontal
+            LandingContentH()
+        }
+
+        else -> { // Modo vertical u otras orientaciones
+            LandingContentV()
+        }
+    }
+}
+
+@Composable
+fun LandingContentH() {
     Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.SpaceEvenly,
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(50.dp, 32.dp, 100.dp, 10.dp),
+        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
+            modifier = Modifier.fillMaxSize(),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.Top
         ) {
-            Icon(
-                painter = painterResource(id = R.drawable.logo),
-                contentDescription = "Logo",
-                modifier = Modifier.size(80.dp),
-                tint = DarkGray
-            )
-            Text(
-                text = "Lyrio",
-                modifier = Modifier.padding(start = 8.dp),
-                fontSize = 60.sp,
-                fontWeight = FontWeight.Bold,
-                color = DarkGray
-            )
+            Column(
+                modifier = Modifier.weight(0.55f),
+                horizontalAlignment = Alignment.Start,
+                verticalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxWidth().padding(20.dp, 8.dp,0.dp,0.dp),
+                ){
+                    Brand()
+                }
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth().padding(10.dp, 20.dp, 0.dp, 0.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    LoreH()
+                }
+            }
+            Column(
+                modifier = Modifier.weight(0.45f).padding(bottom = 15.dp),
+                horizontalAlignment = Alignment.End,
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxWidth().weight(0.45f),
+                    verticalArrangement = Arrangement.Top,
+                    horizontalAlignment = Alignment.End
+                ) {
+                    LandingImg()
+                }
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(end = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    AppButton(
+                        text = "Iniciar Sesión",
+                        onClick = { /*TODO*/ },
+                        modifier = Modifier.weight(1f)
+                    )
+                    AppButton(
+                        text = "Registrarse",
+                        onClick = { /*TODO*/ },
+                        background = LightGray,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+            }
         }
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 25.dp),
-            horizontalAlignment = Alignment.Start
-        ) {
-            Text(
-                text = "La nueva forma de",
-                fontWeight = FontWeight.Medium,
-                fontSize = 24.sp,
-                color = DarkGray
-            )
-            Text(
-                text = "administrar tu dinero",
-                fontWeight = FontWeight.Black,
-                fontSize = 26.sp,
-                color = DarkGray
-            )
-            Spacer(modifier = Modifier.height(26.dp))
-            Text(
-                text = "Ahorrá, cobrá y pagá.",
-                fontWeight = FontWeight.Medium,
-                fontSize = 18.sp,
-                color = Color.Gray,
-                fontStyle = FontStyle.Italic
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "Lyrio te permite manejar tu dinero de",
-                fontWeight = FontWeight.Medium,
-                fontSize = 18.sp,
-                color = Color.Gray,
-                fontStyle = FontStyle.Italic
-            )
-            Text(
-                text = "forma fácil y segura.",
-                fontWeight = FontWeight.Medium,
-                fontSize = 18.sp,
-                color = Color.Gray,
-                fontStyle = FontStyle.Italic
-            )
-        }
-        Image(
-            painter = painterResource(id = R.drawable.landing_logo),
-            contentDescription = "Landing page",
-            modifier = Modifier
-                .size(320.dp)
-                .padding(vertical = 16.dp)
-        )
+    }
+}
+
+@Composable
+fun LandingContentV(){
+    Column(
+        modifier = Modifier.fillMaxSize().padding(top = 20.dp, bottom = 50.dp),
+        verticalArrangement = Arrangement.SpaceEvenly,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Brand()
+        Lore()
+        LandingImg()
         Column(
             modifier = Modifier
                 .fillMaxWidth(),
@@ -122,5 +142,129 @@ fun LandingPage() {
             )
         }
     }
+}
 
+@Composable
+fun Brand(){
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.logo),
+            contentDescription = "Logo",
+            modifier = Modifier.size(80.dp),
+            tint = DarkGray
+        )
+        Text(
+            text = "Lyrio",
+            modifier = Modifier.padding(start = 8.dp),
+            fontSize = 60.sp,
+            fontWeight = FontWeight.Bold,
+            color = DarkGray
+        )
+    }
+}
+
+@Composable
+fun Lore(){
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 25.dp),
+        horizontalAlignment = Alignment.Start
+    ) {
+        Text(
+            text = "La nueva forma de",
+            fontWeight = FontWeight.Medium,
+            fontSize = 24.sp,
+            color = DarkGray
+        )
+        Text(
+            text = "administrar tu dinero",
+            fontWeight = FontWeight.Black,
+            fontSize = 26.sp,
+            color = DarkGray
+        )
+        Spacer(modifier = Modifier.height(26.dp))
+        Text(
+            text = "Ahorrá, cobrá y pagá.",
+            fontWeight = FontWeight.Medium,
+            fontSize = 18.sp,
+            color = Color.Gray,
+            fontStyle = FontStyle.Italic
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = "Lyrio te permite manejar tu dinero de",
+            fontWeight = FontWeight.Medium,
+            fontSize = 18.sp,
+            color = Color.Gray,
+            fontStyle = FontStyle.Italic
+        )
+        Text(
+            text = "forma fácil y segura.",
+            fontWeight = FontWeight.Medium,
+            fontSize = 18.sp,
+            color = Color.Gray,
+            fontStyle = FontStyle.Italic
+        )
+    }
+}
+
+@Composable
+fun LoreH(){
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 25.dp),
+        horizontalAlignment = Alignment.Start
+    ) {
+        Text(
+            text = "La nueva forma de",
+            fontWeight = FontWeight.Medium,
+            fontSize = 28.sp,
+            color = DarkGray
+        )
+        Text(
+            text = "administrar tu dinero",
+            fontWeight = FontWeight.Black,
+            fontSize = 30.sp,
+            color = DarkGray
+        )
+        Spacer(modifier = Modifier.height(26.dp))
+        Text(
+            text = "Ahorrá, cobrá y pagá.",
+            fontWeight = FontWeight.Medium,
+            fontSize = 20.sp,
+            color = Color.Gray,
+            fontStyle = FontStyle.Italic
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = "Lyrio te permite manejar tu dinero de",
+            fontWeight = FontWeight.Medium,
+            fontSize = 20.sp,
+            color = Color.Gray,
+            fontStyle = FontStyle.Italic
+        )
+        Text(
+            text = "forma fácil y segura.",
+            fontWeight = FontWeight.Medium,
+            fontSize = 20.sp,
+            color = Color.Gray,
+            fontStyle = FontStyle.Italic
+        )
+    }
+}
+
+@Composable
+fun LandingImg(){
+    Image(
+        painter = painterResource(id = R.drawable.landing_logo),
+        contentDescription = "Landing page",
+        modifier = Modifier
+            .size(320.dp)
+            .padding(vertical = 14.dp)
+    )
 }

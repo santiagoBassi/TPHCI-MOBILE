@@ -22,6 +22,7 @@ fun Successful(
     message: String,
     buttonLabel: String,
     variant: String = "",
+    height: Float = 0.5f,
     content: @Composable () -> Unit = {}
 ){
 
@@ -36,7 +37,7 @@ fun Successful(
             AppWindow(
                 modifier = Modifier
                     .fillMaxWidth(fraction = 0.95f)
-                    .fillMaxHeight(fraction = 0.5f)
+                    .fillMaxHeight(fraction = height)
             ) {
                 Column(
                     modifier = Modifier
@@ -48,7 +49,7 @@ fun Successful(
                     Text(text = message, style = MaterialTheme.typography.titleLarge,
                         color = Green)
                     content()
-                    AppButton(text = buttonLabel, onClick = { /* TODO */ }, width = 0.8f,
+                    AppButton(text = buttonLabel, onClick = { /* TODO */ }, width = if (height == 1f) 0.6f else 0.8f,
                         background = if(variant == "secondary") LightGray else Orange)
                 }
             }
