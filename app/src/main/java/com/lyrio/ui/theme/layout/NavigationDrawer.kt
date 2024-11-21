@@ -44,11 +44,11 @@ data class NavItem(
 
 val items = listOf(
     NavItem(R.drawable.send_money_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Transferir", "Transfer Icon", false) { /* Acción Transferir */ },
-    NavItem(R.drawable.account_balance_wallet_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Mi dinero", "Transfer Icon", false) { /* Acción Mi dinero */ },
+    NavItem(R.drawable.account_balance_wallet_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Dinero", "Transfer Icon", false) { /* Acción Mi dinero */ },
     NavItem(R.drawable.list_alt_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Movimientos", "Transfer Icon", false) { /* Acción Movimientos */ },
     NavItem(R.drawable.currency_exchange_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Inversiones", "Transfer Icon", false) { /* Acción Inversiones */ },
-    NavItem(R.drawable.link_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Cobrar con link de pago", "Transfer Icon", false) { /* Acción Cobrar con link */ },
-    NavItem(R.drawable.credit_card_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Mis tarjetas", "Transfer Icon", false) { /* Acción Mis tarjetas */ },
+    NavItem(R.drawable.link_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Link de pago", "Transfer Icon", false) { /* Acción Cobrar con link */ },
+    NavItem(R.drawable.credit_card_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Tarjetas", "Transfer Icon", false) { /* Acción Mis tarjetas */ },
 )
 
 @Composable

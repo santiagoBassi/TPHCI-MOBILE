@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.targets.js.npm.importedPackageDir
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -51,14 +53,9 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation(libs.androidx.window.java)
-    implementation(libs.androidx.adaptive)
-    implementation(libs.kotlinx.serialization.json)
-    implementation(libs.logging.interceptor)
-    implementation(libs.retrofit)
-    implementation(libs.converter.kotlinx.serialization)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.androidx.adaptive)
     implementation("androidx.compose.foundation:foundation:1.4.3")
     implementation(libs.accompanist.pager.indicators)
     testImplementation(libs.junit)

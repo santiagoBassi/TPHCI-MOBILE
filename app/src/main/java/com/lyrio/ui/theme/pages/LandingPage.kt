@@ -21,7 +21,6 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lyrio.R
@@ -29,24 +28,33 @@ import com.lyrio.ui.theme.components.AppButton
 import com.lyrio.ui.theme.styles.DarkGray
 import com.lyrio.ui.theme.styles.LightGray
 
-@Preview(showBackground = true)
+
 @Composable
-fun LandingPage() {
+fun LandingPage(navigateSignIn: () -> Unit = {}, navigateSignUp: () -> Unit) {
     val configuration = LocalConfiguration.current
 
     when (configuration.orientation) {
         Configuration.ORIENTATION_LANDSCAPE -> { // Modo horizontal
-            LandingContentH()
+            LandingContentH(
+                navigateSignIn = navigateSignIn,
+                navigateSignUp = navigateSignUp
+            )
         }
 
         else -> { // Modo vertical u otras orientaciones
-            LandingContentV()
+            LandingContentV(
+                navigateSignIn = navigateSignIn,
+                navigateSignUp = navigateSignUp
+            )
         }
     }
 }
 
 @Composable
-fun LandingContentH() {
+fun LandingContentH(
+    navigateSignIn: () -> Unit = {},
+    navigateSignUp: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -65,13 +73,16 @@ fun LandingContentH() {
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Column(
-                    modifier = Modifier.fillMaxWidth().padding(20.dp, 8.dp,0.dp,0.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(20.dp, 8.dp, 0.dp, 0.dp),
                 ){
                     Brand()
                 }
                 Column(
                     modifier = Modifier
-                        .fillMaxWidth().padding(10.dp, 20.dp, 0.dp, 0.dp),
+                        .fillMaxWidth()
+                        .padding(10.dp, 20.dp, 0.dp, 0.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
@@ -79,30 +90,36 @@ fun LandingContentH() {
                 }
             }
             Column(
-                modifier = Modifier.weight(0.45f).padding(bottom = 15.dp),
+                modifier = Modifier
+                    .weight(0.45f)
+                    .padding(bottom = 15.dp),
                 horizontalAlignment = Alignment.End,
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Column(
-                    modifier = Modifier.fillMaxWidth().weight(0.45f),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(0.45f),
                     verticalArrangement = Arrangement.Top,
                     horizontalAlignment = Alignment.End
                 ) {
                     LandingImg()
                 }
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(end = 8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(end = 8.dp),
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     AppButton(
                         text = "Iniciar Sesión",
-                        onClick = { /*TODO*/ },
+                        onClick = navigateSignIn,
                         modifier = Modifier.weight(1f)
                     )
                     AppButton(
                         text = "Registrarse",
-                        onClick = { /*TODO*/ },
+                        onClick = navigateSignUp,
                         background = LightGray,
                         modifier = Modifier.weight(1f)
                     )
@@ -113,9 +130,14 @@ fun LandingContentH() {
 }
 
 @Composable
-fun LandingContentV(){
+fun LandingContentV(
+    navigateSignIn: () -> Unit = {},
+    navigateSignUp: () -> Unit
+){
     Column(
-        modifier = Modifier.fillMaxSize().padding(top = 20.dp, bottom = 50.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 20.dp, bottom = 50.dp),
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -131,12 +153,12 @@ fun LandingContentV(){
         {
             AppButton(
                 text = "Iniciar Sesión",
-                onClick = { /*TODO*/ },
+                onClick = navigateSignIn,
                 width = 0.7f
             )
             AppButton(
                 text = "Registrarse",
-                onClick = { /*TODO*/ },
+                onClick = navigateSignUp,
                 width = 0.7f,
                 background = LightGray
             )

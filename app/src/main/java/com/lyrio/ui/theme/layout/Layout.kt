@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.material3.*
@@ -20,28 +19,28 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import androidx.window.core.layout.WindowWidthSizeClass
 
-
 @Composable
-fun DefaultLayout(content: @Composable () -> Unit) {
+fun DefaultLayout(navController: NavController,content: @Composable () -> Unit) {
+
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
 
     when (windowSizeClass.windowWidthSizeClass) {
         WindowWidthSizeClass.COMPACT -> {
-            MobileBottomBarNavigation(content)
+            MobileBottomBarNavigation(navController,content)
         }
         else -> {
-            if(isMobil()) MobileSidebarNavigation(content)
+            if(isMobile()) MobileSidebarNavigation(content)
             else TabletNavigation(content)
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MobileBottomBarNavigation(content: @Composable () -> Unit) {
+fun MobileBottomBarNavigation(navController: NavController, content: @Composable () -> Unit) {
     val drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     Scaffold(
@@ -55,7 +54,7 @@ fun MobileBottomBarNavigation(content: @Composable () -> Unit) {
             }, state = drawerState)
         },
         bottomBar = {
-            BottomBar()
+            BottomBar(navController)
         }
         ) { innerPadding ->
         Box(
@@ -71,14 +70,13 @@ fun MobileBottomBarNavigation(content: @Composable () -> Unit) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MobileSidebarNavigation(content: @Composable () -> Unit) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
     Row (Modifier.fillMaxSize()) {
-        LeftBarMobil(state = drawerState, onButtonClick = {
+        LeftBarMobile(state = drawerState, onButtonClick = {
             scope.launch {
                 drawerState.apply {
                     if (isClosed) open() else close()
