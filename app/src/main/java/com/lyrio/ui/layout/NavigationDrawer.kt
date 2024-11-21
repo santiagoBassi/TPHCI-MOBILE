@@ -19,6 +19,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.DrawerState
@@ -56,6 +59,8 @@ val items = listOf(
         Screen.Home),
     NavItem(R.drawable.credit_card_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Tarjetas", "Transfer Icon", false,
         Screen.CreditCards),
+    NavItem(R.drawable.logout_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Cerrar Sesion", "Logout Icon", false,
+        Screen.Home)
 )
 
 @Composable
@@ -95,78 +100,67 @@ fun NavigationDrawerContent(navController: NavController){
     }
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Column {
+        HorizontalDivider()
+
+        items.dropLast(1).forEach { item ->
+            Spacer(modifier = Modifier.height(10.dp))
+            NavigationDrawerItem(
+                label = {
+                    NavDrawerItem(item, navController)
+                },
+                selected = item.selected,
+                onClick = {navController.navigate(item.page)}
+            )
+            Spacer(modifier = Modifier.height(10.dp))
             HorizontalDivider()
-            items.forEach { item ->
-                Spacer(modifier = Modifier.height(10.dp))
-                NavigationDrawerItem(
-                    label = {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(start = 16.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Row {
-                                Icon(
-                                    painter = painterResource(id = item.icon),
-                                    contentDescription = item.title,
-                                    modifier = Modifier.size(24.dp),
-                                    tint = Color.Black
-                                )
-                                Spacer(modifier = Modifier.width(16.dp))
-                                Text(
-                                    text = item.title,
-                                    style = MaterialTheme.typography.titleMedium.copy(
-                                        color = Color.Black,
-                                    )
-                                )
-                            }
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                                contentDescription = "Chevron",
-                                modifier = Modifier.size(24.dp),
-                                tint = Color.Black
-                            )
-                        }
-                    },
-                    selected = item.selected,
-                    onClick = {navController.navigate(item.page)}
-                )
-                Spacer(modifier = Modifier.height(10.dp))
-                HorizontalDivider()
-            }
         }
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 35.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.logout),
-                contentDescription = "Cerrar sesión",
-                modifier = Modifier.size(24.dp),
-                tint = Color.Black
-            )
-            Spacer(modifier = Modifier.width(16.dp))
-            Text(
-                text = "Cerrar sesión",
-                style = MaterialTheme.typography.titleMedium.copy(
-                    color = Color.Black,
-                ),
-                modifier = Modifier.clickable {
-                    openAlertDialog = true
-                }
-            )
+
+        Spacer(modifier = Modifier.weight(1f))
+        items.lastOrNull()?.let { item ->
+            HorizontalDivider()
+            Spacer(modifier = Modifier.height(20.dp))
+            NavDrawerItem(item, navController)
+            Spacer(modifier = Modifier.height(20.dp))
+            HorizontalDivider()
         }
     }
 }
 
 
+@Composable
+fun NavDrawerItem(item: NavItem, navController: NavController){
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Row {
+            Icon(
+                painter = painterResource(id = item.icon),
+                contentDescription = item.title,
+                modifier = Modifier.size(24.dp),
+                tint = Color.Black
+            )
+            Spacer(modifier = Modifier.width(16.dp))
+            Text(
+                text = item.title,
+                style = MaterialTheme.typography.titleMedium.copy(
+                    color = Color.Black,
+                )
+            )
+        }
+        Icon(
+            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+            contentDescription = "Chevron",
+            modifier = Modifier.size(24.dp),
+            tint = Color.Black
+        )
+    }
+}
 
