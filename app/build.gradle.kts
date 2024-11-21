@@ -57,7 +57,7 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.adaptive)
     implementation("androidx.compose.foundation:foundation:1.4.3")
-    implementation("com.google.accompanist:accompanist-pager-indicators:0.30.1")
+    implementation(libs.accompanist.pager.indicators)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
