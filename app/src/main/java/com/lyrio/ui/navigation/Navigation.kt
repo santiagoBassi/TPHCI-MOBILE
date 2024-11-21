@@ -15,6 +15,7 @@ import com.lyrio.ui.pages.LandingPage
 import com.lyrio.ui.pages.Money
 import com.lyrio.ui.pages.Movements
 import com.lyrio.ui.pages.Profile
+import com.lyrio.ui.pages.ReceiveMoney
 import com.lyrio.ui.pages.Transfer1
 import com.lyrio.ui.pages.Transfer2
 
@@ -45,49 +46,49 @@ fun NavigationWrapper(){
             SignUp2()
         }
 
-        composable<Screen.Home>(){
+        composable<Screen.Home>{
             DefaultLayout(navController) {
                 Home()
             }
         }
 
-        composable<Screen.Profile>(){
+        composable<Screen.Profile>{
             DefaultLayout(navController) {
                 Profile()
             }
         }
 
-        composable<Screen.Transfer1>(){
+        composable<Screen.Transfer1>{
             DefaultLayout(navController) {
                 Transfer1()
             }
         }
 
-        composable<Screen.Transfer2>(){
+        composable<Screen.Transfer2>{
             DefaultLayout(navController) {
                 Transfer2()
             }
         }
 
-        composable<Screen.Money>(){
+        composable<Screen.Money>{
             DefaultLayout(navController) {
                 Money()
             }
         }
 
-        composable<Screen.Movements>(){
+        composable<Screen.Movements>{
             DefaultLayout(navController) {
                 Movements()
             }
         }
 
-        composable<Screen.Invest>(){
+        composable<Screen.Invest>{
             DefaultLayout(navController) {
                 Invest()
             }
         }
 
-        composable<Screen.CreditCards>(){
+        composable<Screen.CreditCards>{
             DefaultLayout(navController) {
                 CreditCards()
             }
