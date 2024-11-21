@@ -27,9 +27,9 @@ import com.lyrio.ui.theme.components.AppButton
 import com.lyrio.ui.theme.styles.DarkGray
 import com.lyrio.ui.theme.styles.LightGray
 
-@Preview(showBackground = true)
+
 @Composable
-fun LandingPage() {
+fun LandingPage(navigateSignIn: () -> Unit = {}, navigateSignUp: () -> Unit) {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.SpaceEvenly,
@@ -111,12 +111,12 @@ fun LandingPage() {
         {
             AppButton(
                 text = "Iniciar Sesión",
-                onClick = { /*TODO*/ },
+                onClick = navigateSignIn,
                 width = 0.7f
             )
             AppButton(
                 text = "Registrarse",
-                onClick = { /*TODO*/ },
+                onClick = navigateSignUp,
                 width = 0.7f,
                 background = LightGray
             )

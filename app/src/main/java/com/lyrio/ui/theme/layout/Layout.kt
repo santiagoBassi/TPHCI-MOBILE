@@ -11,42 +11,36 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.material3.*
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import androidx.window.core.layout.WindowWidthSizeClass
-import com.lyrio.ui.theme.navigation.AppDestinations
 
 @Composable
-fun DefaultLayout(content: @Composable () -> Unit) {
-    var currentDestination by rememberSaveable { mutableStateOf(AppDestinations.TRANSFER) }
+fun DefaultLayout(navController: NavController,content: @Composable () -> Unit) {
 
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
 
     when (windowSizeClass.windowWidthSizeClass) {
         WindowWidthSizeClass.COMPACT -> {
-            MobileBottomBarNavigation(content, currentDestination)
+            MobileBottomBarNavigation(navController,content)
         }
         else -> {
-            if(isMobile()) MobileSidebarNavigation(content, currentDestination)
-            else TabletNavigation(content, currentDestination)
+            if(isMobile()) MobileSidebarNavigation(content)
+            else TabletNavigation(content)
         }
     }
 }
 
 @Composable
-fun MobileBottomBarNavigation(content: @Composable () -> Unit, currentDestination: String) {
+fun MobileBottomBarNavigation(navController: NavController, content: @Composable () -> Unit) {
     val drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     Scaffold(
@@ -60,7 +54,7 @@ fun MobileBottomBarNavigation(content: @Composable () -> Unit, currentDestinatio
             }, state = drawerState)
         },
         bottomBar = {
-            BottomBar()
+            BottomBar(navController)
         }
         ) { innerPadding ->
         Box(

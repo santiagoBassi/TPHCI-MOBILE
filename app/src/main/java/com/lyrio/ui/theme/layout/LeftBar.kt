@@ -134,7 +134,7 @@ fun LeftBarMobile(onButtonClick: () -> Unit, state: DrawerState, windowSizeClass
 
 @Composable
 fun LeftBarTablet( windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo().windowSizeClass) {
-    var selectedItem by remember { mutableIntStateOf(0) }
+    var selectedItem by remember { mutableIntStateOf(R.drawable.home_24dp_e8eaed_fill0_wght400_grad0_opsz24) }
 
     NavigationRail(
         modifier = Modifier
@@ -169,7 +169,7 @@ fun LeftBarTablet( windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo(
                 modifier = Modifier
                     .fillMaxHeight()
                     .padding(top = 20.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
+                horizontalAlignment = if(windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.MEDIUM) Alignment.CenterHorizontally else Alignment.Start,
                 verticalArrangement = Arrangement.Center
             ) {
                 itemsNavBar.dropLast(1).forEach { item ->
@@ -194,20 +194,26 @@ fun RenderRailItem(item: NavItem, selectedItem: Int, onItemSelected: () -> Unit)
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    itemContent(item,selectedItem)
+                    ItemContent(item,selectedItem)
                 }
             else
                 Row (
-                    modifier = Modifier.fillMaxHeight(0.25f),
+                    modifier = Modifier.fillMaxHeight(0.30f),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Start
+                    horizontalArrangement = Arrangement.Start,
+                    
                 ) {
-                    itemContent(item,selectedItem)
+                    ItemContent(item,selectedItem)
                 }
         },
         selected = selectedItem == item.icon,
         onClick = onItemSelected,
-        modifier = Modifier.padding(0.dp, 10.dp),
+        modifier =
+            if(windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.MEDIUM)
+                Modifier.padding(0.dp, 10.dp)
+            else
+                Modifier.padding(0.dp, 1.dp)
+        ,
         colors = NavigationRailItemColors(
             selectedIconColor = MaterialTheme.colorScheme.primary,
             selectedTextColor = MaterialTheme.colorScheme.primary,
@@ -221,12 +227,17 @@ fun RenderRailItem(item: NavItem, selectedItem: Int, onItemSelected: () -> Unit)
 }
 
 @Composable
-fun itemContent(item: NavItem, selectedItem: Int){
+fun ItemContent(item: NavItem, selectedItem: Int){
+    val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
     Icon(
         painter = painterResource(id = item.icon),
         contentDescription = item.title,
         modifier = Modifier.size(30.dp)
     )
+    if (windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.EXPANDED)
+        Spacer(
+            modifier = Modifier.size(15.dp)
+        )
     Text(
         text = item.title,
         style = MaterialTheme.typography.titleMedium.copy(
@@ -234,7 +245,7 @@ fun itemContent(item: NavItem, selectedItem: Int){
                 MaterialTheme.colorScheme.primary
             } else {
                 MaterialTheme.colorScheme.background
-            }
+            },
         )
     )
 }
