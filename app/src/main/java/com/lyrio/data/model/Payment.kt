@@ -1,6 +1,7 @@
 package com.lyrio.data.model
 
 import kotlinx.serialization.Serializable
+import com.lyrio.data.model.Card
 
 @Serializable
 data class Payment(
@@ -13,15 +14,7 @@ data class Payment(
     val linkUuid: String,
     val createdAt: String,
     val updatedAt: String,
-    val card: Card? = null
-)
-    {
-    @Serializable
-    data class Card(
-        val id: Int,
-        val number: String,
-        val expirationDate: String,
-        val fullName: String,
-        val type: String
-    )
-    }
+    //val card: Card? = null
+) {
+
+}
