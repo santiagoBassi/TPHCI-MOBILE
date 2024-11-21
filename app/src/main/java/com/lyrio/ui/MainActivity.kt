@@ -1,4 +1,4 @@
-package com.lyrio
+package com.lyrio.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

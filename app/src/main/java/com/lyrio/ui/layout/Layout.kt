@@ -22,6 +22,7 @@ import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import androidx.window.core.layout.WindowWidthSizeClass
+import com.lyrio.ui.theme.layout.BottomBar
 
 @Composable
 fun DefaultLayout(navController: NavController,content: @Composable () -> Unit) {

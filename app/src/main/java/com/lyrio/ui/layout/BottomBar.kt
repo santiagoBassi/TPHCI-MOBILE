@@ -18,11 +18,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.lyrio.R
-import com.lyrio.ui.theme.navigation.Home
-import com.lyrio.ui.theme.navigation.Landing
-import com.lyrio.ui.theme.navigation.Profile
-import com.lyrio.ui.theme.pages.Home
-import com.lyrio.ui.theme.pages.Profile
+import com.lyrio.ui.navigation.Screen
+
 
 @Composable
 fun BottomBar(navController: NavController){
@@ -38,7 +35,7 @@ fun BottomBar(navController: NavController){
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = { navController.navigate(Home) }) {
+            IconButton(onClick = { navController.navigate(Screen.Home) }) {
 
                 Icon(
                     painter = painterResource(id = R.drawable.home_24dp_e8eaed_fill0_wght400_grad0_opsz24),
@@ -62,7 +59,7 @@ fun BottomBar(navController: NavController){
                     tint = MaterialTheme.colorScheme.secondary
                 )
             }
-            IconButton(onClick = { navController.navigate(Profile) }) {
+            IconButton(onClick = { navController.navigate(Screen.Profile) }) {
                 Icon(
                     painter = painterResource(id = R.drawable.account_circle_24dp_e8eaed_fill0_wght400_grad0_opsz24),
                     contentDescription = "Account Circle",
