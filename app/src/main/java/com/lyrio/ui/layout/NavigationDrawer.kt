@@ -1,5 +1,6 @@
 package com.lyrio.ui.layout
 
+import android.content.res.Configuration
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,12 +28,14 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import com.lyrio.R
@@ -83,6 +86,7 @@ fun NavigationDrawer(navController: NavController, modifier: Modifier = Modifier
 @Composable
 fun NavigationDrawerContent(navController: NavController){
     var openAlertDialog by remember { mutableStateOf(false) }
+    val configuration = LocalConfiguration.current
     when {
         openAlertDialog -> {
             AlertDialog(
@@ -105,29 +109,42 @@ fun NavigationDrawerContent(navController: NavController){
     ) {
         HorizontalDivider()
 
-        items.dropLast(1).forEach { item ->
-            Spacer(modifier = Modifier.height(10.dp))
-            NavigationDrawerItem(
-                label = {
-                    NavDrawerItem(item, navController)
-                },
-                selected = item.selected,
-                onClick = {navController.navigate(item.page)}
-            )
-            Spacer(modifier = Modifier.height(10.dp))
-            HorizontalDivider()
-        }
+        if(configuration.orientation == Configuration.ORIENTATION_LANDSCAPE){
+            items.forEach { item ->
+                Spacer(modifier = Modifier.height(10.dp))
+                NavigationDrawerItem(
+                    label = {
+                        NavDrawerItem(item, navController)
+                    },
+                    selected = item.selected,
+                    onClick = {navController.navigate(item.page)}
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+                HorizontalDivider()
+            }
+        }else{
+            items.dropLast(1).forEach { item ->
+                Spacer(modifier = Modifier.height(10.dp))
+                NavigationDrawerItem(
+                    label = {
+                        NavDrawerItem(item, navController)
+                    },
+                    selected = item.selected,
+                    onClick = {navController.navigate(item.page)}
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+                HorizontalDivider()
+            }
 
-
-        Spacer(modifier = Modifier.weight(1f))
-        items.lastOrNull()?.let { item ->
-            HorizontalDivider()
-            Spacer(modifier = Modifier.height(20.dp))
-            NavDrawerItem(item, navController)
-            Spacer(modifier = Modifier.height(20.dp))
-            HorizontalDivider()
-        }
-    }
+            Spacer(modifier = Modifier.weight(1f))
+            items.lastOrNull()?.let { item ->
+                HorizontalDivider()
+                Spacer(modifier = Modifier.height(20.dp))
+                NavDrawerItem(item, navController)
+                Spacer(modifier = Modifier.height(20.dp))
+                HorizontalDivider()
+            }
+    }   }
 }
 
 
