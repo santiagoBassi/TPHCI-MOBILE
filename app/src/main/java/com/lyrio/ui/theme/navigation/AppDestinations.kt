@@ -2,75 +2,77 @@ package com.lyrio.ui.theme.navigation
 
 import kotlinx.serialization.Serializable
 
-//auth
-
 @Serializable
-object SignIn
+sealed class Screen(val route: String) {
 
-@Serializable
-object SignUp1
+    // Auth Screens
+    @Serializable
+    object SignIn : Screen("sign_in")
 
-@Serializable
-object SignUp2
+    @Serializable
+    object SignUp1 : Screen("sign_up1")
 
-@Serializable
-object RecoverPass1
+    @Serializable
+    object SignUp2 : Screen("sign_up2")
 
-@Serializable
-object RecoverPass2
+    @Serializable
+    object RecoverPass1 : Screen("recover_pass1")
 
-@Serializable
-object RecoverPass3
+    @Serializable
+    object RecoverPass2 : Screen("recover_pass2")
 
-//pages
+    @Serializable
+    object RecoverPass3 : Screen("recover_pass3")
 
-@Serializable
-object Landing
+    // Pages
+    @Serializable
+    object Landing : Screen("landing")
 
-@Serializable
-object Home
+    @Serializable
+    object Home : Screen("home")
 
-@Serializable
-object AddCardSuccessful
+    @Serializable
+    object AddCardSuccessful : Screen("add_card_successful")
 
-@Serializable
-object AddCreditCard
+    @Serializable
+    object AddCreditCard : Screen("add_credit_card")
 
-@Serializable
-object AddInvestment
+    @Serializable
+    object AddInvestment : Screen("add_investment")
 
-@Serializable
-object ChangeAlias
+    @Serializable
+    object ChangeAlias : Screen("change_alias")
 
-@Serializable
-object ChangeAliasSuccessful
+    @Serializable
+    object ChangeAliasSuccessful : Screen("change_alias_successful")
 
-@Serializable
-object CreditCards
+    @Serializable
+    object CreditCards : Screen("credit_cards")
 
-@Serializable
-object Invest
+    @Serializable
+    object Invest : Screen("invest")
 
-@Serializable
-object Money
+    @Serializable
+    object Money : Screen("money")
 
-@Serializable
-object Movements
+    @Serializable
+    object Movements : Screen("movements")
 
-@Serializable
-object Profile
+    @Serializable
+    object Profile : Screen("profile")
 
-@Serializable
-object ReceiveMoney
+    @Serializable
+    object ReceiveMoney : Screen("receive_money")
 
-@Serializable
-object Transfer1
+    @Serializable
+    object Transfer1 : Screen("transfer1")
 
-@Serializable
-object Transfer2
+    @Serializable
+    object Transfer2 : Screen("transfer2")
 
-@Serializable
-object TransferSuccessful
+    @Serializable
+    object TransferSuccessful : Screen("transfer_successful")
 
-@Serializable
-object WithdrawInvestment
+    @Serializable
+    object WithdrawInvestment : Screen("withdraw_investment")
+}

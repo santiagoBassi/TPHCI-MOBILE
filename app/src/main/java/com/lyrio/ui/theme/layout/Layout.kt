@@ -33,7 +33,7 @@ fun DefaultLayout(navController: NavController,content: @Composable () -> Unit) 
             MobileBottomBarNavigation(navController,content)
         }
         else -> {
-            if(isMobile()) MobileSidebarNavigation(content)
+            if(isMobile()) MobileSidebarNavigation(navController, content)
             else TabletNavigation(content)
         }
     }
@@ -65,18 +65,18 @@ fun MobileBottomBarNavigation(navController: NavController, content: @Composable
                 .fillMaxHeight()
                 .shadow(1.dp)
             ) {
-                NavigationDrawer(drawerState = drawerState, content = content)
+                NavigationDrawer(drawerState = drawerState, navController = navController, content = content)
             }
     }
 }
 
 @Composable
-fun MobileSidebarNavigation(content: @Composable () -> Unit) {
+fun MobileSidebarNavigation(navController: NavController, content: @Composable () -> Unit) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
     Row (Modifier.fillMaxSize()) {
-        LeftBarMobile(state = drawerState, onButtonClick = {
+        LeftBarMobile(state = drawerState,navController = navController, onButtonClick = {
             scope.launch {
                 drawerState.apply {
                     if (isClosed) open() else close()
@@ -86,6 +86,7 @@ fun MobileSidebarNavigation(content: @Composable () -> Unit) {
 
 
         NavigationDrawer(
+            navController = navController,
             drawerState = drawerState,
             modifier = Modifier
                 .fillMaxSize()

@@ -31,35 +31,42 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.navigation.NavController
 import com.lyrio.R
 import com.lyrio.ui.theme.components.AlertDialog
+import com.lyrio.ui.theme.navigation.Screen
 
 data class NavItem(
     val icon: Int,
     val title: String,
     val description: String,
     val selected: Boolean,
-    val onClick: () -> Unit
+    val page: Screen
 )
 
 val items = listOf(
-    NavItem(R.drawable.send_money_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Transferir", "Transfer Icon", false) { /* Acción Transferir */ },
-    NavItem(R.drawable.account_balance_wallet_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Dinero", "Transfer Icon", false) { /* Acción Mi dinero */ },
-    NavItem(R.drawable.list_alt_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Movimientos", "Transfer Icon", false) { /* Acción Movimientos */ },
-    NavItem(R.drawable.currency_exchange_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Inversiones", "Transfer Icon", false) { /* Acción Inversiones */ },
-    NavItem(R.drawable.link_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Link de pago", "Transfer Icon", false) { /* Acción Cobrar con link */ },
-    NavItem(R.drawable.credit_card_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Tarjetas", "Transfer Icon", false) { /* Acción Mis tarjetas */ },
+    NavItem(R.drawable.send_money_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Transferir", "Transfer Icon", false,Screen.Transfer1),
+    NavItem(R.drawable.account_balance_wallet_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Dinero", "Transfer Icon", false,
+        Screen.Money) ,
+    NavItem(R.drawable.list_alt_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Movimientos", "Transfer Icon", false,
+        Screen.Movements) ,
+    NavItem(R.drawable.currency_exchange_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Inversiones", "Transfer Icon", false,
+        Screen.Invest) ,
+    NavItem(R.drawable.link_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Link de pago", "Transfer Icon", false,
+        Screen.Home),
+    NavItem(R.drawable.credit_card_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Tarjetas", "Transfer Icon", false,
+        Screen.CreditCards),
 )
 
 @Composable
-fun NavigationDrawer(modifier: Modifier = Modifier, content: @Composable () -> Unit, drawerState: DrawerState) {
+fun NavigationDrawer(navController: NavController, modifier: Modifier = Modifier, content: @Composable () -> Unit, drawerState: DrawerState) {
 
     ModalNavigationDrawer(
         drawerState = drawerState,
         modifier = modifier,
         drawerContent = {
             ModalDrawerSheet {
-                NavigationDrawerContent()
+                NavigationDrawerContent(navController)
             }
         }
     ) {
@@ -69,7 +76,7 @@ fun NavigationDrawer(modifier: Modifier = Modifier, content: @Composable () -> U
 }
 
 @Composable
-fun NavigationDrawerContent(){
+fun NavigationDrawerContent(navController: NavController){
     var openAlertDialog by remember { mutableStateOf(false) }
     when {
         openAlertDialog -> {
@@ -128,7 +135,7 @@ fun NavigationDrawerContent(){
                         }
                     },
                     selected = item.selected,
-                    onClick = item.onClick
+                    onClick = {navController.navigate(item.page)}
                 )
                 Spacer(modifier = Modifier.height(10.dp))
                 HorizontalDivider()

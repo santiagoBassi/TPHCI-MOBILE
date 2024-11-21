@@ -1,6 +1,7 @@
 package com.lyrio.ui.theme.layout
 
 import android.content.res.Configuration
+import android.transition.Scene
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -37,8 +38,11 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import androidx.navigation.NavController
 import androidx.window.core.layout.WindowSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
+import com.lyrio.ui.theme.navigation.Screen
+import com.lyrio.ui.theme.pages.Profile
 
 @Composable
 fun isMobile(): Boolean {
@@ -53,22 +57,27 @@ fun isMobile(): Boolean {
 
 
 val itemsNavBar = listOf(
-    NavItem(R.drawable.home_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Home", "Home Icon", false) { /* Acción Transferir */ },
-    NavItem(R.drawable.account_circle_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Perfil", "Profile Icon", false) { /* Acción Transferir */ },
-    NavItem(R.drawable.qr_code_2_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Pago QR", "QR Icon", false) { /* Acción Transferir */ },
-    NavItem(R.drawable.send_money_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Transferir", "Transfer Icon", false) { /* Acción Transferir */ },
-    NavItem(R.drawable.account_balance_wallet_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Dinero", "Money Icon", false) { /* Acción Mi dinero */ },
-    NavItem(R.drawable.list_alt_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Movimientos", "Movements Icon", false) { /* Acción Movimientos */ },
-    NavItem(R.drawable.currency_exchange_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Inversiones", "Invest Icon", false) { /* Acción Inversiones */ },
-    NavItem(R.drawable.link_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Link de pago", "Link Icon", false) { /* Acción Cobrar con link */ },
-    NavItem(R.drawable.credit_card_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Tarjetas", "Card Icon", false) { /* Acción Mis tarjetas */ },
-    NavItem(R.drawable.logout_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Cerrar sesion", "Logout Icon", false) { /* Acción Transferir */ },
+    NavItem(R.drawable.home_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Home", "Home Icon", false,
+        Screen.Home),
+    NavItem(R.drawable.account_circle_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Perfil", "Profile Icon", false,
+        Screen.Profile),
+    NavItem(R.drawable.qr_code_2_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Pago QR", "QR Icon", false, Screen.Home) ,
+    NavItem(R.drawable.send_money_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Transferir", "Transfer Icon", false,
+        Screen.Transfer1) ,
+    NavItem(R.drawable.account_balance_wallet_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Dinero", "Money Icon", false, Screen.Money),
+    NavItem(R.drawable.list_alt_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Movimientos", "Movements Icon", false, Screen.Movements) ,
+    NavItem(R.drawable.currency_exchange_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Inversiones", "Invest Icon", false, Screen.Invest) ,
+    NavItem(R.drawable.link_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Link de pago", "Link Icon", false, Screen.Home),
+    NavItem(R.drawable.credit_card_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Tarjetas", "Card Icon", false,
+        Screen.CreditCards) ,
+    NavItem(R.drawable.logout_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Cerrar sesion", "Logout Icon", false,
+        Screen.Home),
     )
 
 
 
 @Composable
-fun LeftBarMobile(onButtonClick: () -> Unit, state: DrawerState, windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo().windowSizeClass) {
+fun LeftBarMobile(onButtonClick: () -> Unit, navController: NavController, state: DrawerState, windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo().windowSizeClass) {
     var selectedItem by remember { mutableIntStateOf(0) }
 
     NavigationRail(
@@ -97,7 +106,7 @@ fun LeftBarMobile(onButtonClick: () -> Unit, state: DrawerState, windowSizeClass
 
                 )
             }
-            IconButton(onClick = { /* Acción del primer icono */ }) {
+            IconButton(onClick = {navController.navigate(Screen.Home)}) {
 
                 Icon(
                     painter = painterResource(id = R.drawable.home_24dp_e8eaed_fill0_wght400_grad0_opsz24),
@@ -120,7 +129,7 @@ fun LeftBarMobile(onButtonClick: () -> Unit, state: DrawerState, windowSizeClass
                     modifier = Modifier.size(40.dp)
                 )
             }
-            IconButton(onClick = { /* Acción del tercer icono */ }) {
+            IconButton(onClick = { navController.navigate(Screen.Profile) }) {
                 Icon(
                     painter = painterResource(id = R.drawable.account_circle_24dp_e8eaed_fill0_wght400_grad0_opsz24),
                     contentDescription = "Account Circle",
