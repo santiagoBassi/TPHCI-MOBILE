@@ -28,18 +28,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.lyrio.LyrioApp
 import com.lyrio.R
 import com.lyrio.ui.components.AppWindow
 import com.lyrio.ui.components.CircularIconButton
 import com.lyrio.ui.components.TransferItem
 import com.lyrio.ui.components.eyeIconPainter
 import com.lyrio.ui.components.eyeOffIconPainter
+import com.lyrio.ui.data.viewmodels.WalletViewModel
 import com.lyrio.ui.styles.LightGray
 import java.util.Calendar
 import java.util.Date
@@ -60,14 +63,14 @@ data class TransferData(
     val date: Date
 )
 
-@Preview(showBackground = true)
 @Composable
 fun Home(
     navigateTransfer1: () -> Unit = {},
     navigateReceiveMoney: () -> Unit = {},
     navigateProfile: () -> Unit = {},
     navigateMovements: () -> Unit = {},
-    navigateMoney: () -> Unit = {}
+    navigateMoney: () -> Unit = {},
+    viewModelWallet: WalletViewModel
 ) {
     val configuration = LocalConfiguration.current
 
@@ -82,7 +85,8 @@ fun Home(
                     navigateReceiveMoney,
                     navigateProfile,
                     navigateMovements,
-                    navigateMoney
+                    navigateMoney,
+                    viewModelWallet
                 )
             }
         }
@@ -100,7 +104,8 @@ fun Home(
                     navigateReceiveMoney,
                     navigateProfile,
                     navigateMovements,
-                    navigateMoney
+                    navigateMoney,
+                    viewModelWallet
                 )
             }
         }
@@ -113,7 +118,8 @@ fun HomeContent(
     navigateReceiveMoney: () -> Unit = {},
     navigateProfile: () -> Unit = {},
     navigateMovements: () -> Unit = {},
-    navigateMoney: () -> Unit = {}
+    navigateMoney: () -> Unit = {},
+    viewModelWallet: WalletViewModel
 ) {
     val transfers = listOf(
         TransferData(R.string.received, 1234.56, "Juan Pérez", Date()),
