@@ -14,15 +14,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.lyrio.R
 import com.lyrio.ui.components.Successful
 import com.lyrio.ui.components.AppButton
 
 @Preview(showBackground = true)
 @Composable
-fun TransferSuccessful() {
+fun TransferSuccessful(
+    navigateHome: () -> Unit = {},
+    navigateTransfer1: () -> Unit = {}
+) {
     val configuration = LocalConfiguration.current
 
     when (configuration.orientation) {
@@ -34,7 +39,11 @@ fun TransferSuccessful() {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                TransferSuccessfulContent(height = 1f)
+                TransferSuccessfulContent(
+                    height = 1f,
+                    navigateHome = navigateHome,
+                    navigateTransfer1 = navigateTransfer1
+                )
             }
         }
 
@@ -46,20 +55,23 @@ fun TransferSuccessful() {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                TransferSuccessfulContent()
+                TransferSuccessfulContent(
+                    navigateHome = navigateHome,
+                    navigateTransfer1 = navigateTransfer1
+                )
             }
         }
     }
 }
 
 @Composable
-fun TransferSuccessfulContent(height: Float = 0.5f) {
+fun TransferSuccessfulContent(height: Float = 0.5f, navigateHome: () -> Unit = {}, navigateTransfer1: () -> Unit = {}) {
     val amount = 1000
 
-    Successful(message = "¡Transferencia enviada!", buttonLabel = "Volver al Inicio", variant = "secondary", height = height){
+    Successful(message = stringResource(R.string.transfer_sent), buttonLabel = stringResource(R.string.back_home), onClick = navigateHome, variant = "secondary", height = height){
         Text("$$amount", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold, color = Color.Black)
-        Text("a Ezequiel Testoni", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold, color = Color.Gray)
+        Text(stringResource(R.string.to) + " Ezequiel Testoni", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold, color = Color.Gray)
         Spacer(Modifier.height(12.dp))
-        AppButton(text = "Nueva transferencia", onClick = { /* TODO */ }, width = if(height == 1f) 0.6f else 0.8f)
+        AppButton(text = stringResource(R.string.new_transfer), onClick = navigateTransfer1, width = if(height == 1f) 0.6f else 0.8f)
     }
 }

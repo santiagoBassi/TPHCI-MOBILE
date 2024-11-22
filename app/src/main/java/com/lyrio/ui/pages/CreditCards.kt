@@ -37,22 +37,10 @@ import com.lyrio.ui.styles.Red
 
 @Preview(showBackground = true)
 @Composable
-fun CreditCards() {
+fun CreditCards(
+    navigateAddCreditCard: () -> Unit = {}
+) {
     val creditCards = remember { mutableStateListOf(
-        CreditCardData(
-            cardNumber = "4734 5678 9012 3456",
-            logo = R.drawable.visa_white,
-            primaryColor = Color(0xFF120269),
-            secondaryColor = Color(0xFF2204C6),
-            logoSize = 80.dp
-        ),
-        CreditCardData(
-            cardNumber = "2345 5678 9012 3456",
-            logo = R.drawable.mastercard,
-            primaryColor = Color(0xFF000000),
-            secondaryColor = Color(0xFF5f5f5f),
-            logoSize = 80.dp
-        ),
         CreditCardData(
             cardNumber = "4734 5678 9012 3456",
             logo = R.drawable.visa_white,
@@ -76,11 +64,11 @@ fun CreditCards() {
             Column(
                 modifier = Modifier
                     .fillMaxSize().verticalScroll(rememberScrollState())
-                    .padding(50.dp,20.dp,100.dp,15.dp),
+                    .padding(120.dp,20.dp,170.dp,15.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                CreditCardsContent(creditCards, onCardDelete = { creditCards.remove(it)})
+                CreditCardsContent(creditCards, onCardDelete = { creditCards.remove(it)}, navigateAddCreditCard)
             }
         }
 
@@ -92,14 +80,14 @@ fun CreditCards() {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                CreditCardsContent(creditCards, onCardDelete = { creditCards.remove(it)})
+                CreditCardsContent(creditCards, onCardDelete = { creditCards.remove(it)}, navigateAddCreditCard)
             }
         }
     }
 }
 
 @Composable
-fun CreditCardsContent(cards: List<CreditCardData>, onCardDelete: (CreditCardData) -> Unit) {
+fun CreditCardsContent(cards: List<CreditCardData>, onCardDelete: (CreditCardData) -> Unit, navigateAddCreditCard: () -> Unit) {
     var openAlertDialog by remember { mutableStateOf(false) }
     var cardToDelete by remember { mutableStateOf<CreditCardData?>(null) }
 
@@ -130,7 +118,7 @@ fun CreditCardsContent(cards: List<CreditCardData>, onCardDelete: (CreditCardDat
             if (cards.isNotEmpty()) {
                 Column(
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .fillMaxWidth().padding(vertical = 12.dp)
                 ) {
                     for (card in cards) {
                         CardRow(card = card, onDelete = {
@@ -145,7 +133,7 @@ fun CreditCardsContent(cards: List<CreditCardData>, onCardDelete: (CreditCardDat
                     color = Color.Gray,
                 )
             }
-            AppButton(text = "Agregar tarjeta", width = 0.8f,onClick = {}, modifier = Modifier.padding(top = 15.dp))
+            AppButton(text = "Agregar tarjeta", width = 0.8f,onClick = navigateAddCreditCard, modifier = Modifier.padding(vertical = 15.dp))
         }
     }
 }

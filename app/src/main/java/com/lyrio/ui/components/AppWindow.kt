@@ -1,5 +1,6 @@
 package com.lyrio.ui.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -29,6 +30,7 @@ fun AppWindow(
     modifier: Modifier = Modifier,
     title: String? = null,
     showChevron: Boolean = false,
+    onChevronClick: () -> Unit = {},
     shape: Shape = CardDefaults.shape,
     background: Color = White,
     content: @Composable () -> Unit
@@ -57,7 +59,8 @@ fun AppWindow(
                     if (showChevron) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                            contentDescription = "Chevron"
+                            contentDescription = "Chevron",
+                            modifier = Modifier.clickable { onChevronClick() }
                         )
                     }
                 }

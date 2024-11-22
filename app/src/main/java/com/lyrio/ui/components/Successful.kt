@@ -23,6 +23,7 @@ fun Successful(
     buttonLabel: String,
     variant: String = "",
     height: Float = 0.5f,
+    onClick: () -> Unit = {},
     content: @Composable () -> Unit = {}
 ){
 
@@ -49,7 +50,7 @@ fun Successful(
                     Text(text = message, style = MaterialTheme.typography.titleLarge,
                         color = Green)
                     content()
-                    AppButton(text = buttonLabel, onClick = { /* TODO */ }, width = if (height == 1f) 0.6f else 0.8f,
+                    AppButton(text = buttonLabel, onClick = onClick, width = if (height == 1f) 0.6f else 0.8f,
                         background = if(variant == "secondary") LightGray else Orange)
                 }
             }

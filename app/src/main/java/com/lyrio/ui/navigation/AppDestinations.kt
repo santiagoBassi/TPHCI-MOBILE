@@ -16,6 +16,9 @@ sealed class Screen(val route: String) {
     object SignUp2 : Screen("sign_up2")
 
     @Serializable
+    object SignUp3 : Screen("sign_up3")
+
+    @Serializable
     object RecoverPass1 : Screen("recover_pass1")
 
     @Serializable
@@ -57,6 +60,9 @@ sealed class Screen(val route: String) {
 
     @Serializable
     object Movements : Screen("movements")
+
+    @Serializable
+    object Paylink : Screen("paylink")
 
     @Serializable
     object Profile : Screen("profile")

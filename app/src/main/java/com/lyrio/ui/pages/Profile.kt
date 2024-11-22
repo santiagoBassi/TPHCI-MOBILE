@@ -44,7 +44,9 @@ import com.lyrio.ui.styles.Orange
 
 @Preview(showBackground = true)
 @Composable
-fun Profile() {
+fun Profile(
+    navigateChangeAlias: () -> Unit = {}
+) {
     var isEditing by rememberSaveable(key = "isEditing") { mutableStateOf(false) }
     var firstName by rememberSaveable(key = "firstName") { mutableStateOf("Ezequiel") }
     var lastName by rememberSaveable(key = "lastName") { mutableStateOf("Testoni") }
@@ -56,7 +58,9 @@ fun Profile() {
     when (configuration.orientation) {
         Configuration.ORIENTATION_LANDSCAPE -> { // Modo horizontal
             Column(
-                modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
                     .padding(20.dp, 25.dp, 70.dp, 10.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -74,7 +78,7 @@ fun Profile() {
                     Column(
                         modifier = Modifier.weight(1f),
                     ){
-                        CVUAlias()
+                        CVUAlias{ navigateChangeAlias() }
                     }
                     Column(
                         modifier = Modifier.weight(1f),
@@ -98,13 +102,14 @@ fun Profile() {
         else -> { // Modo vertical u otras orientaciones
             Column(
                 modifier = Modifier
-                    .fillMaxSize().verticalScroll(rememberScrollState())
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
                     .padding(16.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Welcome(firstName)
-                CVUAlias()
+                CVUAlias { navigateChangeAlias() }
                 PersonalData(
                     firstName = firstName,
                     onFirstNameChange = { firstName = it },
@@ -187,7 +192,9 @@ fun PersonalData(
 }
 
 @Composable
-fun CVUAlias(){
+fun CVUAlias(
+    navigateChangeAlias: () -> Unit = {}
+){
     AppWindow(title = "CVU y Alias", modifier = Modifier.padding(bottom = 16.dp)) {
         Column(
             modifier = Modifier
@@ -225,7 +232,7 @@ fun CVUAlias(){
                     text = "Cambiar alias",
                     style = TextStyle(textDecoration = TextDecoration.Underline),
                     color = Color.Gray,
-                    modifier = Modifier.clickable(enabled = false) {} // Deshabilitado por ahora
+                    modifier = Modifier.clickable { navigateChangeAlias() }
                 )
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
@@ -241,7 +248,9 @@ fun CVUAlias(){
 @Composable
 fun Welcome(firstName: String){
     AppWindow(
-        modifier = Modifier.wrapContentWidth().padding(bottom = 16.dp),
+        modifier = Modifier
+            .wrapContentWidth()
+            .padding(bottom = 16.dp),
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),

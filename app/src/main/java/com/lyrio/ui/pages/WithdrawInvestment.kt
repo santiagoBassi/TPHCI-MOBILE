@@ -22,7 +22,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lyrio.ui.components.AppButton
@@ -30,9 +29,10 @@ import com.lyrio.ui.components.AppInput
 import com.lyrio.ui.components.AppWindow
 import com.lyrio.ui.styles.Orange
 
-@Preview(showBackground = true)
 @Composable
-fun WithdrawInvestment() {
+fun WithdrawInvestment(
+    navigateInvest: () -> Unit
+) {
     var amount by rememberSaveable(key = "withdrawAmount"){ mutableLongStateOf(0) }
     val availableBalance = 100000.0
 
@@ -50,7 +50,8 @@ fun WithdrawInvestment() {
                 WithdrawInvestmentContent(
                     amount = amount,
                     onAmountChange = { amount = it },
-                    availableBalance = availableBalance
+                    availableBalance = availableBalance,
+                    navigateInvest = navigateInvest
                 )
             }
         }
@@ -66,7 +67,8 @@ fun WithdrawInvestment() {
                 WithdrawInvestmentContent(0.8f,
                     amount = amount,
                     onAmountChange = { amount = it },
-                    availableBalance = availableBalance
+                    availableBalance = availableBalance,
+                    navigateInvest = navigateInvest
                 )
             }
         }
@@ -79,6 +81,7 @@ fun WithdrawInvestmentContent(
     amount: Long,
     onAmountChange: (Long) -> Unit,
     availableBalance: Double,
+    navigateInvest: () -> Unit
 ) {
     AppWindow {
         Column(
@@ -125,7 +128,7 @@ fun WithdrawInvestmentContent(
                     )
                 }
             }
-            AppButton(text = "Dejar de invertir", onClick = { /*TODO*/ }, modifier = Modifier.fillMaxWidth(if(height == 1f) 0.5f else 0.7f))
+            AppButton(text = "Dejar de invertir", onClick = navigateInvest, modifier = Modifier.fillMaxWidth(if(height == 1f) 0.5f else 0.7f))
         }
     }
 }

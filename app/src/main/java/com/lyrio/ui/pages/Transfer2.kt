@@ -37,6 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -137,7 +138,7 @@ fun Transfer2ContentH(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        "¿Cuánto querés transferir?",
+                        stringResource(R.string.how_much_to_transfer),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.SemiBold,
                         color = Color.Black
@@ -156,11 +157,11 @@ fun Transfer2ContentH(
                         AppInput(
                             value = if (amount == 0L) "" else amount.toString(),
                             onValueChange = { onAmountChange(it.toLongOrNull() ?: 0L) },
-                            label = "Monto",
+                            label = stringResource(R.string.amount),
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         )
                         Text(
-                            "a $recipient   $selectedMethod",
+                            stringResource(R.string.to) + " $recipient   $selectedMethod",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = Color.Gray,
@@ -175,7 +176,7 @@ fun Transfer2ContentH(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        "Método de pago",
+                        stringResource(R.string.payment_method),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.SemiBold,
                         color = Color.Black,
@@ -190,7 +191,7 @@ fun Transfer2ContentH(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 AppButton(
-                    text = "Transferir",
+                    text = stringResource(R.string.transfer),
                     onClick = { /*TODO*/ },
                     modifier = Modifier.fillMaxWidth(0.35f)
                 )
@@ -216,7 +217,7 @@ fun Transfer2ContentV(
             verticalArrangement = Arrangement.SpaceEvenly,
             horizontalAlignment = Alignment.CenterHorizontally
         ){
-            Text("¿Cuánto querés transferir?", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold, color = Color.Black)
+            Text(stringResource(R.string.how_much_to_transfer), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold, color = Color.Black)
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -226,14 +227,14 @@ fun Transfer2ContentV(
                 AppInput(
                     value = if(amount == 0L) "" else amount.toString(),
                     onValueChange = { onAmountChange(it.toLongOrNull() ?: 0L) },
-                    label = "Monto",
+                    label = stringResource(R.string.amount),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 )
                 Text("a $recipient   $selectedMethod", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold, color = Color.Gray,
                     modifier = Modifier.padding(top = 10.dp))
             }
             carousel()
-            AppButton(text = "Transferir", onClick = { /*TODO*/ }, modifier = Modifier.fillMaxWidth(0.75f))
+            AppButton(text = stringResource(R.string.transfer), onClick = { /*TODO*/ }, modifier = Modifier.fillMaxWidth(0.75f))
         }
     }
 }
@@ -311,9 +312,9 @@ fun AccountBalanceOption(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                Text("Dinero en cuenta", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold, color = Color.Black)
+                Text(stringResource(R.string.money_in_account), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold, color = Color.Black)
                 Spacer(modifier = Modifier.height(12.dp))
-                Text("Saldo: $${"%.2f".format(balance)}", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = Color.Black)
+                Text(stringResource(R.string.balance) + ": $${"%.2f".format(balance)}", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = Color.Black)
             }
         }
     }

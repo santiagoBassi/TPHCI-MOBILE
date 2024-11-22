@@ -25,7 +25,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.lyrio.R
 import com.lyrio.ui.components.AppButton
@@ -39,9 +38,10 @@ import com.lyrio.ui.components.RotationAxis
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview(showBackground = true)
 @Composable
-fun AddCreditCard(){
+fun AddCreditCard(
+    navigateAddCardSuccessful: () -> Unit
+){
     var cardNumber by rememberSaveable(key = "addCardNumber"){ mutableStateOf("") }
     var holderName by rememberSaveable(key = "addCardHolderName"){ mutableStateOf("") }
     var expiryDate by rememberSaveable(key = "addCardExpiryDate"){ mutableStateOf("") }
@@ -94,7 +94,8 @@ fun AddCreditCard(){
                             onCvvChange = { cvv = it },
                             onStateChange = {state = it}
                         )
-                    }
+                    },
+                    navigateAddCardSuccessful = navigateAddCardSuccessful
                 )
 
             }
@@ -127,18 +128,21 @@ fun AddCreditCard(){
                             }
                         )
                     },
-                    cardInputs = { CardInputs(
-                        cardNumber = cardNumber,
-                        onCardNumberChange = { cardNumber = it },
-                        holderName = holderName,
-                        onHolderNameChange = { holderName = it },
-                        expiryDate = expiryDate,
-                        onExpiryDateChange = { expiryDate = it },
-                        cvv = cvv,
-                        onCvvChange = { cvv = it },
-                        onStateChange = {state = it}
-                    )
-                })
+                    cardInputs = {
+                        CardInputs(
+                            cardNumber = cardNumber,
+                            onCardNumberChange = { cardNumber = it },
+                            holderName = holderName,
+                            onHolderNameChange = { holderName = it },
+                            expiryDate = expiryDate,
+                            onExpiryDateChange = { expiryDate = it },
+                            cvv = cvv,
+                            onCvvChange = { cvv = it },
+                            onStateChange = {state = it}
+                        )
+                    },
+                    navigateAddCardSuccessful = navigateAddCardSuccessful
+                )
             }
         }
     }
@@ -148,6 +152,7 @@ fun AddCreditCard(){
 fun AddCardContentH(
     flippableCard: @Composable () -> Unit = {},
     cardInputs: @Composable () -> Unit = {},
+    navigateAddCardSuccessful: () -> Unit
 ) {
     AppWindow (
         modifier = Modifier.fillMaxSize()
@@ -181,7 +186,7 @@ fun AddCardContentH(
                     cardInputs()
                 }
             }
-            AppButton(text = "Continuar", width = 0.5f, onClick = {})
+            AppButton(text = "Continuar", width = 0.5f, onClick = navigateAddCardSuccessful)
         }
     }
 }
@@ -190,6 +195,7 @@ fun AddCardContentH(
 fun AddCardContentV(
     flippableCard: @Composable () -> Unit = {},
     cardInputs: @Composable () -> Unit = {},
+    navigateAddCardSuccessful: () -> Unit
 ) {
     AppWindow {
         Column(
@@ -217,7 +223,7 @@ fun AddCardContentV(
                 cardInputs()
             }
             Spacer(Modifier.height(6.dp))
-            AppButton(text = "Agregar", width = 0.8f, onClick = {})
+            AppButton(text = "Agregar", width = 0.8f, onClick = navigateAddCardSuccessful)
         }
     }
 }

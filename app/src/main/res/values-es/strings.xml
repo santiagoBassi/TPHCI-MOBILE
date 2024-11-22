@@ -1,3 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name" translatable="false">Lyrio</string>
+    <string name="home">Inicio</string>
+    <string name="profile">Perfil</string>
+    <string name="transfer">Transferir</string>
+    <string name="invest">Invertir</string>
+    <string name="money">Dinero</string>
+    <string name="activity">Actividad</string>
+    <string name="pay_link">Cobrar con link de pago</string>
+    <string name="add_card">Agregar tarjeta</string>
+    <string name="cards">Tarjetas</string>
+
+    <!-- HOME -->
+    <string name="received">Recibiste</string>
+    <string name="sent">Enviaste</string>
+    <string name="receive">Recibir</string>
+    <string name="cvu_alias">CVU y Alias</string>
+    <string name="movements">Movimientos</string>
+    <string name="no_movements">No hay movimientos disponibles</string>
+    <string name="see_all_movements">Ver todos mis movimientos</string>
+
+    <!-- Transfer1 -->
+    <string name="who_to_transfer">¿A quién le querés transferir?</string>
+    <string name="cvu_or_alias">CVU o Alias</string>
+    <string name="continue_">Continuar</string>
+    <string name="recent_contacts">Contactos Recientes</string>
+
+    <!-- Transfer2 -->
+    <string name="how_much_to_transfer">¿Cuánto querés transferir?</string>
+    <string name="amount">Monto</string>
+    <string name="to">a</string>
+    <string name="payment_method">Método de pago</string>
+    <string name="money_in_account">Dinero en cuenta</string>
+    <string name="balance">Saldo</string>
+
+    <!-- TransferSuccessful -->
+    <string name="transfer_sent">¡Transferencia enviada!</string>
+    <string name="back_home">Volver al Inicio</string>
+    <string name="new_transfer">Nueva transferencia</string>
+
+    <!-- Invest -->
+    <string name="invested_money">Dinero invertido</string>
+    <string name="withdraw">Retirar</string>
+    <string name="earnings">Ganancias</string>
+    <string name="this_month">Este mes:</string>
+
 </resources>
