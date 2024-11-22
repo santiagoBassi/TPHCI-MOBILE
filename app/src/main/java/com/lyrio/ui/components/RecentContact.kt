@@ -38,9 +38,9 @@ fun RecentContact(
             verticalAlignment = Alignment.Top
         ) {
             Row {
-                Text(text = firstName, fontWeight = FontWeight.Bold)
+                Text(text = firstName, fontWeight = FontWeight.Bold, color = Color.Black)
                 Spacer(modifier = Modifier.width(4.dp))
-                Text(text = lastName, fontWeight = FontWeight.Bold)
+                Text(text = lastName, fontWeight = FontWeight.Bold, color = Color.Black)
             }
             Column(
                 verticalArrangement = Arrangement.spacedBy(4.dp),

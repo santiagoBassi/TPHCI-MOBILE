@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -113,12 +114,12 @@ fun LandingContentH(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     AppButton(
-                        text = "Iniciar Sesión",
+                        text = stringResource(R.string.sign_in),
                         onClick = navigateSignIn,
                         modifier = Modifier.weight(1f)
                     )
                     AppButton(
-                        text = "Registrarse",
+                        text = stringResource(R.string.register_reflex),
                         onClick = navigateSignUp,
                         background = LightGray,
                         modifier = Modifier.weight(1f)
@@ -152,12 +153,12 @@ fun LandingContentV(
         )
         {
             AppButton(
-                text = "Iniciar Sesión",
+                text = stringResource(R.string.sign_in),
                 onClick = navigateSignIn,
                 width = 0.7f
             )
             AppButton(
-                text = "Registrarse",
+                text = stringResource(R.string.register_reflex),
                 onClick = navigateSignUp,
                 width = 0.7f,
                 background = LightGray

@@ -83,6 +83,7 @@ fun PaylinkContent(context: Context, height: Float = 0.5f, navigateHome: () -> U
             Text(link, modifier = if(height == 1f) Modifier else Modifier
                 .weight(1f)
                 .padding(start = 12.dp),
+                color = Color.Black,
                 fontWeight = FontWeight.SemiBold, fontSize = 18.sp, textAlign = TextAlign.Center)
             IconButton(onClick = {
                 copyLink(context, link)

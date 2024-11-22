@@ -7,6 +7,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -71,7 +72,8 @@ fun ChangeAliasContent(
             Text(
                 text = stringResource(R.string.enter_new_alias),
                 style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.SemiBold
+                fontWeight = FontWeight.SemiBold,
+                color = Color.Black
             )
             Column(
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
@@ -80,14 +82,14 @@ fun ChangeAliasContent(
                 AppInput(value = newAlias, onValueChange = { onNewAliasChange(it) }, label = stringResource(R.string.new_alias),
                     modifier = Modifier.fillMaxWidth().padding(horizontal = if(landscape) 100.dp else 8.dp))
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(stringResource(R.string.rule1))
-                Text(stringResource(R.string.rule2))
+                Text(stringResource(R.string.rule1), color = Color.Black)
+                Text(stringResource(R.string.rule2), color = Color.Black)
                 if(landscape) {
-                    Text(stringResource(R.string.rule3))
+                    Text(stringResource(R.string.rule3), color = Color.Black)
                 } else {
                     Column {
-                        Text(stringResource(R.string.rule3_1))
-                        Text(stringResource(R.string.rule3_2))
+                        Text(stringResource(R.string.rule3_1), color = Color.Black)
+                        Text(stringResource(R.string.rule3_2), color = Color.Black)
                     }
                 }
             }

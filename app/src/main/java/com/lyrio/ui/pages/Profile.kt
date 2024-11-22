@@ -210,8 +210,8 @@ fun CVUAlias(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(stringResource(R.string.cvu))
-                Text("000000123019231200")
+                Text(stringResource(R.string.cvu), fontWeight = FontWeight.Bold, color = Color.Black)
+                Text("000000123019231200", color = Color.Black)
             }
             Spacer(modifier = Modifier.width(8.dp))
             Row(
@@ -221,8 +221,8 @@ fun CVUAlias(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(stringResource(R.string.alias))
-                Text("mi.alias.lyrio")
+                Text(stringResource(R.string.alias), fontWeight = FontWeight.Bold, color = Color.Black)
+                Text("mi.alias.lyrio", color = Color.Black)
             }
             Spacer(modifier = Modifier.height(4.dp))
             Row(
@@ -262,14 +262,14 @@ fun Welcome(firstName: String){
                 modifier = Modifier.padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = stringResource(R.string.welcome), fontSize = 22.sp, fontWeight = FontWeight.SemiBold)
+                Text(text = stringResource(R.string.welcome), fontSize = 22.sp, fontWeight = FontWeight.SemiBold, color = Color.Black)
                 Text(
                     text = " $firstName",
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
                     color = Orange
                 )
-                Text(text = "!", fontSize = 22.sp, fontWeight = FontWeight.Medium)
+                Text(text = "!", fontSize = 22.sp, fontWeight = FontWeight.Medium, color = Color.Black)
             }
         }
     }

@@ -11,6 +11,14 @@
     <string name="add_card">Agregar tarjeta</string>
     <string name="cards">Tarjetas</string>
 
+    <!-- LandingPage -->
+    <string name="landing_1">La nueva forma de</string>
+    <string name="landing_2">administrar tu dinero</string>
+    <string name="landing_3">Ahorrá, cobrá y pagá.</string>
+    <string name="landing_4">Lyrio te permite manejar tu dinero de</string>
+    <string name="landing_5">forma fácil y segura.</string>
+    <string name="register_reflex">Registrarse</string>
+
     <!-- SignIn -->
     <string name="sign_in">Iniciar sesión</string>
     <string name="password">Contraseña</string>
@@ -125,11 +133,11 @@
     <!-- ChangeAlias -->
     <string name="enter_new_alias">Ingresá tu nuevo alias</string>
     <string name="new_alias">Nuevo alias</string>
-    <string name="rule1"> -  Debe tener entre 6 y 20 caracteres</string>
-    <string name="rule2"> -  No uses la letra ñ</string>
-    <string name="rule3"> -  Los únicos caracteres especiales permitidos son  \'_\'  y  \'.\'</string>
-    <string name="rule3_1"> -  Los únicos caracteres especiales</string>
-    <string name="rule3_2">    permitidos son  \'_\'  y  \'.\'</string>
+    <string name="rule1">\ -\ \ Debe tener entre 6 y 20 caracteres</string>
+    <string name="rule2">\ -\ \ No uses la letra ñ</string>
+    <string name="rule3">\ -\ \ Los únicos caracteres especiales permitidos son  \'_\'  y  \'.\'</string>
+    <string name="rule3_1">\ -\ \ Los únicos caracteres especiales</string>
+    <string name="rule3_2">\ \ \ \ permitidos son  \'_\'  y  \'.\'</string>
 
     <!-- ChangeAliasSuccessful -->
     <string name="alias_changed">¡Cambiaste tu alias!</string>
