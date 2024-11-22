@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -67,7 +68,7 @@ fun ReceiveMoneyContentH(
         horizontalAlignment = Alignment.CenterHorizontally
     ){
         AppWindow(
-            title = "Recibir dinero",
+            title = stringResource(R.string.receive_money),
             modifier = Modifier.fillMaxSize()
         ){
             Column(
@@ -76,7 +77,7 @@ fun ReceiveMoneyContentH(
                 horizontalAlignment = Alignment.CenterHorizontally
             ){
                 Text(
-                    text = "Recibí dinero a través de tu CVU o Alias, o cobrá mediante un link de pago.",
+                    text = stringResource(R.string.receive_lore),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Medium,
                     modifier = Modifier.padding(0.dp, 10.dp, 0.dp, 10.dp)
@@ -97,7 +98,7 @@ fun ReceiveMoneyContentH(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ){
                         AppButton(
-                            text = "Generar link de pago",
+                            text = stringResource(R.string.generate_link),
                             onClick = navigatePaylink,
                             width = 0.8f
                         )
@@ -120,7 +121,7 @@ fun ReceiveMoneyContentV(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         AppWindow(
-            title = "Recibir dinero",
+            title = stringResource(R.string.receive_money),
             modifier = Modifier
         ) {
             Column(
@@ -132,12 +133,12 @@ fun ReceiveMoneyContentV(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    Text(text = "Recibí dinero a través de tu CVU o Alias,", fontWeight = FontWeight.Medium)
-                    Text(text = "o cobrá mediante un link de pago.", fontWeight = FontWeight.Medium)
+                    Text(text = stringResource(R.string.receive_lore1), fontWeight = FontWeight.Medium)
+                    Text(text = stringResource(R.string.receive_lore2), fontWeight = FontWeight.Medium)
                 }
                 cvuAlias()
                 AppButton(
-                    text = "Generar link de pago",
+                    text = stringResource(R.string.generate_link),
                     onClick = navigatePaylink,
                     width = 0.8f
                 )
@@ -154,7 +155,7 @@ fun CVUAliasWindow(
     val alias = "mi.alias.lyrio"
 
     AppWindow(
-        title = "CVU y Alias",
+        title = stringResource(R.string.cvu_alias),
         modifier = Modifier.padding(bottom = 16.dp),
         background = Color(0xFFF5F5F5)
     ) {
@@ -170,7 +171,7 @@ fun CVUAliasWindow(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("CVU:")
+                Text(stringResource(R.string.cvu))
                 Text(cvu)
             }
             Spacer(modifier = Modifier.width(8.dp))
@@ -181,7 +182,7 @@ fun CVUAliasWindow(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("Alias:")
+                Text(stringResource(R.string.alias))
                 Text(alias)
             }
             Spacer(modifier = Modifier.height(15.dp))
@@ -191,7 +192,7 @@ fun CVUAliasWindow(
                 horizontalArrangement = Arrangement.End
             ) {
                 Text(
-                    text = "Copiar CVU y Alias",
+                    text = stringResource(R.string.copy_cvu_alias),
                     color = Color.Gray,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Medium

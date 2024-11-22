@@ -20,10 +20,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.lyrio.R
 import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.components.AppInput
 import com.lyrio.ui.components.AppWindow
@@ -90,13 +92,13 @@ fun AddInvestmentContent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                "¿Cuánto querés invertir?",
+                stringResource(R.string.how_much_to_invest),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold,
                 color = Color.Black
             )
             Text(
-                "Saldo disponible: $$availableBalance",
+                stringResource(R.string.available_balance) + " $$availableBalance",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold,
                 color = Color.Gray,
@@ -121,15 +123,15 @@ fun AddInvestmentContent(
                     AppInput(
                         value = if (amount.toInt() == 0) "" else amount.toString(),
                         onValueChange = { onAmountChange(it.toLongOrNull() ?: 0) },
-                        label = "Monto",
-                        hint = "Nota: Recordá que podés dejar de invertir este dinero cuando quieras.",
+                        label = stringResource(R.string.amount),
+                        hint = stringResource(R.string.add_investment_note),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
             }
             AppButton(
-                text = "Invertir",
+                text = stringResource(R.string.invest),
                 onClick = navigateInvest,
                 modifier = Modifier.fillMaxWidth(if (height == 1f) 0.5f else 0.7f)
             )

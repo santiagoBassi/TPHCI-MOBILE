@@ -22,11 +22,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.lyrio.R
 import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.components.AppWindow
 import com.lyrio.ui.components.BarChart
@@ -92,7 +93,7 @@ fun InvestContent(
     var showBalance by remember { mutableStateOf(true) }
 
     AppWindow(
-        title = "Dinero invertido",
+        title = stringResource(R.string.invested_money),
         modifier = Modifier
             .padding(bottom = 16.dp)
             .widthIn(max = 375.dp),
@@ -138,8 +139,8 @@ fun InvestContent(
                 horizontalArrangement = Arrangement.spacedBy(20.dp),
                 verticalAlignment = Alignment.CenterVertically
             ){
-                AppButton(text = "Invertir", onClick = navigateAddInvestment, modifier = Modifier.weight(1f))
-                AppButton(text = "Retirar", onClick = navigateWithdrawInvestment, modifier = Modifier.weight(1f))
+                AppButton(text = stringResource(R.string.invest), onClick = navigateAddInvestment, modifier = Modifier.weight(1f))
+                AppButton(text = stringResource(R.string.withdraw), onClick = navigateWithdrawInvestment, modifier = Modifier.weight(1f))
             }
         }
     }
@@ -148,19 +149,19 @@ fun InvestContent(
         modifier = Modifier
             .fillMaxHeight()
             .widthIn(375.dp),
-        title = "Ganancias"
+        title = stringResource(R.string.earnings)
     ){
         Row(
             modifier = Modifier.padding(vertical = 16.dp).padding(start = 2.dp)
         ) {
             Text(
-                text = "Este mes: ",
+                text = stringResource(R.string.this_month),
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
                 color = Color.Gray
             )
             Text(
-                text = "$${investData[5].expense}",
+                text = " $${investData[5].expense}",
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
                 color = Green

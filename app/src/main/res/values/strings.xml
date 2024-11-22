@@ -44,4 +44,36 @@
     <string name="earnings">Earnings</string>
     <string name="this_month">This month:</string>
 
+    <!-- WithdrawInvestment -->
+    <string name="how_much_to_withdraw1">How much do you want</string>
+    <string name="how_much_to_withdraw2">to withdraw?</string>
+    <string name="withdraw_note">Note: You can invest this money again at any time.</string>
+    <string name="stop_investing">Withdraw money</string>
+
+    <!-- AddInvestment -->
+    <string name="how_much_to_invest">How much to invest?</string>
+    <string name="available_balance">Available balance:</string>
+    <string name="add_investment_note">Note: You can invest this money again at any time.</string>
+
+    <!-- ReceiveMoney -->
+    <string name="receive_money">Receive money</string>
+    <string name="receive_lore">Receive money through your CVU or Alias, or generate a payment link.</string>
+    <string name="receive_lore1">Receive money through your CVU or Alias,</string>
+    <string name="receive_lore2">or generate a payment link.</string>
+    <string name="cvu">CVU:</string>
+    <string name="alias">Alias:</string>
+    <string name="copy_cvu_alias">Copy CVU and Alias</string>
+    <string name="generate_link">Generate payment link</string>
+
+    <!-- Profile -->
+    <string name="welcome">Welcome, </string>
+    <string name="personal_data">Personal data</string>
+    <string name="firstname">Name</string>
+    <string name="lastname">Surname</string>
+    <string name="email">Email</string>
+    <string name="birthdate">Birthdate</string>
+    <string name="edit_profile">Edit profile</string>
+    <string name="save_changes">Save changes</string>
+    <string name="change_alias">Change alias</string>
+
 </resources>
