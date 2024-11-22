@@ -42,25 +42,25 @@ import com.lyrio.ui.navigation.Screen
 
 data class NavItem(
     val icon: Int,
-    val title: String,
+    val title: Int,
     val description: String,
     val selected: Boolean,
     val page: Screen
 )
 
 val items = listOf(
-    NavItem(R.drawable.send_money_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Transferir", "Transfer Icon", false,Screen.Transfer1),
-    NavItem(R.drawable.account_balance_wallet_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Dinero", "Transfer Icon", false,
+    NavItem(R.drawable.send_money_24dp_e8eaed_fill0_wght400_grad0_opsz24, R.string.transfer, "Transfer Icon", false,Screen.Transfer1),
+    NavItem(R.drawable.account_balance_wallet_24dp_e8eaed_fill0_wght400_grad0_opsz24, R.string.money, "Transfer Icon", false,
         Screen.Money) ,
-    NavItem(R.drawable.list_alt_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Movimientos", "Transfer Icon", false,
+    NavItem(R.drawable.list_alt_24dp_e8eaed_fill0_wght400_grad0_opsz24, R.string.movements, "Transfer Icon", false,
         Screen.Movements) ,
-    NavItem(R.drawable.currency_exchange_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Inversiones", "Transfer Icon", false,
+    NavItem(R.drawable.currency_exchange_24dp_e8eaed_fill0_wght400_grad0_opsz24, R.string.invest, "Transfer Icon", false,
         Screen.Invest) ,
-    NavItem(R.drawable.link_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Link de pago", "Transfer Icon", false,
+    NavItem(R.drawable.link_24dp_e8eaed_fill0_wght400_grad0_opsz24, R.string.pay_link, "Transfer Icon", false,
         Screen.ReceiveMoney),
-    NavItem(R.drawable.credit_card_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Tarjetas", "Transfer Icon", false,
+    NavItem(R.drawable.credit_card_24dp_e8eaed_fill0_wght400_grad0_opsz24, R.string.cards, "Transfer Icon", false,
         Screen.CreditCards),
-    NavItem(R.drawable.logout_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Cerrar Sesion", "Logout Icon", false,
+    NavItem(R.drawable.logout_24dp_e8eaed_fill0_wght400_grad0_opsz24, R.string.logout, "Logout Icon", false,
         Screen.Landing)
 )
 
@@ -165,13 +165,13 @@ fun NavDrawerItem(item: NavItem){
         Row {
             Icon(
                 painter = painterResource(id = item.icon),
-                contentDescription = item.title,
+                contentDescription = stringResource(item.title),
                 modifier = Modifier.size(24.dp),
                 tint = Color.Black
             )
             Spacer(modifier = Modifier.width(16.dp))
             Text(
-                text = item.title,
+                text = stringResource(item.title),
                 style = MaterialTheme.typography.titleMedium.copy(
                     color = Color.Black,
                 )

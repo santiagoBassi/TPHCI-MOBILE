@@ -60,7 +60,7 @@ fun NewCreditCardBack(
                 .height(45.dp)
                 .align(Alignment.CenterEnd)
                 .padding(end = 50.dp)
-
+                .background(Color.White)
             ){
                 Row(
                     modifier = Modifier.fillMaxSize(),

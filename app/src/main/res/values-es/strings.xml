@@ -5,11 +5,15 @@
     <string name="profile">Perfil</string>
     <string name="transfer">Transferir</string>
     <string name="invest">Invertir</string>
+    <string name="investments">Inversiones</string>
     <string name="money">Dinero</string>
     <string name="activity">Actividad</string>
     <string name="pay_link">Cobrar con link de pago</string>
     <string name="add_card">Agregar tarjeta</string>
     <string name="cards">Tarjetas</string>
+    <string name="logout">Logout</string>
+    <string name="qr">QR</string>
+
 
     <!-- LandingPage -->
     <string name="landing_1">La nueva forma de</string>

@@ -74,7 +74,7 @@ fun AppInput(
                 cursorColor = if(readOnly) Color.Gray else Orange,
                 unfocusedLabelColor = Color.Gray,
                 focusedPlaceholderColor = Color.Gray,
-
+                focusedTextColor = Color.Black,
             ),
             shape = RoundedCornerShape(16.dp),
             visualTransformation = myVisualTransformation,
