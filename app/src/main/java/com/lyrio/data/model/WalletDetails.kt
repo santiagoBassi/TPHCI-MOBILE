@@ -1,14 +1,25 @@
 package com.lyrio.data.model
 
-import kotlinx.serialization.Serializable
+import com.lyrio.data.network.model.NetworkWalletDetails
+import java.util.Date
 
-@Serializable
+
 data class WalletDetails(
     val id: Int,
     val balance: Double,
     val invested: Double,
     val cbu: String,
     val alias: String,
-    val createdAt: String,
-    val updatedAt: String
-)
+) {
+    fun toNetworkModel(): NetworkWalletDetails {
+        return NetworkWalletDetails(
+            id = id,
+            balance = balance,
+            invested = invested,
+            cbu = cbu,
+            alias = alias,
+            createdAt = null,
+            updatedAt = null
+        )
+    }
+}
