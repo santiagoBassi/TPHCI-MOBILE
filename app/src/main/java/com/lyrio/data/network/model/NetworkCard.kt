@@ -26,8 +26,6 @@ class NetworkCard(
             fullName = fullName,
             cvv = cvv,
             type = when (type) { "DEBIT" -> CardType.DEBIT else -> CardType.CREDIT },
-            createdAt = createdAt?.let { dateFormat.parse(createdAt!!) },
-            updatedAt = updatedAt?.let { dateFormat.parse(updatedAt!!) }
         )
     }
 }

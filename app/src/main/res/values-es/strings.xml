@@ -127,9 +127,9 @@
     <string name="new_alias">Nuevo alias</string>
     <string name="rule1"> -  Debe tener entre 6 y 20 caracteres</string>
     <string name="rule2"> -  No uses la letra ñ</string>
-    <string name="rule3"> -  Los únicos caracteres especiales permitidos son  '_'  y  '.'</string>
+    <string name="rule3"> -  Los únicos caracteres especiales permitidos son  \'_\'  y  \'.\'</string>
     <string name="rule3_1"> -  Los únicos caracteres especiales</string>
-    <string name="rule3_2">    permitidos son  '_'  y  '.'</string>
+    <string name="rule3_2">    permitidos son  \'_\'  y  \'.\'</string>
 
     <!-- ChangeAliasSuccessful -->
     <string name="alias_changed">¡Cambiaste tu alias!</string>
