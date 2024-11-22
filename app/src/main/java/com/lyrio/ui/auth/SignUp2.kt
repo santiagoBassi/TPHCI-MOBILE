@@ -16,35 +16,28 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.lyrio.LyrioApp
 import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.components.AppInput
 import com.lyrio.ui.components.AppWindow
-import com.lyrio.ui.data.states.SignUpUiState
-import com.lyrio.ui.data.viewmodels.SignUpViewModel
+import com.lyrio.ui.data.viewmodels.UserViewModel
 import com.lyrio.ui.layout.AuthHeader
 import com.lyrio.ui.styles.OffWhite
-import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun SignUp2(
-    viewModel: SignUpViewModel,
+    viewModel: UserViewModel,
+    navigateSignUp3: () -> Unit
 ){
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -78,7 +71,8 @@ fun SignUp2(
                         onPasswordChange = { password = it },
                         confirmPassword = confirmPassword,
                         onConfirmPasswordChange = { confirmPassword = it },
-                        viewModel = viewModel
+                        viewModel = viewModel,
+                        navigateSignUp3 = navigateSignUp3
                     )
                 }
             }
@@ -107,7 +101,8 @@ fun SignUp2(
                         onPasswordChange = { password = it },
                         confirmPassword = confirmPassword,
                         onConfirmPasswordChange = { confirmPassword = it },
-                        viewModel = viewModel
+                        viewModel = viewModel,
+                        navigateSignUp3 = navigateSignUp3
                     )
                 }
 
@@ -125,9 +120,10 @@ fun SignUp2Content(
     onPasswordChange: (String) -> Unit = {},
     confirmPassword: String = "",
     onConfirmPasswordChange: (String) -> Unit = {},
-    viewModel: SignUpViewModel
+    viewModel: UserViewModel,
+    navigateSignUp3: () -> Unit
 ) {
-    val signUpUiState by viewModel.uiStateSignUp.collectAsState()
+    val signUpUiState by viewModel.uiStateUser.collectAsState()
 
     AppWindow(
         modifier = Modifier
@@ -177,14 +173,19 @@ fun SignUp2Content(
             Spacer(modifier = Modifier.height(16.dp))
 
             AppButton(text = "Crear cuenta", onClick = {
+                try {
+                    viewModel.register(
+                        firstName = signUpUiState.firstName,
+                        lastName = signUpUiState.lastName,
+                        dateOfBirth = signUpUiState.dateOfBirth.toString(),
+                        email = email,
+                        password = password
+                    )
+                    navigateSignUp3()
+                }catch (e : Exception){
+                    e.printStackTrace()
+                }
 
-                viewModel.register(
-                    firstName = signUpUiState.firstName,
-                    lastName = signUpUiState.lastName,
-                    dateOfBirth = signUpUiState.dateOfBirth.toString(),
-                    email = email,
-                    password = password
-                )
             }, width = 0.8f)
         }
     }

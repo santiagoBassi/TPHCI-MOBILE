@@ -8,7 +8,7 @@ import com.lyrio.LyrioApp
 import com.lyrio.SessionManager
 import com.lyrio.data.DataSourceException
 import com.lyrio.data.repository.UserRepository
-import com.lyrio.ui.data.states.SignUpUiState
+import com.lyrio.ui.data.states.UserUiState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,16 +19,19 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import com.lyrio.data.model.Error
-import java.util.Date
 
-class SignUpViewModel(
+class UserViewModel(
     sessionManager: SessionManager,
     private val userRepository: UserRepository,
 ) : ViewModel() {
 
-    private val _uiStateSignUp = MutableStateFlow(SignUpUiState())
-    val uiStateSignUp: StateFlow<SignUpUiState> = _uiStateSignUp.asStateFlow()
+    private val _uiStateUser = MutableStateFlow(UserUiState())
+    val uiStateUser: StateFlow<UserUiState> = _uiStateUser.asStateFlow()
 
+
+    fun completeFormRegister1(firstName: String, lastName: String, birthDate: String) {
+        _uiStateUser.value = _uiStateUser.value.copy(firstName = firstName, lastName = lastName, dateOfBirth = birthDate)
+    }
 
     fun register(firstName: String, lastName: String, dateOfBirth: String, email: String, password: String) = runOnViewModelScope(
         {
@@ -37,34 +40,63 @@ class SignUpViewModel(
         { state, _ -> state.copy() }
     )
 
+    fun login(email: String, password: String) = runOnViewModelScope(
+        {
+            userRepository.login(email, password)
+        },
+        { state, _ -> state.copy() }
+    )
 
-    fun completeFormRegister1(firstName: String, lastName: String, birthDate: String) {
-        _uiStateSignUp.value = _uiStateSignUp.value.copy(firstName = firstName, lastName = lastName, dateOfBirth = birthDate)
+    fun verifyEmail(code: String) = runOnViewModelScope(
+        {
+            userRepository.verifyEmail(code)
+        },
+        { state, _ -> state.copy() }
+    )
+
+    fun recoverPass1(email: String) = runOnViewModelScope(
+        {
+            userRepository.recoverPassword(email)
+        },
+        {state, _ -> state.copy()}
+    )
+
+    fun recoverPass2(password: String) = runOnViewModelScope(
+        {
+            userRepository.resetPassword(_uiStateUser.value.code, password)
+        },
+        {state, _ -> state.copy()}
+    )
+
+    fun saveCode(code: String) {
+        _uiStateUser.value = _uiStateUser.value.copy(code = code)
+
     }
+
 
 
 
     private fun <T> collectOnViewModelScope(
         flow: Flow<T>,
-        updateState: (SignUpUiState, T) -> SignUpUiState
+        updateState: (UserUiState, T) -> UserUiState
     ) = viewModelScope.launch {
         flow
             .distinctUntilChanged()
-            .catch { e -> _uiStateSignUp.update { currentState -> currentState.copy(error = handleError(e)) } }
-            .collect { response -> _uiStateSignUp.update { currentState -> updateState(currentState, response) } }
+            .catch { e -> _uiStateUser.update { currentState -> currentState.copy(error = handleError(e)) } }
+            .collect { response -> _uiStateUser.update { currentState -> updateState(currentState, response) } }
     }
 
     private fun <R> runOnViewModelScope(
         block: suspend () -> R,
-        updateState: (SignUpUiState, R) -> SignUpUiState
+        updateState: (UserUiState, R) -> UserUiState
     ): Job = viewModelScope.launch {
-        _uiStateSignUp.update { currentState -> currentState.copy(isFetching = true, error = null) }
+        _uiStateUser.update { currentState -> currentState.copy(isFetching = true, error = null) }
         runCatching {
             block()
         }.onSuccess { response ->
-            _uiStateSignUp.update { currentState -> updateState(currentState, response).copy(isFetching = false) }
+            _uiStateUser.update { currentState -> updateState(currentState, response).copy(isFetching = false) }
         }.onFailure { e ->
-            _uiStateSignUp.update { currentState -> currentState.copy(isFetching = false, error = handleError(e)) }
+            _uiStateUser.update { currentState -> currentState.copy(isFetching = false, error = handleError(e)) }
             Log.e(TAG, "Coroutine execution failed", e)
         }
     }
@@ -85,7 +117,7 @@ class SignUpViewModel(
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return SignUpViewModel(
+                return UserViewModel(
                     application.sessionManager,
                     application.userRepository) as T
             }

@@ -3,6 +3,7 @@ package com.lyrio.ui.auth
 import androidx.compose.runtime.remember
 import android.content.res.Configuration
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,26 +23,22 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.lyrio.LyrioApp
 import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.components.AppInput
 import com.lyrio.ui.components.AppWindow
-import com.lyrio.ui.data.states.SignUpUiState
-import com.lyrio.ui.data.viewmodels.SignUpViewModel
+import com.lyrio.ui.data.viewmodels.UserViewModel
 import com.lyrio.ui.layout.AuthHeader
 import com.lyrio.ui.styles.OffWhite
-import java.util.Date
 
 @Composable
 fun SignUp1(
-    viewModel: SignUpViewModel,
-    navigateSignUp2: () -> Unit
+    viewModel: UserViewModel,
+    navigateSignUp2: () -> Unit,
+    navigateSignIn: () -> Unit
 ){
     var birthDate by remember { mutableStateOf("") }
     var name by remember { mutableStateOf("") }
@@ -78,7 +75,8 @@ fun SignUp1(
                         lastname = lastname,
                         onLastnameChange = { lastname = it },
                         viewModel = viewModel,
-                        navigateSignUp2 = navigateSignUp2
+                        navigateSignUp2 = navigateSignUp2,
+                        navigateSignIn = navigateSignIn
                     )
                 }
             }
@@ -108,7 +106,8 @@ fun SignUp1(
                         lastname = lastname,
                         onLastnameChange = { lastname = it },
                         viewModel = viewModel,
-                        navigateSignUp2 = navigateSignUp2
+                        navigateSignUp2 = navigateSignUp2,
+                        navigateSignIn = navigateSignIn
                     )
                 }
 
@@ -126,8 +125,9 @@ fun SignUp1Content(
     onNameChange: (String) -> Unit,
     lastname: String,
     onLastnameChange: (String) -> Unit,
-    viewModel: SignUpViewModel,
-    navigateSignUp2: () -> Unit
+    viewModel: UserViewModel,
+    navigateSignUp2: () -> Unit,
+    navigateSignIn: () -> Unit
 ){
     AppWindow(
         modifier = Modifier
@@ -185,7 +185,8 @@ fun SignUp1Content(
                 Text(
                     text = "Iniciá sesión",
                     textDecoration = TextDecoration.Underline,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.clickable(onClick = navigateSignIn)
                 )
             }
         }

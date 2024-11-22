@@ -29,12 +29,15 @@ import androidx.compose.ui.unit.sp
 import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.components.AppInput
 import com.lyrio.ui.components.AppWindow
+import com.lyrio.ui.data.viewmodels.UserViewModel
 import com.lyrio.ui.layout.AuthHeader
 import com.lyrio.ui.styles.OffWhite
 
-@Preview(showBackground = true)
 @Composable
-fun RecoverPass2() {
+fun RecoverPass2(
+    navigateRecoverPass3: () -> Unit,
+    viewModel: UserViewModel
+) {
     var code by rememberSaveable(key = "recover2Code") { mutableStateOf("") }
 
     val configuration = LocalConfiguration.current
@@ -61,6 +64,8 @@ fun RecoverPass2() {
                         landscape = true,
                         code = code,
                         onCodeChange = { code = it },
+                        navigateRecoverPass3 = navigateRecoverPass3,
+                        viewModel = viewModel
                     )
                 }
             }
@@ -85,6 +90,8 @@ fun RecoverPass2() {
                         height = 0.7f,
                         code = code,
                         onCodeChange = { code = it },
+                        navigateRecoverPass3 = navigateRecoverPass3,
+                        viewModel = viewModel
                     )
                 }
 
@@ -98,7 +105,9 @@ fun RecoverPass2Content(
     height: Float = 1f,
     landscape: Boolean = false,
     code: String,
-    onCodeChange: (String) -> Unit
+    onCodeChange: (String) -> Unit,
+    navigateRecoverPass3: () -> Unit,
+    viewModel: UserViewModel
 ){
     AppWindow(
         modifier = Modifier
@@ -141,7 +150,14 @@ fun RecoverPass2Content(
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
-            AppButton(text = "Continuar", onClick = { /* TODO */ }, width = 0.8f)
+            AppButton(text = "Continuar", onClick = {
+                try {
+                    viewModel.saveCode(code)
+                    navigateRecoverPass3()
+                }catch (e: Exception){
+                    e.printStackTrace()
+                }
+            }, width = 0.8f)
         }
     }
 }
