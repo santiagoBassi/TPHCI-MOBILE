@@ -1,20 +1,28 @@
 package com.lyrio.data.model
 
-import kotlinx.serialization.Serializable
-import com.lyrio.data.model.Card
+import com.lyrio.data.network.model.NetworkPayment
 
-@Serializable
 data class Payment(
     val id: Int,
-    val type: String,
+    val type: PaymentType,
     val amount: Double,
-    val balanceBefore: Double,
-    val balanceAfter: Double,
     val pending: Boolean,
-    val linkUuid: String,
+    val linkUuid: String?,
     val createdAt: String,
-    val updatedAt: String,
-    //val card: Card? = null
+    val card: Card? = null
 ) {
-
+    fun asNetworkModel(): NetworkPayment {
+        return NetworkPayment(
+            id = id,
+            type = when (type) { PaymentType.BALANCE -> "BALANCE"; PaymentType.CARD -> "CARD" else -> "LINK" },
+            amount = amount,
+            balanceBefore = null,
+            balanceAfter = null,
+            pending = pending,
+            linkUuid = linkUuid,
+            createdAt = createdAt,
+            updatedAt = null,
+            card = card?.asNetworkModel()
+        )
+    }
 }

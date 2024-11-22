@@ -1,13 +1,20 @@
 package com.lyrio.data.model
 
-import kotlinx.serialization.Serializable
+import com.lyrio.data.network.model.NetworkDailyReturn
 
-@Serializable
 data class DailyReturn(
     val id: Int,
     val returnGiven: Double,
-    val balanceBefore: Double,
-    val balanceAfter: Double,
-    val createdAt: String,
-    val updatedAt: String
-)
+) {
+    fun asNetworkModel(): NetworkDailyReturn {
+        return NetworkDailyReturn(
+            id = id,
+            returnGiven = returnGiven,
+            balanceBefore = null,
+            balanceAfter = null,
+            createdAt = null,
+            updatedAt = null
+        )
+    }
+
+}
