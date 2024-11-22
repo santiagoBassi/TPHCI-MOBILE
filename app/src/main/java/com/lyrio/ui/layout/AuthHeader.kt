@@ -2,6 +2,8 @@ package com.lyrio.ui.layout
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraintsScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
@@ -22,20 +24,20 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lyrio.R
+import com.lyrio.ui.styles.DarkGray
 
 @Composable
-fun AuthHeader(content: @Composable () -> Unit) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+fun AuthHeader() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(80.dp)
+            .background(DarkGray)
+            .windowInsetsPadding(WindowInsets.statusBars)
+            .padding(25.dp, 0.dp),
+        ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(80.dp)
-                .background(MaterialTheme.colorScheme.secondary)
-                .windowInsetsPadding(WindowInsets.statusBars)
-                .padding(14.dp, 0.dp),
+            modifier = Modifier.fillMaxSize(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.End
         ) {
@@ -64,7 +66,7 @@ fun AuthHeader(content: @Composable () -> Unit) {
                 )
             }
         }
-        content()
     }
 }
+
 
