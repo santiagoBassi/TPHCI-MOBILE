@@ -7,7 +7,7 @@ import androidx.navigation.compose.rememberNavController
 import com.lyrio.ui.auth.SignIn
 import com.lyrio.ui.auth.SignUp1
 import com.lyrio.ui.auth.SignUp2
-import com.lyrio.ui.components.AppButton
+import com.lyrio.ui.auth.SignUp3
 import com.lyrio.ui.layout.DefaultLayout
 import com.lyrio.ui.pages.AddCardSuccessful
 import com.lyrio.ui.pages.AddCreditCard
@@ -26,13 +26,14 @@ import com.lyrio.ui.pages.Transfer1
 import com.lyrio.ui.pages.Transfer2
 import com.lyrio.ui.pages.WithdrawInvestment
 import com.lyrio.ui.pages.ChangeAliasSuccessful
+import com.lyrio.ui.pages.TransferSuccessful
 
 @Composable
 fun NavigationWrapper(){
     val navController = rememberNavController()
 
 
-    NavHost(navController = navController, startDestination = Screen.Home){
+    NavHost(navController = navController, startDestination = Screen.SignUp3){
 
         composable<Screen.Landing>{
             LandingPage(navigateSignIn = {
@@ -56,6 +57,14 @@ fun NavigationWrapper(){
 
         composable<Screen.SignUp2>{
             SignUp2()
+        }
+
+        composable<Screen.SignUp3> {
+            SignUp3(
+                navigateSignIn = {
+                    navController.navigate(Screen.SignIn)
+                }
+            )
         }
 
         composable<Screen.Home>{
@@ -99,6 +108,19 @@ fun NavigationWrapper(){
         composable<Screen.Transfer2>{
             DefaultLayout(navController) {
                 Transfer2()
+            }
+        }
+
+        composable<Screen.TransferSuccessful>{
+            DefaultLayout(navController) {
+                TransferSuccessful(
+                    navigateHome = {
+                        navController.navigate(Screen.Home)
+                    },
+                    navigateTransfer1 = {
+                        navController.navigate(Screen.Transfer1)
+                    }
+                )
             }
         }
 

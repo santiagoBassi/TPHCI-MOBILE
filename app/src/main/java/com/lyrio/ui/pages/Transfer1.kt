@@ -21,9 +21,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.lyrio.R
 import com.lyrio.ui.components.RecentContact
 import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.components.AppInput
@@ -91,18 +93,18 @@ fun Transfer1Content() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "¿A quién le querés transferir?",
+                text = stringResource(R.string.who_to_transfer),
                 style = Typography.titleLarge,
                 fontWeight = FontWeight.SemiBold
             )
             AppInput(
                 value = cvuOrAlias,
                 onValueChange = { cvuOrAlias = it },
-                label = "CVU o Alias",
+                label = stringResource(R.string.cvu_or_alias),
                 modifier = Modifier.fillMaxWidth(0.95f)
             )
             AppButton(
-                text = "Continuar",
+                text = stringResource(R.string.continue_),
                 onClick = { /* TODO */ },
                 width = 0.8f
             )
@@ -110,7 +112,7 @@ fun Transfer1Content() {
     }
 
     AppWindow(
-        title = "Contactos Recientes",
+        title = stringResource(R.string.recent_contacts),
         modifier = Modifier
             .fillMaxHeight()
             .widthIn(max = 450.dp)

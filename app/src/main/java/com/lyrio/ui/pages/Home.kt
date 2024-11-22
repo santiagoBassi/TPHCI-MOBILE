@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -151,7 +152,7 @@ fun HomeContent(
     var showBalance by remember { mutableStateOf(true) } // Estado para mostrar/ocultar
 
     AppWindow(
-        title = "Dinero",
+        title = stringResource(id = R.string.money),
         showChevron = true,
         onChevronClick = { navigateMoney() },
         modifier = Modifier
@@ -199,13 +200,13 @@ fun HomeContent(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            CircularIconButton(icon = transferIconPainter(), text = "Transferir", onClickFn = navigateTransfer1)
-            CircularIconButton(icon = receiveIconPainter(), text = "Recibir", onClickFn = navigateReceiveMoney)
-            CircularIconButton(icon = cvuAliasIconPainter(), text = "CVU y Alias", onClickFn = navigateProfile)
+            CircularIconButton(icon = transferIconPainter(), text = stringResource(R.string.transfer), onClickFn = navigateTransfer1)
+            CircularIconButton(icon = receiveIconPainter(), text = stringResource(R.string.receive), onClickFn = navigateReceiveMoney)
+            CircularIconButton(icon = cvuAliasIconPainter(), text = stringResource(R.string.cvu_alias), onClickFn = navigateProfile)
         }
     }
     AppWindow(
-        title = "Movimientos",
+        title = stringResource(R.string.movements),
         modifier = Modifier
             .fillMaxHeight()
             .widthIn(max = 450.dp),
@@ -224,7 +225,7 @@ fun HomeContent(
                     verticalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = "No hay movimientos disponibles",
+                        text = stringResource(R.string.no_movements),
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
                         modifier = Modifier.padding(start = 4.dp),
@@ -251,7 +252,7 @@ fun HomeContent(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
-                        "Ver todos mis movimientos ",
+                        stringResource(R.string.see_all_movements),
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
                         modifier = Modifier.padding(start = 4.dp).clickable { navigateMovements() },
