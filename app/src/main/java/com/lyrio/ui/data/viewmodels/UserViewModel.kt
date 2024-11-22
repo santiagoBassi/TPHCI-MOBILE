@@ -8,7 +8,6 @@ import com.lyrio.LyrioApp
 import com.lyrio.SessionManager
 import com.lyrio.data.DataSourceException
 import com.lyrio.data.repository.UserRepository
-import com.lyrio.ui.data.states.UserUiState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,6 +18,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import com.lyrio.data.model.Error
+import com.lyrio.ui.data.states.UserUiState
 
 class UserViewModel(
     sessionManager: SessionManager,
