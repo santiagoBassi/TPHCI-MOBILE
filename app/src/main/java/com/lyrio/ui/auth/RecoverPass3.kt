@@ -21,10 +21,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.lyrio.R
 import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.components.AppInput
 import com.lyrio.ui.components.AppWindow
@@ -130,7 +131,7 @@ fun RecoverPass3Content(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Reestablecer contraseña",
+                text = stringResource(R.string.reset_pass),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = if(landscape) 26.sp else 22.sp
@@ -144,26 +145,26 @@ fun RecoverPass3Content(
                     modifier = Modifier.fillMaxWidth().padding(bottom = 22.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    Text("Ingresá tu nueva contraseña", fontWeight = FontWeight.Normal, fontSize = if(landscape) 22.sp else 18.sp)
-                    Text("y volvé a iniciar sesión", fontWeight = FontWeight.Normal, fontSize = if(landscape) 22.sp else 18.sp)
+                    Text(stringResource(R.string.recover3_lore1), fontWeight = FontWeight.Normal, fontSize = if(landscape) 22.sp else 18.sp)
+                    Text(stringResource(R.string.recover3_lore2), fontWeight = FontWeight.Normal, fontSize = if(landscape) 22.sp else 18.sp)
                 }
                 AppInput(
                     value = newPassword,
                     onValueChange = { onNewPasswordChange(it) },
-                    label = "Contraseña",
-                    hint = "Debe tener al menos 8 caracteres.",
+                    label = stringResource(R.string.password),
+                    hint = stringResource(R.string.pass_rule),
                     modifier = Modifier.fillMaxWidth(),
                     isPassword = true
                 )
                 AppInput(
                     value = confirmPassword,
                     onValueChange = { onConfirmPasswordChange(it) },
-                    label = "Confirmá tu contraseña",
+                    label = stringResource(R.string.confirm_pass),
                     modifier = Modifier.fillMaxWidth(),
                     isPassword = true
                 )
             }
-            AppButton(text = "Guardar contraseña", onClick = {
+            AppButton(text = stringResource(R.string.save_pass), onClick = {
                 try {
                     viewModel.recoverPass2(newPassword)
                     navigateSignIn()

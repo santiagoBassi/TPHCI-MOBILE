@@ -24,9 +24,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.lyrio.R
 import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.components.AppInput
 import com.lyrio.ui.components.AppWindow
@@ -139,7 +141,7 @@ fun SignUp2Content(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Creá tu cuenta", style = MaterialTheme.typography.titleLarge,
+                text = stringResource(R.string.create_account), style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold
             )
             Spacer(modifier = Modifier.height(16.dp))
@@ -150,34 +152,34 @@ fun SignUp2Content(
                 AppInput(
                     value = email,
                     onValueChange = { onEmailChange(it) },
-                    label = "Email",
+                    label = stringResource(R.string.email),
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
                 )
                 AppInput(
                     value = password,
                     onValueChange = { onPasswordChange(it) },
-                    label = "Contraseña",
-                    hint = "Debe tener al menos 8 caracteres.",
+                    label = stringResource(R.string.password),
+                    hint = stringResource(R.string.pass_rule),
                     modifier = Modifier.fillMaxWidth(),
                     isPassword = true
                 )
                 AppInput(
                     value = confirmPassword,
                     onValueChange = { onConfirmPasswordChange(it) },
-                    label = "Confirmá tu contraseña",
+                    label = stringResource(R.string.confirm_pass),
                     modifier = Modifier.fillMaxWidth(),
                     isPassword = true
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
 
-            AppButton(text = "Crear cuenta", onClick = {
+            AppButton(text = stringResource(R.string.continue_), onClick = {
                 try {
                     viewModel.register(
                         firstName = signUpUiState.firstName,
                         lastName = signUpUiState.lastName,
-                        dateOfBirth = signUpUiState.dateOfBirth.toString(),
+                        dateOfBirth = signUpUiState.dateOfBirth,
                         email = email,
                         password = password
                     )

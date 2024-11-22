@@ -24,9 +24,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import com.lyrio.R
 import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.components.AppInput
 import com.lyrio.ui.components.AppWindow
@@ -143,7 +145,7 @@ fun SignUp1Content(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Creá tu cuenta", style = MaterialTheme.typography.titleLarge,
+                text = stringResource(R.string.create_account), style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold
             )
             Spacer(modifier = Modifier.height(16.dp))
@@ -154,26 +156,26 @@ fun SignUp1Content(
                 AppInput(
                     value = name,
                     onValueChange = { onNameChange(it) },
-                    label = "Nombre/s",
+                    label = stringResource(R.string.name_s),
                     modifier = Modifier.fillMaxWidth(),
                 )
                 AppInput(
                     value = lastname,
                     onValueChange = { onLastnameChange(it) },
-                    label = "Apellido/s",
+                    label = stringResource(R.string.surname_s),
                     modifier = Modifier.fillMaxWidth(),
                 )
 
                 AppInput(
                     value = birthDate,
                     onValueChange = { onBirthDateChange(it) },
-                    label = "Fecha de nacimiento",
-                    placeholder = "AAAA-MM-DD",
+                    label = stringResource(R.string.birthdate),
+                    placeholder = stringResource(R.string.date_format),
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
-            AppButton(text = "Continuar", onClick = {
+            AppButton(text = stringResource(R.string.continue_), onClick = {
                 viewModel.completeFormRegister1(firstName = name, lastName = lastname, birthDate = birthDate)
                 navigateSignUp2()
             }, width = 0.8f)
@@ -181,9 +183,9 @@ fun SignUp1Content(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
-                Text("Ya tenés una cuenta? ")
+                Text(stringResource(R.string.already_have_account) + " ")
                 Text(
-                    text = "Iniciá sesión",
+                    text = stringResource(R.string.sign_in_imperative),
                     textDecoration = TextDecoration.Underline,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.clickable(onClick = navigateSignIn)

@@ -22,10 +22,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.lyrio.R
 import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.components.AppInput
 import com.lyrio.ui.components.AppWindow
@@ -123,7 +125,7 @@ fun RecoverPass2Content(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Recuperá tu contraseña",
+                text = stringResource(R.string.recover_pass),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = if(landscape) 26.sp else 22.sp
@@ -132,11 +134,11 @@ fun RecoverPass2Content(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Text("¡Ya te enviamos el correo!", fontWeight = FontWeight.Medium, fontSize = if(landscape) 22.sp else 18.sp)
+                Text(stringResource(R.string.mail_sent), fontWeight = FontWeight.Medium, fontSize = if(landscape) 22.sp else 18.sp)
                 Spacer(modifier = Modifier.height(20.dp))
-                Text("Revisá tu casilla de mail e ingresá", fontWeight = FontWeight.Normal, fontSize = if(landscape) 20.sp else 16.sp)
-                Text("el código de verificación para", fontWeight = FontWeight.Normal, fontSize = if(landscape) 20.sp else 16.sp)
-                Text("restablecer tu contraseña", fontWeight = FontWeight.Normal, fontSize = if(landscape) 20.sp else 16.sp)
+                Text(stringResource(R.string.recover2_lore1), fontWeight = FontWeight.Normal, fontSize = if(landscape) 20.sp else 16.sp)
+                Text(stringResource(R.string.recover2_lore2), fontWeight = FontWeight.Normal, fontSize = if(landscape) 20.sp else 16.sp)
+                Text(stringResource(R.string.recover_lore3), fontWeight = FontWeight.Normal, fontSize = if(landscape) 20.sp else 16.sp)
             }
 
             Column(
@@ -146,11 +148,11 @@ fun RecoverPass2Content(
                 AppInput(
                     value = code,
                     onValueChange = { onCodeChange(it) },
-                    label = "Código de verificación",
+                    label = stringResource(R.string.verification_code),
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
-            AppButton(text = "Continuar", onClick = {
+            AppButton(text = stringResource(R.string.continue_), onClick = {
                 try {
                     viewModel.saveCode(code)
                     navigateRecoverPass3()

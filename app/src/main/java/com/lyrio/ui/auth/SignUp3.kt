@@ -22,9 +22,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.lyrio.R
 import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.components.AppInput
 import com.lyrio.ui.components.AppWindow
@@ -122,7 +124,7 @@ fun SignUp3Content(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Verificá tu cuenta",
+                text = stringResource(R.string.verify_account_imperative),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = if(landscape) 26.sp else 22.sp
@@ -131,11 +133,11 @@ fun SignUp3Content(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Text("¡Ya te enviamos el correo!", fontWeight = FontWeight.Medium, fontSize = if(landscape) 22.sp else 18.sp)
+                Text(stringResource(R.string.mail_sent), fontWeight = FontWeight.Medium, fontSize = if(landscape) 22.sp else 18.sp)
                 Spacer(modifier = Modifier.height(20.dp))
-                Text("Revisá tu casilla de mail e ingresá", fontWeight = FontWeight.Normal, fontSize = if(landscape) 20.sp else 16.sp)
-                Text("el código de verificación para", fontWeight = FontWeight.Normal, fontSize = if(landscape) 20.sp else 16.sp)
-                Text("iniciar sesión con tu cuenta", fontWeight = FontWeight.Normal, fontSize = if(landscape) 20.sp else 16.sp)
+                Text(stringResource(R.string.signup_lore1), fontWeight = FontWeight.Normal, fontSize = if(landscape) 20.sp else 16.sp)
+                Text(stringResource(R.string.signup_lore2), fontWeight = FontWeight.Normal, fontSize = if(landscape) 20.sp else 16.sp)
+                Text(stringResource(R.string.signup_lore3), fontWeight = FontWeight.Normal, fontSize = if(landscape) 20.sp else 16.sp)
             }
 
             Column(
@@ -145,11 +147,11 @@ fun SignUp3Content(
                 AppInput(
                     value = code,
                     onValueChange = { onCodeChange(it) },
-                    label = "Código de verificación",
+                    label = stringResource(R.string.verification_code),
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
-            AppButton(text = "Verificar cuenta", onClick = {
+            AppButton(text = stringResource(R.string.verify_account), onClick = {
                 try {
                     viewModel.verifyEmail(code)
                     navigateSignIn()

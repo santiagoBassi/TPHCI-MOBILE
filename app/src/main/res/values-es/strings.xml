@@ -11,6 +11,50 @@
     <string name="add_card">Agregar tarjeta</string>
     <string name="cards">Tarjetas</string>
 
+    <!-- SignIn -->
+    <string name="sign_in">Iniciar sesión</string>
+    <string name="password">Contraseña</string>
+    <string name="pass_rule">Debe tener al menos 8 caracteres.</string>
+    <string name="forgot_pass">Olvidaste tu contraseña?</string>
+    <string name="dont_have_account">No tenés cuenta?  </string>
+    <string name="register">Registrate</string>
+
+    <!-- SignUp1 -->
+    <string name="create_account">Creá tu cuenta</string>
+    <string name="name_s">Nombre/s</string>
+    <string name="surname_s">Apellido/s</string>
+    <string name="already_have_account">Ya tenés una cuenta? </string>
+    <string name="sign_in_imperative">Iniciá sesión</string>
+
+    <!-- SignUp2 -->
+    <string name="confirm_pass">Confirmá tu contraseña</string>
+
+    <!-- SignUp3 -->
+    <string name="verify_account_imperative">Verificá tu cuenta</string>
+    <string name="mail_sent">¡Ya te enviamos el correo!</string>
+    <string name="signup_lore1">Revisá tu casilla de mail e ingresá</string>
+    <string name="signup_lore2">el código de verificación para</string>
+    <string name="signup_lore3">iniciar sesión con tu cuenta</string>
+    <string name="verification_code">Código de verificación</string>
+    <string name="verify_account">Verificar cuenta</string>
+
+    <!-- RecoverPass1 -->
+    <string name="recover_pass">Recuperá tu contraseña</string>
+    <string name="recover_lore1">Ingresá tu cuenta de e-mail y</string>
+    <string name="recover_lore2">te enviaremos un correo para</string>
+    <string name="recover_lore3">reestablecer tu contraseña</string>
+    <string name="send_code">Enviar código</string>
+
+    <!-- RecoverPass2 -->
+    <string name="recover2_lore1">Revisá tu casilla de mail e ingresá</string>
+    <string name="recover2_lore2">el código de verificación para</string>
+
+    <!-- RecoverPass3 -->
+    <string name="reset_pass">Reestablecer contraseña</string>
+    <string name="recover3_lore1">Ingresá tu nueva contraseña</string>
+    <string name="recover3_lore2">y volvé a iniciar sesión</string>
+    <string name="save_pass">Guardar contraseña</string>
+
     <!-- Home -->
     <string name="received">Recibiste</string>
     <string name="sent">Enviaste</string>
@@ -137,9 +181,5 @@
     <!-- AddCardSuccessful -->
     <string name="card_added">¡Tarjeta agregada!</string>
     <string name="add_another_card">Agregar otra tarjeta</string>
-
-
-
-
 
 </resources>

@@ -25,18 +25,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import com.lyrio.R
 import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.components.AppInput
 import com.lyrio.ui.components.AppWindow
 import com.lyrio.ui.layout.AuthHeader
 import com.lyrio.ui.styles.OffWhite
 import com.lyrio.ui.data.viewmodels.UserViewModel
-import com.lyrio.ui.pages.Money
-
 
 @Composable
 fun SignIn(
@@ -140,7 +140,7 @@ fun SignInContent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Iniciar sesión", style = MaterialTheme.typography.titleLarge,
+                text = stringResource(R.string.sign_in), style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold
             )
             Spacer(modifier = Modifier.height(16.dp))
@@ -151,27 +151,27 @@ fun SignInContent(
                 AppInput(
                     value = email,
                     onValueChange = { onEmailChange(it) },
-                    label = "Email",
+                    label = stringResource(R.string.email),
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
                 )
                 AppInput(
                     value = password,
                     onValueChange = {  onPasswordChange(it) },
-                    label = "Contraseña",
-                    hint = "Debe tener al menos 8 caracteres.",
+                    label = stringResource(R.string.password),
+                    hint = stringResource(R.string.pass_rule),
                     modifier = Modifier.fillMaxWidth(),
                     isPassword = true
                 )
                 Text(
-                    text = "Olvidaste tu contraseña?",
+                    text = stringResource(R.string.forgot_pass),
                     textDecoration = TextDecoration.Underline,
                     modifier = Modifier.padding(start = 8.dp, top = 10.dp). clickable(onClick = navigateRecoverPass1),
                     fontWeight = FontWeight.SemiBold
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
-            AppButton(text = "Continuar", onClick = {
+            AppButton(text = stringResource(R.string.continue_), onClick = {
                 try {
                     viewModel.login(email, password)
                     navigateHome()
@@ -184,9 +184,9 @@ fun SignInContent(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
-                Text("No tenés cuenta?  ")
+                Text(stringResource(R.string.dont_have_account) + "  ")
                 Text(
-                    text = "Registrate",
+                    text = stringResource(R.string.register),
                     textDecoration = TextDecoration.Underline,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.clickable(onClick = navigateSignUp)

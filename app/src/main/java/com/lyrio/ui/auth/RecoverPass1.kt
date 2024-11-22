@@ -22,12 +22,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.lyrio.R
 import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.components.AppInput
 import com.lyrio.ui.components.AppWindow
@@ -126,7 +128,7 @@ fun RecoverPass1Content(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Recuperá tu contraseña",
+                text = stringResource(R.string.recover_pass),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = if(landscape) 26.sp else 22.sp
@@ -135,11 +137,11 @@ fun RecoverPass1Content(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Text("Ingresá tu cuenta de e-mail y", fontWeight = FontWeight.Normal,
+                Text(stringResource(R.string.recover_lore1), fontWeight = FontWeight.Normal,
                     fontSize = if(landscape) 20.sp else 16.sp)
-                Text("te enviaremos un correo para", fontWeight = FontWeight.Normal,
+                Text(stringResource(R.string.recover_lore2), fontWeight = FontWeight.Normal,
                     fontSize = if(landscape) 20.sp else 16.sp)
-                Text("reestablecer tu contraseña", fontWeight = FontWeight.Normal,
+                Text(stringResource(R.string.recover_lore3), fontWeight = FontWeight.Normal,
                     fontSize = if(landscape) 20.sp else 16.sp)
             }
 
@@ -150,12 +152,12 @@ fun RecoverPass1Content(
                 AppInput(
                     value = email,
                     onValueChange = { onEmailChange(it) },
-                    label = "Email",
+                    label = stringResource(R.string.email),
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
                 )
             }
-            AppButton(text = "Enviar correo", onClick = {
+            AppButton(text = stringResource(R.string.send_code), onClick = {
                 try {
                     viewModel.recoverPass1(email)
                     navigateRecoverPass2()

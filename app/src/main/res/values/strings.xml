@@ -10,7 +10,51 @@
     <string name="add_card">Add Card</string>
     <string name="cards">Cards</string>
 
-    <!-- HOME -->
+    <!-- SignIn -->
+    <string name="sign_in">Sign In</string>
+    <string name="password">Password</string>
+    <string name="pass_rule">Must have at least 8 characters.</string>
+    <string name="forgot_pass">Forgot your password?</string>
+    <string name="dont_have_account">Don\'t have an account?</string>
+    <string name="register">Sign Up</string>
+
+    <!-- SignUp1 -->
+    <string name="create_account">Create  your account</string>
+    <string name="name_s">Name/s</string>
+    <string name="surname_s">Surname/s</string>
+    <string name="already_have_account">Already have an account?</string>
+    <string name="sign_in_imperative">Sign In</string>
+
+    <!-- SignUp2 -->
+    <string name="confirm_pass">Confirm your password</string>
+
+    <!-- SignUp3 -->
+    <string name="verify_account_imperative">Verify your account</string>
+    <string name="mail_sent">Sent you an email!</string>
+    <string name="signup_lore1">Check your mail box and enter</string>
+    <string name="signup_lore2">the verification code to</string>
+    <string name="signup_lore3">sign in with your account</string>
+    <string name="verification_code">Verification code</string>
+    <string name="verify_account">Verify account</string>
+
+    <!-- RecoverPass1 -->
+    <string name="recover_pass">Recover your password</string>
+    <string name="recover_lore1">Enter your account e-mail and</string>
+    <string name="recover_lore2">we\'ll send you an email to</string>
+    <string name="recover_lore3">reset your password</string>
+    <string name="send_code">Send code</string>
+
+    <!-- RecoverPass2 -->
+    <string name="recover2_lore1">Check your mail box and enter</string>
+    <string name="recover2_lore2">the verification code to</string>
+
+    <!-- RecoverPass3 -->
+    <string name="reset_pass">Reset password</string>
+    <string name="recover3_lore1">Enter your new password</string>
+    <string name="recover3_lore2">and sign in again</string>
+    <string name="save_pass">Save password</string>
+
+    <!-- Home -->
     <string name="received">Received</string>
     <string name="sent">Sent</string>
     <string name="receive">Received</string>
@@ -136,6 +180,5 @@
     <!-- AddCardSuccessful -->
     <string name="card_added">Card added!</string>
     <string name="add_another_card">Add another card</string>
-
 
 </resources>
