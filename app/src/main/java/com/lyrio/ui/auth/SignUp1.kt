@@ -1,5 +1,6 @@
 package com.lyrio.ui.auth
 
+import androidx.compose.runtime.remember
 import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -22,28 +23,38 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.compose.snippets.components.DatePickerFieldToModal
+import com.lyrio.LyrioApp
 import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.components.AppInput
 import com.lyrio.ui.components.AppWindow
+import com.lyrio.ui.data.states.SignUpUiState
+import com.lyrio.ui.data.viewmodels.SignUpViewModel
 import com.lyrio.ui.layout.AuthHeader
 import com.lyrio.ui.styles.OffWhite
+import java.util.Date
 
-@Preview(showBackground = true)
 @Composable
-fun SignUp1() {
-    var birthDate by rememberSaveable(key = "signupBirthDate") { mutableStateOf("") }
-    var name by rememberSaveable(key = "signupName") { mutableStateOf("") }
-    var lastname by rememberSaveable(key = "signupLastname") { mutableStateOf("") }
+fun SignUp1(
+    viewModel: SignUpViewModel = viewModel(factory = SignUpViewModel.provideFactory(LocalContext.current.applicationContext as LyrioApp)),
+    navigateSignUp2: () -> Unit
+){
+    var birthDate = "hola"
+    var name by remember { mutableStateOf("") }
+    var lastname by remember { mutableStateOf("") }
+
 
     val configuration = LocalConfiguration.current
 
     when (configuration.orientation) {
         Configuration.ORIENTATION_LANDSCAPE -> { // Modo horizontal
+
             Column(
                 modifier = Modifier
                     .fillMaxWidth().verticalScroll(rememberScrollState())
@@ -59,6 +70,7 @@ fun SignUp1() {
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+
                     SignUp1Content(
                         height = 0.82f,
                         birthDate = birthDate,
@@ -72,7 +84,7 @@ fun SignUp1() {
             }
         }
 
-        else -> { // Modo vertical u otras orientaciones
+        else -> {
             Column(
                 modifier = Modifier
                     .fillMaxSize()

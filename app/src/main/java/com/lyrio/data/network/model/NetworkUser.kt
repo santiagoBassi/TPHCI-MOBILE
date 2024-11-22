@@ -4,13 +4,13 @@ import com.lyrio.data.model.User
 import kotlinx.serialization.Serializable
 
 @Serializable
-class NetworkUser (
-    var id: Int?,
-    var firstName: String,
-    var lastName: String,
-    var birthDate: String,
-    var email: String,
-    var password: String?,
+class NetworkUser(
+    val id: Int? = null,
+    val firstName: String = "",
+    val lastName: String = "",
+    val birthDate: String = "",
+    val email: String = "",
+    val password: String? = null
 ) {
     fun asModel(): User {
         return User(
