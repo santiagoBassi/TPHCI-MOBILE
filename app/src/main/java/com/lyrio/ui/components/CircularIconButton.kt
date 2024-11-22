@@ -14,8 +14,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
+import com.lyrio.ui.styles.Orange
 
 @Composable
 fun CircularIconButton(icon: Painter, text: String, onClickFn: () -> Unit = {}) {
@@ -26,12 +28,12 @@ fun CircularIconButton(icon: Painter, text: String, onClickFn: () -> Unit = {}) 
                 .clip(CircleShape)
                 .size(48.dp),
             colors = IconButtonDefaults.iconButtonColors(
-                containerColor = MaterialTheme.colorScheme.primary)
+                containerColor = Orange)
 
         ) {
-            Icon(painter = icon, contentDescription = text, modifier = Modifier.size(24.dp))
+            Icon(painter = icon, contentDescription = text, modifier = Modifier.size(24.dp), tint = Color.Black)
         }
         Spacer(modifier = Modifier.height(5.dp))
-        Text(text = text, style = MaterialTheme.typography.labelSmall)
+        Text(text = text, style = MaterialTheme.typography.labelSmall, color = Color.Black)
     }
 }

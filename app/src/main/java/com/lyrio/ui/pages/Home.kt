@@ -183,13 +183,15 @@ fun HomeContent(
                     fontWeight = FontWeight.Bold,
                     fontSize = 38.sp,
                     modifier = Modifier.padding(end = 4.dp),
+                    color = Color.Black
                 )
                 if (showBalance) {
                     Text(
                         text = "58",
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp,
-                        modifier = Modifier.padding(top = 2.dp)
+                        modifier = Modifier.padding(top = 2.dp),
+                        color = Color.Black
                     )
                 }
             }
@@ -197,7 +199,8 @@ fun HomeContent(
                 Icon(
                     painter = if (showBalance) eyeIconPainter() else eyeOffIconPainter(),
                     contentDescription = if (showBalance) "Ocultar saldo" else "Mostrar saldo",
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier.size(24.dp),
+                    tint = Color.Black
                 )
             }
         }
