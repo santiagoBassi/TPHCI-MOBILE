@@ -20,7 +20,9 @@ import com.lyrio.ui.components.Successful
 
 @Preview(showBackground = true)
 @Composable
-fun ChangeAliasSuccesful() {
+fun ChangeAliasSuccessful(
+    navigateProfile: () -> Unit = {}
+) {
     val configuration = LocalConfiguration.current
 
     when (configuration.orientation) {
@@ -32,7 +34,7 @@ fun ChangeAliasSuccesful() {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                ChangeAliasSuccesfulContent(height = 1f)
+                ChangeAliasSuccesfulContent(height = 1f, navigateProfile)
             }
         }
 
@@ -44,7 +46,9 @@ fun ChangeAliasSuccesful() {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                ChangeAliasSuccesfulContent()
+                ChangeAliasSuccesfulContent(
+                    navigateProfile = navigateProfile
+                )
             }
         }
     }
@@ -52,12 +56,13 @@ fun ChangeAliasSuccesful() {
 }
 
 @Composable
-fun ChangeAliasSuccesfulContent(height: Float = 0.5f){
+fun ChangeAliasSuccesfulContent(height: Float = 0.5f, navigateProfile: () -> Unit = {}){
     val fakeAlias = "mi.nuevo.alias"
 
     Successful(
         message = "¡Cambiaste tu alias!",
         buttonLabel = "Volver al Perfil",
+        onClick = navigateProfile,
         height = height,
         content = {
             Column(

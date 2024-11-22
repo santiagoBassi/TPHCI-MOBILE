@@ -1,6 +1,7 @@
 package com.lyrio.ui.pages
 
 import android.content.res.Configuration
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -64,6 +65,8 @@ fun Home(
     navigateTransfer1: () -> Unit = {},
     navigateReceiveMoney: () -> Unit = {},
     navigateProfile: () -> Unit = {},
+    navigateMovements: () -> Unit = {},
+    navigateMoney: () -> Unit = {}
 ) {
     val configuration = LocalConfiguration.current
 
@@ -76,7 +79,9 @@ fun Home(
                 HomeContent(
                     navigateTransfer1,
                     navigateReceiveMoney,
-                    navigateProfile
+                    navigateProfile,
+                    navigateMovements,
+                    navigateMoney
                 )
             }
         }
@@ -92,7 +97,9 @@ fun Home(
                 HomeContent(
                     navigateTransfer1,
                     navigateReceiveMoney,
-                    navigateProfile
+                    navigateProfile,
+                    navigateMovements,
+                    navigateMoney
                 )
             }
         }
@@ -104,6 +111,8 @@ fun HomeContent(
     navigateTransfer1: () -> Unit = {},
     navigateReceiveMoney: () -> Unit = {},
     navigateProfile: () -> Unit = {},
+    navigateMovements: () -> Unit = {},
+    navigateMoney: () -> Unit = {}
 ) {
     val transfers = listOf(
         TransferData("Recibiste", 1234.56, "Juan Pérez", Date()),
@@ -144,6 +153,7 @@ fun HomeContent(
     AppWindow(
         title = "Dinero",
         showChevron = true,
+        onChevronClick = { navigateMoney() },
         modifier = Modifier
             .padding(bottom = 16.dp)
             .widthIn(max = 400.dp)
@@ -244,8 +254,8 @@ fun HomeContent(
                         "Ver todos mis movimientos ",
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
-                        modifier = Modifier.padding(start = 4.dp),
-                        color = Color.Gray
+                        modifier = Modifier.padding(start = 4.dp).clickable { navigateMovements() },
+                        color = Color.Gray,
                     )
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,

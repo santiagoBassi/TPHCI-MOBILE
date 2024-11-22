@@ -16,9 +16,11 @@ import androidx.compose.ui.unit.dp
 import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.components.Successful
 
-@Preview(showBackground = true)
 @Composable
-fun AddCardSuccessful() {
+fun AddCardSuccessful(
+    navigateAddCardSuccessful: () -> Unit,
+    navigateHome: () -> Unit
+) {
     val configuration = LocalConfiguration.current
 
     when (configuration.orientation) {
@@ -30,7 +32,7 @@ fun AddCardSuccessful() {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                AddCardSuccessfulContent(height = 1f)
+                AddCardSuccessfulContent(height = 1f, navigateAddCardSuccessful, navigateHome)
             }
         }
 
@@ -42,21 +44,25 @@ fun AddCardSuccessful() {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                AddCardSuccessfulContent()
+                AddCardSuccessfulContent(
+                    navigateAddCardSuccessful = navigateAddCardSuccessful,
+                    navigateHome = navigateHome
+                )
             }
         }
     }
 }
 
 @Composable
-fun AddCardSuccessfulContent(height: Float = 0.5f) {
+fun AddCardSuccessfulContent(height: Float = 0.5f, navigateAddCardSuccessful: () -> Unit, navigateHome: () -> Unit) {
     Successful(
         message = "¡Tarjeta agregada!",
         buttonLabel = "Volver al Inicio",
+        onClick = navigateHome,
         variant = "secondary",
         height = height
     ) {
-        Spacer(Modifier.height(40.dp))
-        AppButton(text = "Agregar otra tarjeta", onClick = {}, width = if(height == 1f) 0.6f else 0.8f)
+        Spacer(Modifier.height(30.dp))
+        AppButton(text = "Agregar otra tarjeta", onClick = navigateAddCardSuccessful, width = if(height == 1f) 0.6f else 0.8f)
     }
 }

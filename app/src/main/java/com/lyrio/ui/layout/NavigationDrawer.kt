@@ -59,7 +59,7 @@ val items = listOf(
     NavItem(R.drawable.currency_exchange_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Inversiones", "Transfer Icon", false,
         Screen.Invest) ,
     NavItem(R.drawable.link_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Link de pago", "Transfer Icon", false,
-        Screen.Home),
+        Screen.ReceiveMoney),
     NavItem(R.drawable.credit_card_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Tarjetas", "Transfer Icon", false,
         Screen.CreditCards),
     NavItem(R.drawable.logout_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Cerrar Sesion", "Logout Icon", false,
@@ -92,8 +92,8 @@ fun NavigationDrawerContent(navController: NavController){
             AlertDialog(
                 onDismissRequest = { openAlertDialog = false },
                 onConfirmation = {
-                    /* TODO */ // Cerrar sesión
                     openAlertDialog = false
+                    navController.navigate(Screen.Landing)
                 },
                 dialogTitle = "Cerrar sesión",
                 dialogText = "¿Estás seguro de que querés cerrar sesión?",

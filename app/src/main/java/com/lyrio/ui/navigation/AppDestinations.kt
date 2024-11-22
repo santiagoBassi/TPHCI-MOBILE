@@ -59,6 +59,9 @@ sealed class Screen(val route: String) {
     object Movements : Screen("movements")
 
     @Serializable
+    object Paylink : Screen("paylink")
+
+    @Serializable
     object Profile : Screen("profile")
 
     @Serializable

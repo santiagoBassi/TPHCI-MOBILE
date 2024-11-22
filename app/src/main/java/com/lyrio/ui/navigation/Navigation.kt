@@ -7,24 +7,32 @@ import androidx.navigation.compose.rememberNavController
 import com.lyrio.ui.auth.SignIn
 import com.lyrio.ui.auth.SignUp1
 import com.lyrio.ui.auth.SignUp2
+import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.layout.DefaultLayout
+import com.lyrio.ui.pages.AddCardSuccessful
+import com.lyrio.ui.pages.AddCreditCard
+import com.lyrio.ui.pages.AddInvestment
+import com.lyrio.ui.pages.ChangeAlias
 import com.lyrio.ui.pages.CreditCards
 import com.lyrio.ui.pages.Home
 import com.lyrio.ui.pages.Invest
 import com.lyrio.ui.pages.LandingPage
 import com.lyrio.ui.pages.Money
 import com.lyrio.ui.pages.Movements
+import com.lyrio.ui.pages.Paylink
 import com.lyrio.ui.pages.Profile
 import com.lyrio.ui.pages.ReceiveMoney
 import com.lyrio.ui.pages.Transfer1
 import com.lyrio.ui.pages.Transfer2
+import com.lyrio.ui.pages.WithdrawInvestment
+import com.lyrio.ui.pages.ChangeAliasSuccessful
 
 @Composable
 fun NavigationWrapper(){
     val navController = rememberNavController()
 
 
-    NavHost(navController = navController, startDestination = Screen.Landing){
+    NavHost(navController = navController, startDestination = Screen.Home){
 
         composable<Screen.Landing>{
             LandingPage(navigateSignIn = {
@@ -34,7 +42,7 @@ fun NavigationWrapper(){
             })
         }
 
-        composable< Screen.SignIn>{
+        composable<Screen.SignIn>{
             SignIn(navigateSignUp = {
                 navController.navigate(Screen.SignUp1)
             })
@@ -61,6 +69,12 @@ fun NavigationWrapper(){
                     },
                     navigateProfile = {
                         navController.navigate(Screen.Profile)
+                    },
+                    navigateMovements = {
+                        navController.navigate(Screen.Movements)
+                    },
+                    navigateMoney = {
+                        navController.navigate(Screen.Money)
                     }
                 )
             }
@@ -68,7 +82,11 @@ fun NavigationWrapper(){
 
         composable<Screen.Profile>{
             DefaultLayout(navController) {
-                Profile()
+                Profile(
+                    navigateChangeAlias = {
+                        navController.navigate(Screen.ChangeAlias)
+                    }
+                )
             }
         }
 
@@ -98,14 +116,111 @@ fun NavigationWrapper(){
 
         composable<Screen.Invest>{
             DefaultLayout(navController) {
-                Invest()
+                Invest(
+                    navigateAddInvestment = {
+                        navController.navigate(Screen.AddInvestment)
+                    },
+                    navigateWithdrawInvestment = {
+                        navController.navigate(Screen.WithdrawInvestment)
+                    }
+                )
+            }
+        }
+
+        composable<Screen.AddInvestment>{
+            DefaultLayout(navController) {
+                AddInvestment(
+                    navigateInvest = {
+                        navController.navigate(Screen.Invest)
+                    }
+                )
+            }
+        }
+
+        composable<Screen.WithdrawInvestment>{
+            DefaultLayout(navController) {
+                WithdrawInvestment(
+                    navigateInvest = {
+                        navController.navigate(Screen.Invest)
+                    }
+                )
+            }
+        }
+
+        composable<Screen.ReceiveMoney>{
+            DefaultLayout(navController) {
+                ReceiveMoney(
+                    navController.context,
+                    navigatePaylink = {
+                        navController.navigate(Screen.Paylink)
+                    }
+                )
+            }
+        }
+
+        composable<Screen.ChangeAlias>{
+            DefaultLayout(navController) {
+                ChangeAlias(
+                    navigateChangeAliasSuccessful = {
+                        navController.navigate(Screen.ChangeAliasSuccessful)
+                    }
+                )
+            }
+        }
+
+        composable<Screen.ChangeAliasSuccessful>{
+            DefaultLayout(navController) {
+                ChangeAliasSuccessful(
+                    navigateProfile = {
+                        navController.navigate(Screen.Profile)
+                    }
+                )
+            }
+        }
+
+        composable<Screen.Paylink> {
+            DefaultLayout(navController) {
+                Paylink(
+                    navController.context,
+                    navigateHome = {
+                        navController.navigate(Screen.Home)
+                    }
+                )
             }
         }
 
         composable<Screen.CreditCards>{
             DefaultLayout(navController) {
-                CreditCards()
+                CreditCards(
+                    navigateAddCreditCard = {
+                        navController.navigate(Screen.AddCreditCard)
+                    }
+                )
             }
         }
+
+        composable<Screen.AddCreditCard>{
+            DefaultLayout(navController) {
+                AddCreditCard(
+                    navigateAddCardSuccessful = {
+                        navController.navigate(Screen.AddCardSuccessful)
+                    }
+                )
+            }
+        }
+
+        composable<Screen.AddCardSuccessful>{
+            DefaultLayout(navController) {
+                AddCardSuccessful(
+                    navigateAddCardSuccessful = {
+                        navController.navigate(Screen.AddCreditCard)
+                    },
+                    navigateHome = {
+                        navController.navigate(Screen.Home)
+                    }
+                )
+            }
+        }
+
     }
 }

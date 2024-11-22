@@ -32,26 +32,34 @@ import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.components.AppWindow
 
 @Composable
-fun ReceiveMoney(context: Context){
+fun ReceiveMoney(
+    context: Context,
+    navigatePaylink: () -> Unit = {},
+){
     val configuration = LocalConfiguration.current
 
     when (configuration.orientation) {
         Configuration.ORIENTATION_LANDSCAPE -> { // Modo horizontal
-            ReceiveMoneyContentH {
-                CVUAliasWindow(context)
-            }
+            ReceiveMoneyContentH(
+                cvuAlias = { CVUAliasWindow(context) },
+                navigatePaylink = navigatePaylink
+            )
+
         }
+
         else -> { // Modo vertical u otras orientaciones
-            ReceiveMoneyContentV {
-                CVUAliasWindow(context)
-            }
+            ReceiveMoneyContentV(
+                cvuAlias = { CVUAliasWindow(context) },
+                navigatePaylink = navigatePaylink
+            )
         }
     }
 }
 
 @Composable
 fun ReceiveMoneyContentH(
-    cvuAlias: @Composable () -> Unit
+    cvuAlias: @Composable () -> Unit,
+    navigatePaylink: () -> Unit = {}
 ){
     Column(
         modifier = Modifier.fillMaxSize().padding(20.dp, 25.dp, 70.dp, 10.dp),
@@ -90,7 +98,7 @@ fun ReceiveMoneyContentH(
                     ){
                         AppButton(
                             text = "Generar link de pago",
-                            onClick = { /* TODO */ },
+                            onClick = navigatePaylink,
                             width = 0.8f
                         )
                     }
@@ -102,7 +110,8 @@ fun ReceiveMoneyContentH(
 
 @Composable
 fun ReceiveMoneyContentV(
-    cvuAlias: @Composable () -> Unit
+    cvuAlias: @Composable () -> Unit,
+    navigatePaylink: () -> Unit = {}
 ){
     Column(
         modifier = Modifier
@@ -129,7 +138,7 @@ fun ReceiveMoneyContentV(
                 cvuAlias()
                 AppButton(
                     text = "Generar link de pago",
-                    onClick = { /* TODO */ },
+                    onClick = navigatePaylink,
                     width = 0.8f
                 )
             }

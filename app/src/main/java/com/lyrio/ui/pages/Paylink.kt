@@ -31,7 +31,7 @@ import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.styles.Orange
 
 @Composable
-fun Paylink(context: Context) {
+fun Paylink(context: Context, navigateHome: () -> Unit = {}) {
     val configuration = LocalConfiguration.current
 
     when (configuration.orientation) {
@@ -39,11 +39,11 @@ fun Paylink(context: Context) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(50.dp,20.dp,100.dp,15.dp),
+                    .padding(50.dp, 20.dp, 100.dp, 15.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                PaylinkContent(context, height = 1f)
+                PaylinkContent(context, height = 1f, navigateHome)
             }
         }
 
@@ -55,28 +55,33 @@ fun Paylink(context: Context) {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                PaylinkContent(context, height = 0.6f)
+                PaylinkContent(context, height = 0.6f, navigateHome)
             }
         }
     }
 }
 
 @Composable
-fun PaylinkContent(context: Context, height: Float = 0.5f) {
+fun PaylinkContent(context: Context, height: Float = 0.5f, navigateHome: () -> Unit = {}) {
     val link = "https://lyrio.com/pay/1j8t90"
 
     Successful(
         message = "¡Link generado!",
         buttonLabel = "Volver al Inicio",
         variant = "secondary",
-        height = height
+        height = height,
+        onClick = navigateHome,
     ){
         Row(
-            modifier = Modifier.fillMaxWidth().padding(0.dp, 18.dp,0.dp,22.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(0.dp, 18.dp, 0.dp, 22.dp),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ){
-            Text(link, modifier = if(height == 1f) Modifier else Modifier.weight(1f).padding(start = 12.dp),
+            Text(link, modifier = if(height == 1f) Modifier else Modifier
+                .weight(1f)
+                .padding(start = 12.dp),
                 fontWeight = FontWeight.SemiBold, fontSize = 18.sp, textAlign = TextAlign.Center)
             IconButton(onClick = {
                 copyLink(context, link)

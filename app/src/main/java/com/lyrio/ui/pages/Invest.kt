@@ -36,9 +36,11 @@ import com.lyrio.ui.components.eyeOffIconPainter
 import com.lyrio.ui.styles.Green
 
 
-@Preview(showBackground = true)
 @Composable
-fun Invest() {
+fun Invest(
+    navigateAddInvestment: () -> Unit,
+    navigateWithdrawInvestment: () -> Unit
+) {
     val configuration = LocalConfiguration.current
 
     when (configuration.orientation) {
@@ -47,7 +49,11 @@ fun Invest() {
                 modifier = Modifier.fillMaxSize().padding(25.dp,25.dp,75.dp,15.dp),
                 horizontalArrangement = Arrangement.spacedBy(20.dp),
             ) {
-                InvestContent(170.dp)
+                InvestContent(
+                    maxBarHeight =  170.dp,
+                    navigateAddInvestment = navigateAddInvestment,
+                    navigateWithdrawInvestment = navigateWithdrawInvestment
+                )
             }
         }
 
@@ -59,7 +65,10 @@ fun Invest() {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                InvestContent()
+                InvestContent(
+                    navigateAddInvestment = navigateAddInvestment,
+                    navigateWithdrawInvestment = navigateWithdrawInvestment
+                )
             }
         }
     }
@@ -75,7 +84,11 @@ val investData = listOf(
 )
 
 @Composable
-fun InvestContent(maxBarHeight: Dp = 200.dp){
+fun InvestContent(
+    maxBarHeight: Dp = 200.dp,
+    navigateAddInvestment: () -> Unit,
+    navigateWithdrawInvestment: () -> Unit
+){
     var showBalance by remember { mutableStateOf(true) }
 
     AppWindow(
@@ -125,8 +138,8 @@ fun InvestContent(maxBarHeight: Dp = 200.dp){
                 horizontalArrangement = Arrangement.spacedBy(20.dp),
                 verticalAlignment = Alignment.CenterVertically
             ){
-                AppButton(text = "Invertir", onClick = { /* TODO */ }, modifier = Modifier.weight(1f))
-                AppButton(text = "Retirar", onClick = { /* TODO */ }, modifier = Modifier.weight(1f))
+                AppButton(text = "Invertir", onClick = navigateAddInvestment, modifier = Modifier.weight(1f))
+                AppButton(text = "Retirar", onClick = navigateWithdrawInvestment, modifier = Modifier.weight(1f))
             }
         }
     }
