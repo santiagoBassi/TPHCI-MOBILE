@@ -8,9 +8,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.lyrio.R
 import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.components.AppInput
 import com.lyrio.ui.components.AppWindow
@@ -67,7 +69,7 @@ fun ChangeAliasContent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Ingresá tu nuevo alias",
+                text = stringResource(R.string.enter_new_alias),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold
             )
@@ -75,21 +77,21 @@ fun ChangeAliasContent(
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
                 verticalArrangement = Arrangement.spacedBy(if(landscape) 5.dp else 16.dp),
             ) {
-                AppInput(value = newAlias, onValueChange = { onNewAliasChange(it) }, label = "Nuevo alias",
+                AppInput(value = newAlias, onValueChange = { onNewAliasChange(it) }, label = stringResource(R.string.new_alias),
                     modifier = Modifier.fillMaxWidth().padding(horizontal = if(landscape) 100.dp else 8.dp))
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(" -  Debe tener entre 6 y 20 caracteres")
-                Text(" -  No uses la letra ñ")
+                Text(stringResource(R.string.rule1))
+                Text(stringResource(R.string.rule2))
                 if(landscape) {
-                    Text(" -  Los únicos caracteres especiales permitidos son  '_'  y  '.'")
+                    Text(stringResource(R.string.rule3))
                 } else {
                     Column {
-                        Text(" -  Los únicos caracteres especiales ")
-                        Text("    permitidos son  '_'  y  '.'")
+                        Text(stringResource(R.string.rule3_1))
+                        Text(stringResource(R.string.rule3_2))
                     }
                 }
             }
-            AppButton(text = "Cambiar alias", onClick = navigateChangeAliasSuccessful, width = if(landscape) 0.6f else 0.8f)
+            AppButton(text = stringResource(R.string.change_alias), onClick = navigateChangeAliasSuccessful, width = if(landscape) 0.6f else 0.8f)
         }
 
     }

@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -96,7 +97,7 @@ fun CreditCard(
                             fontWeight = FontWeight.Medium
                         )
                         Text(
-                            text = "Crédito",
+                            text = stringResource(R.string.credit),
                             color = Color.White,
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Medium
@@ -109,7 +110,7 @@ fun CreditCard(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "Crédito",
+                            text = stringResource(R.string.credit),
                             color = Color.White,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Medium

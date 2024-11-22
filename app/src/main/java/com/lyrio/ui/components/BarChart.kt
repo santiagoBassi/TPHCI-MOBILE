@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
@@ -45,10 +46,10 @@ fun BarChart(data: List<BarChartData>, maxBarHeight: Dp) {
                         .background(Orange, RoundedCornerShape(8.dp))
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(text = item.label)
+                Text(text = stringResource(item.label))
             }
         }
     }
 }
 
-data class BarChartData(val label: String, val expense: Float)
+data class BarChartData(val label: Int, val expense: Float)

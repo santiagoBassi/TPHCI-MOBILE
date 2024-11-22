@@ -11,8 +11,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.lyrio.R
 import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.components.Successful
 
@@ -56,13 +58,13 @@ fun AddCardSuccessful(
 @Composable
 fun AddCardSuccessfulContent(height: Float = 0.5f, navigateAddCardSuccessful: () -> Unit, navigateHome: () -> Unit) {
     Successful(
-        message = "¡Tarjeta agregada!",
-        buttonLabel = "Volver al Inicio",
+        message = stringResource(R.string.card_added),
+        buttonLabel = stringResource(R.string.back_home),
         onClick = navigateHome,
         variant = "secondary",
         height = height
     ) {
         Spacer(Modifier.height(30.dp))
-        AppButton(text = "Agregar otra tarjeta", onClick = navigateAddCardSuccessful, width = if(height == 1f) 0.6f else 0.8f)
+        AppButton(text = stringResource(R.string.add_another_card), onClick = navigateAddCardSuccessful, width = if(height == 1f) 0.6f else 0.8f)
     }
 }

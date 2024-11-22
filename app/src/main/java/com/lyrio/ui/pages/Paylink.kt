@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -66,8 +67,8 @@ fun PaylinkContent(context: Context, height: Float = 0.5f, navigateHome: () -> U
     val link = "https://lyrio.com/pay/1j8t90"
 
     Successful(
-        message = "¡Link generado!",
-        buttonLabel = "Volver al Inicio",
+        message = stringResource(R.string.link_generated),
+        buttonLabel = stringResource(R.string.back_home),
         variant = "secondary",
         height = height,
         onClick = navigateHome,
@@ -94,7 +95,7 @@ fun PaylinkContent(context: Context, height: Float = 0.5f, navigateHome: () -> U
                 )
             }
         }
-        AppButton(text = "Generar otro link", onClick = {}, width = if(height == 1f) 0.6f else 0.8f, background = Orange)
+        AppButton(text = stringResource(R.string.generate_another_link), onClick = {}, width = if(height == 1f) 0.6f else 0.8f, background = Orange)
     }
 }
 

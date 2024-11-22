@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -99,16 +100,16 @@ fun CreditCardsContent(cards: List<CreditCardData>, onCardDelete: (CreditCardDat
                     cardToDelete?.let(onCardDelete)
                     openAlertDialog = false
                 },
-                dialogTitle = "Eliminar tarjeta?",
-                dialogText = "La tarjeta será eliminada de tu cuenta y cualquier dispositivo asociado.",
-                dismissText = "Cancelar",
-                confirmText = "Eliminar"
+                dialogTitle = stringResource(R.string.remove_card),
+                dialogText = stringResource(R.string.card_model_lore),
+                dismissText = stringResource(R.string.cancel),
+                confirmText = stringResource(R.string.remove)
             )
         }
     }
 
     AppWindow(
-        title = "Tarjetas de crédito",
+        title = stringResource(R.string.credit_cards),
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -128,12 +129,12 @@ fun CreditCardsContent(cards: List<CreditCardData>, onCardDelete: (CreditCardDat
                 }
             } else {
                 Text(
-                    text = "No tenés tarjetas asociadas",
+                    text = stringResource(R.string.no_cards_associated),
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.Gray,
                 )
             }
-            AppButton(text = "Agregar tarjeta", width = 0.8f,onClick = navigateAddCreditCard, modifier = Modifier.padding(vertical = 15.dp))
+            AppButton(text = stringResource(R.string.add_card), width = 0.8f,onClick = navigateAddCreditCard, modifier = Modifier.padding(vertical = 15.dp))
         }
     }
 }

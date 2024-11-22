@@ -23,6 +23,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -163,7 +164,7 @@ fun AddCardContentH(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                "Agregar tarjeta",
+                stringResource(R.string.add_card),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold
             )
@@ -186,7 +187,7 @@ fun AddCardContentH(
                     cardInputs()
                 }
             }
-            AppButton(text = "Continuar", width = 0.5f, onClick = navigateAddCardSuccessful)
+            AppButton(text = stringResource(R.string.continue_), width = 0.5f, onClick = navigateAddCardSuccessful)
         }
     }
 }
@@ -204,7 +205,7 @@ fun AddCardContentV(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                "Agregar tarjeta",
+                stringResource(R.string.add_card),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold
             )
@@ -223,7 +224,7 @@ fun AddCardContentV(
                 cardInputs()
             }
             Spacer(Modifier.height(6.dp))
-            AppButton(text = "Agregar", width = 0.8f, onClick = navigateAddCardSuccessful)
+            AppButton(text = stringResource(R.string.add), width = 0.8f, onClick = navigateAddCardSuccessful)
         }
     }
 }
@@ -242,7 +243,7 @@ fun CardInputs(
     onStateChange: (CardFace) -> Unit
 ){
     AppInput(
-        label = "Número de tarjeta",
+        label = stringResource(R.string.card_number),
         value = cardNumber,
         onValueChange = { if (it.length <= 16) onCardNumberChange(it) },
         modifier = Modifier.fillMaxWidth(),
@@ -250,7 +251,7 @@ fun CardInputs(
         onFocusAction = {onStateChange(if(it) CardFace.Front else CardFace.Back)}
     )
     AppInput(
-        label = "Nombre del titular",
+        label = stringResource(R.string.holder_name),
         value = holderName,
         onValueChange = {if (it.length <= 25) onHolderNameChange(it)},
         modifier = Modifier.fillMaxWidth(),
@@ -261,15 +262,15 @@ fun CardInputs(
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         AppInput(
-            label = "Vencimiento",
+            label = stringResource(R.string.expiry),
             value = expiryDate,
             onValueChange = { if (it.length <= 5) onExpiryDateChange(it) },
             modifier = Modifier.fillMaxWidth(0.6f),
-            placeholder = "MM/YY",
+            placeholder = stringResource(R.string.expiry_format),
             onFocusAction = { onStateChange(if (it) CardFace.Front else CardFace.Back) }
         )
         AppInput(
-            label = "CVV",
+            label = stringResource(R.string.cvv),
             value = cvv,
             onValueChange = { if (it.length <= 3) onCvvChange(it) },
             modifier = Modifier.fillMaxWidth(),

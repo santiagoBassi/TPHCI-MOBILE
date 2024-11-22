@@ -12,10 +12,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.lyrio.R
 import com.lyrio.ui.components.Successful
 
 @Preview(showBackground = true)
@@ -60,8 +62,8 @@ fun ChangeAliasSuccesfulContent(height: Float = 0.5f, navigateProfile: () -> Uni
     val fakeAlias = "mi.nuevo.alias"
 
     Successful(
-        message = "¡Cambiaste tu alias!",
-        buttonLabel = "Volver al Perfil",
+        message = stringResource(R.string.alias_changed),
+        buttonLabel = stringResource(R.string.back_profile),
         onClick = navigateProfile,
         height = height,
         content = {
@@ -70,8 +72,8 @@ fun ChangeAliasSuccesfulContent(height: Float = 0.5f, navigateProfile: () -> Uni
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Text("Tu nuevo alias es: ", color = Color.Gray, fontWeight = FontWeight.Medium)
-                Text(fakeAlias, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.your_new_alias), color = Color.Gray, fontWeight = FontWeight.Medium)
+                Text(" $fakeAlias", fontSize = 20.sp, fontWeight = FontWeight.Bold)
 
             }
         }

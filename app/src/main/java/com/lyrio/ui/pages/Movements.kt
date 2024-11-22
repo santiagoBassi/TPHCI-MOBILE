@@ -28,8 +28,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.res.painterResource // Import para painterResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.lyrio.R
 import com.lyrio.ui.components.AppWindow
@@ -37,7 +37,6 @@ import com.lyrio.ui.components.TransferItem
 import com.lyrio.ui.styles.OffWhite
 import java.util.Date
 
-@Preview(showBackground = true)
 @Composable
 fun Movements() {
 
@@ -76,26 +75,26 @@ fun MovementsContent(){
     var searchText by remember { mutableStateOf("") }
     val recentTransfers = remember {
         mutableStateListOf(
-            TransferData(transactionType = "Enviaste", amount = 1500.0, recipient = "Supermercado", date = Date()),
-            TransferData(transactionType = "Recibiste", amount = 5000.0, recipient = "Juan Pérez", date = Date()),
-            TransferData(transactionType = "Enviaste", amount = 1000.0, recipient = "Celular", date = Date()),
-            TransferData(transactionType = "Enviaste", amount = 200.0, recipient = "Kiosco", date = Date()),
-            TransferData(transactionType = "Recibiste", amount = 10000.0, recipient = "María García", date = Date()),
-            TransferData(transactionType = "Enviaste", amount = 1500.0, recipient = "Supermercado", date = Date()),
-            TransferData(transactionType = "Recibiste", amount = 5000.0, recipient = "Juan Pérez", date = Date()),
-            TransferData(transactionType = "Enviaste", amount = 1000.0, recipient = "Celular", date = Date()),
-            TransferData(transactionType = "Enviaste", amount = 200.0, recipient = "Kiosco", date = Date()),
-            TransferData(transactionType = "Recibiste", amount = 10000.0, recipient = "María García", date = Date()),
-            TransferData(transactionType = "Enviaste", amount = 1500.0, recipient = "Supermercado", date = Date()),
-            TransferData(transactionType = "Recibiste", amount = 5000.0, recipient = "Juan Pérez", date = Date()),
-            TransferData(transactionType = "Enviaste", amount = 1000.0, recipient = "Celular", date = Date()),
-            TransferData(transactionType = "Enviaste", amount = 200.0, recipient = "Kiosco", date = Date()),
-            TransferData(transactionType = "Recibiste", amount = 10000.0, recipient = "María García", date = Date())
+            TransferData(transactionType = R.string.sent, amount = 1500.0, recipient = "Supermercado", date = Date()),
+            TransferData(transactionType = R.string.received, amount = 5000.0, recipient = "Juan Pérez", date = Date()),
+            TransferData(transactionType = R.string.sent, amount = 1000.0, recipient = "Celular", date = Date()),
+            TransferData(transactionType = R.string.sent, amount = 200.0, recipient = "Kiosco", date = Date()),
+            TransferData(transactionType = R.string.received, amount = 10000.0, recipient = "María García", date = Date()),
+            TransferData(transactionType = R.string.sent, amount = 1500.0, recipient = "Supermercado", date = Date()),
+            TransferData(transactionType = R.string.received, amount = 5000.0, recipient = "Juan Pérez", date = Date()),
+            TransferData(transactionType = R.string.sent, amount = 1000.0, recipient = "Celular", date = Date()),
+            TransferData(transactionType = R.string.sent, amount = 200.0, recipient = "Kiosco", date = Date()),
+            TransferData(transactionType = R.string.received, amount = 10000.0, recipient = "María García", date = Date()),
+            TransferData(transactionType = R.string.sent, amount = 1500.0, recipient = "Supermercado", date = Date()),
+            TransferData(transactionType = R.string.received, amount = 5000.0, recipient = "Juan Pérez", date = Date()),
+            TransferData(transactionType = R.string.sent, amount = 1000.0, recipient = "Celular", date = Date()),
+            TransferData(transactionType = R.string.sent, amount = 200.0, recipient = "Kiosco", date = Date()),
+            TransferData(transactionType = R.string.received, amount = 10000.0, recipient = "María García", date = Date())
         )
     }
 
     AppWindow(
-        title = "Movimientos",
+        title = stringResource(R.string.movements),
     ) {
         Column(modifier = Modifier.padding(horizontal = 10.dp)) {
             SearchBar(
@@ -125,7 +124,7 @@ fun MovementsContent(){
                         }
                     }
                 },
-                placeholder = { Text("Buscar", color = Color.Gray) },
+                placeholder = { Text(stringResource(R.string.search), color = Color.Gray) },
                 shape = RoundedCornerShape(16.dp),
                 modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
                 colors = SearchBarDefaults.colors(OffWhite),
@@ -143,7 +142,7 @@ fun MovementsContent(){
                             transfer.date.toString().contains(searchText, ignoreCase = true)
                 }) { transfer ->
                     TransferItem(
-                        transactionType = transfer.transactionType,
+                        transactionType = stringResource(transfer.transactionType),
                         amount = transfer.amount,
                         recipient = transfer.recipient,
                         date = transfer.date

@@ -75,15 +75,6 @@ fun Invest(
     }
 }
 
-val investData = listOf(
-    BarChartData("Jun", 250f),
-    BarChartData("Jul", 100f),
-    BarChartData("Ago", 200f),
-    BarChartData("Sep", 150f),
-    BarChartData("Oct", 300f),
-    BarChartData("Nov", 50f),
-)
-
 @Composable
 fun InvestContent(
     maxBarHeight: Dp = 200.dp,
@@ -171,3 +162,13 @@ fun InvestContent(
         BarChart(investData, maxBarHeight)
     }
 }
+
+val investData = listOf(
+    BarChartData(months[(actualMonth - 6 + months.size) % months.size], 250f),
+    BarChartData(months[(actualMonth - 5 + months.size) % months.size], 100f),
+    BarChartData(months[(actualMonth - 4 + months.size) % months.size], 200f),
+    BarChartData(months[(actualMonth - 3 + months.size) % months.size], 150f),
+    BarChartData(months[(actualMonth - 2 + months.size) % months.size], 300f),
+    BarChartData(months[(actualMonth - 1 + months.size) % months.size], 50f)
+)
+

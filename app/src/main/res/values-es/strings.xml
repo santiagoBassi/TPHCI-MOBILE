@@ -11,7 +11,7 @@
     <string name="add_card">Agregar tarjeta</string>
     <string name="cards">Tarjetas</string>
 
-    <!-- HOME -->
+    <!-- Home -->
     <string name="received">Recibiste</string>
     <string name="sent">Enviaste</string>
     <string name="receive">Recibir</string>
@@ -73,9 +73,73 @@
     <string name="lastname">Apellido</string>
     <string name="email">Email</string>
     <string name="birthdate">Fecha de nacimiento</string>
+    <string name="date_format">DD/MM/AAAA</string>
     <string name="edit_profile">Editar perfil</string>
     <string name="save_changes">Guardar cambios</string>
     <string name="change_alias">Cambiar alias</string>
+
+    <!-- ChangeAlias -->
+    <string name="enter_new_alias">Ingresá tu nuevo alias</string>
+    <string name="new_alias">Nuevo alias</string>
+    <string name="rule1"> -  Debe tener entre 6 y 20 caracteres</string>
+    <string name="rule2"> -  No uses la letra ñ</string>
+    <string name="rule3"> -  Los únicos caracteres especiales permitidos son  '_'  y  '.'</string>
+    <string name="rule3_1"> -  Los únicos caracteres especiales</string>
+    <string name="rule3_2">    permitidos son  '_'  y  '.'</string>
+
+    <!-- ChangeAliasSuccessful -->
+    <string name="alias_changed">¡Cambiaste tu alias!</string>
+    <string name="back_profile">Volver al Perfil</string>
+    <string name="your_new_alias">Tu nuevo alias es: </string>
+
+    <!-- Paylink -->
+    <string name="link_generated">¡Link generado!</string>
+    <string name="generate_another_link">Generar otro link</string>
+
+    <!-- Movements -->
+    <string name="search">Buscar</string>
+
+    <!-- Money -->
+    <string name="expenses">Gastos</string>
+
+    <!-- Months -->
+    <string name="jan">Ene</string>
+    <string name="feb">Feb</string>
+    <string name="mar">Mar</string>
+    <string name="apr">Abr</string>
+    <string name="may">May</string>
+    <string name="jun">Jun</string>
+    <string name="jul">Jul</string>
+    <string name="aug">Ago</string>
+    <string name="sep">Sep</string>
+    <string name="oct">Oct</string>
+    <string name="nov">Nov</string>
+    <string name="dec">Dic</string>
+
+    <!-- CreditCards -->
+    <string name="add_credit_card">Agregar tarjeta</string>
+    <string name="credit_cards">Tarjetas de crédito</string>
+    <string name="no_cards_associated">No tenés tarjetas asociadas</string>
+    <string name="remove_card">Eliminar tarjeta?</string>
+    <string name="card_model_lore">La tarjeta será eliminada de tu cuenta y cualquier dispositivo asociado.</string>
+    <string name="cancel">Cancelar</string>
+    <string name="remove">Eliminar</string>
+    <string name="credit">Crédito</string>
+
+    <!-- AddCreditCard -->
+    <string name="card_number">Número de tarjeta</string>
+    <string name="holder_name">Nombre del titular</string>
+    <string name="expiry">Vencimiento</string>
+    <string name="expiry_format">MM/AA</string>
+    <string name="cvv">CVV</string>
+    <string name="add">Agregar</string>
+
+    <!-- AddCardSuccessful -->
+    <string name="card_added">¡Tarjeta agregada!</string>
+    <string name="add_another_card">Agregar otra tarjeta</string>
+
+
+
 
 
 </resources>

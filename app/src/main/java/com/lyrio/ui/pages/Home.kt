@@ -54,7 +54,7 @@ fun receiveIconPainter(): Painter = painterResource(id = R.drawable.receive)
 fun cvuAliasIconPainter(): Painter = painterResource(id = R.drawable.cvu_alias)
 
 data class TransferData(
-    val transactionType: String,
+    val transactionType: Int,
     val amount: Double,
     val recipient: String,
     val date: Date
@@ -116,9 +116,9 @@ fun HomeContent(
     navigateMoney: () -> Unit = {}
 ) {
     val transfers = listOf(
-        TransferData("Recibiste", 1234.56, "Juan Pérez", Date()),
+        TransferData(R.string.received, 1234.56, "Juan Pérez", Date()),
         TransferData(
-            "Enviaste",
+            R.string.sent,
             -567.89,
             "María García",
             Calendar.getInstance().apply {
@@ -129,7 +129,7 @@ fun HomeContent(
             }.time
         ),
         TransferData(
-            "Recibiste",
+            R.string.received,
             345.67,
             "Pedro López",
             Calendar.getInstance().apply {
@@ -137,7 +137,7 @@ fun HomeContent(
             }.time
         ),
         TransferData(
-            "Enviaste",
+            R.string.sent,
             -567.89,
             "María García",
             Calendar.getInstance().apply {
@@ -240,7 +240,7 @@ fun HomeContent(
                 ) {
                     items(transfers.take(4)) { transferData ->
                         TransferItem(
-                            transactionType = transferData.transactionType,
+                            transactionType = stringResource(transferData.transactionType),
                             amount = transferData.amount,
                             recipient = transferData.recipient,
                             date = transferData.date

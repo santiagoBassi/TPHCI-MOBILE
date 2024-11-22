@@ -29,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -36,6 +37,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.lyrio.R
 import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.components.AppInput
 import com.lyrio.ui.components.AppWindow
@@ -140,7 +142,7 @@ fun PersonalData(
     isEditing: Boolean,
     onEditClick: (Boolean) -> Unit
 ){
-    AppWindow(title = "Datos personales", modifier = Modifier.padding(bottom = 16.dp)) {
+    AppWindow(title = stringResource(R.string.personal_data), modifier = Modifier.padding(bottom = 16.dp)) {
         Column(
             modifier = Modifier.padding(10.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp),
@@ -148,21 +150,21 @@ fun PersonalData(
             AppInput(
                 value = firstName,
                 onValueChange = { onFirstNameChange(it) },
-                label = "Nombre",
+                label = stringResource(R.string.firstname),
                 readOnly = !isEditing,
                 modifier = Modifier.fillMaxWidth()
             )
             AppInput(
                 value = lastName,
                 onValueChange = { onLastNameChange(it) },
-                label = "Apellido",
+                label = stringResource(R.string.lastname),
                 readOnly = !isEditing,
                 modifier = Modifier.fillMaxWidth()
             )
             AppInput(
                 value = email,
                 onValueChange = { onEmailChange(it) },
-                label = "Email",
+                label = stringResource(R.string.email),
                 readOnly = !isEditing,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 modifier = Modifier.fillMaxWidth()
@@ -170,8 +172,8 @@ fun PersonalData(
             AppInput(
                 value = birthDate,
                 onValueChange = { onBirthDateChange(it) },
-                label = "Fecha de nacimiento",
-                placeholder = "DD/MM/AAAA",
+                label = stringResource(R.string.birthdate),
+                placeholder = stringResource(R.string.date_format),
                 readOnly = !isEditing,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -182,7 +184,7 @@ fun PersonalData(
             horizontalArrangement = Arrangement.Center,
         ) {
             AppButton(
-                text = if (isEditing) "Guardar cambios" else "Editar perfil",
+                text = if (isEditing) stringResource(R.string.save_changes) else stringResource(R.string.edit_profile),
                 onClick = { onEditClick(!isEditing) },
                 width = 0.8f,
                 background = if (isEditing) Orange else LightGray
@@ -195,7 +197,7 @@ fun PersonalData(
 fun CVUAlias(
     navigateChangeAlias: () -> Unit = {}
 ){
-    AppWindow(title = "CVU y Alias", modifier = Modifier.padding(bottom = 16.dp)) {
+    AppWindow(title = stringResource(R.string.cvu_alias), modifier = Modifier.padding(bottom = 16.dp)) {
         Column(
             modifier = Modifier
                 .padding(12.dp)
@@ -208,7 +210,7 @@ fun CVUAlias(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("CVU:")
+                Text(stringResource(R.string.cvu))
                 Text("000000123019231200")
             }
             Spacer(modifier = Modifier.width(8.dp))
@@ -219,7 +221,7 @@ fun CVUAlias(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("Alias:")
+                Text(stringResource(R.string.alias))
                 Text("mi.alias.lyrio")
             }
             Spacer(modifier = Modifier.height(4.dp))
@@ -229,7 +231,7 @@ fun CVUAlias(
                 horizontalArrangement = Arrangement.End
             ) {
                 Text(
-                    text = "Cambiar alias",
+                    text = stringResource(R.string.change_alias),
                     style = TextStyle(textDecoration = TextDecoration.Underline),
                     color = Color.Gray,
                     modifier = Modifier.clickable { navigateChangeAlias() }
@@ -260,16 +262,15 @@ fun Welcome(firstName: String){
                 modifier = Modifier.padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = "Bienvenido, ", fontSize = 22.sp, fontWeight = FontWeight.SemiBold)
+                Text(text = stringResource(R.string.welcome), fontSize = 22.sp, fontWeight = FontWeight.SemiBold)
                 Text(
-                    text = firstName,
+                    text = " $firstName",
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
                     color = Orange
                 )
                 Text(text = "!", fontSize = 22.sp, fontWeight = FontWeight.Medium)
             }
-
         }
     }
 }
