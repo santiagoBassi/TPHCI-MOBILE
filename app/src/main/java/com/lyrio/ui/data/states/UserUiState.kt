@@ -1,14 +1,14 @@
 package com.lyrio.ui.data.states
 
 import com.lyrio.data.model.Error
-import java.util.Date
 
-data class SignUpUiState(
+data class UserUiState(
     val firstName: String = "",
     val lastName: String = "",
-    val dateOfBirth: Date = Date(),
+    val dateOfBirth: String = "",
     val email: String = "",
     val password: String = "",
+    val code: String = "",
     val isFetching: Boolean = false,
     val error: Error? = null
 )

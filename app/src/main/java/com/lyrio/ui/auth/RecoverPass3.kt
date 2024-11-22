@@ -28,12 +28,16 @@ import androidx.compose.ui.unit.sp
 import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.components.AppInput
 import com.lyrio.ui.components.AppWindow
+import com.lyrio.ui.data.viewmodels.UserViewModel
 import com.lyrio.ui.layout.AuthHeader
 import com.lyrio.ui.styles.OffWhite
 
-@Preview(showBackground = true)
+
 @Composable
-fun RecoverPass3() {
+fun RecoverPass3(
+    navigateSignIn: () -> Unit = {},
+    viewModel: UserViewModel
+) {
     var newPassword by rememberSaveable(key = "recover3NewPassword") { mutableStateOf("") }
     var confirmPassword by rememberSaveable(key = "recover3ConfirmPassword") { mutableStateOf("") }
 
@@ -62,7 +66,9 @@ fun RecoverPass3() {
                         newPassword = newPassword,
                         onNewPasswordChange = { newPassword = it },
                         confirmPassword = confirmPassword,
-                        onConfirmPasswordChange = { confirmPassword = it }
+                        onConfirmPasswordChange = { confirmPassword = it },
+                        viewModel = viewModel,
+                        navigateSignIn = navigateSignIn
                     )
                 }
             }
@@ -88,7 +94,9 @@ fun RecoverPass3() {
                         newPassword = newPassword,
                         onNewPasswordChange = { newPassword = it },
                         confirmPassword = confirmPassword,
-                        onConfirmPasswordChange = { confirmPassword = it }
+                        onConfirmPasswordChange = { confirmPassword = it },
+                        viewModel = viewModel,
+                        navigateSignIn = navigateSignIn
                     )
                 }
 
@@ -104,7 +112,9 @@ fun RecoverPass3Content(
     newPassword: String,
     onNewPasswordChange: (String) -> Unit,
     confirmPassword: String,
-    onConfirmPasswordChange: (String) -> Unit
+    onConfirmPasswordChange: (String) -> Unit,
+    viewModel: UserViewModel,
+    navigateSignIn: () -> Unit
 ){
     AppWindow(
         modifier = Modifier
@@ -153,7 +163,14 @@ fun RecoverPass3Content(
                     isPassword = true
                 )
             }
-            AppButton(text = "Guardar contraseña", onClick = { /* TODO */ }, width = 0.8f)
+            AppButton(text = "Guardar contraseña", onClick = {
+                try {
+                    viewModel.recoverPass2(newPassword)
+                    navigateSignIn()
+                }catch (e: Exception){
+                    println(e.message)
+                }
+            }, width = 0.8f)
         }
     }
 }

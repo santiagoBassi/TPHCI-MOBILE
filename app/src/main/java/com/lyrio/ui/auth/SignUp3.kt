@@ -28,12 +28,14 @@ import androidx.compose.ui.unit.sp
 import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.components.AppInput
 import com.lyrio.ui.components.AppWindow
+import com.lyrio.ui.data.viewmodels.UserViewModel
 import com.lyrio.ui.layout.AuthHeader
 import com.lyrio.ui.styles.OffWhite
 
 @Composable
 fun SignUp3(
-    navigateSignIn: () -> Unit
+    navigateSignIn: () -> Unit,
+    viewModel: UserViewModel
 ) {
     var code by rememberSaveable(key = "recover2Code") { mutableStateOf("") }
 
@@ -61,7 +63,8 @@ fun SignUp3(
                         landscape = true,
                         code = code,
                         onCodeChange = { code = it },
-                        navigateSignIn = navigateSignIn
+                        navigateSignIn = navigateSignIn,
+                        viewModel = viewModel
                     )
                 }
             }
@@ -86,7 +89,8 @@ fun SignUp3(
                         height = 0.7f,
                         code = code,
                         onCodeChange = { code = it },
-                        navigateSignIn = navigateSignIn
+                        navigateSignIn = navigateSignIn,
+                        viewModel = viewModel
                     )
                 }
 
@@ -101,7 +105,8 @@ fun SignUp3Content(
     landscape: Boolean = false,
     code: String,
     onCodeChange: (String) -> Unit,
-    navigateSignIn: () -> Unit
+    navigateSignIn: () -> Unit,
+    viewModel: UserViewModel
 ){
     AppWindow(
         modifier = Modifier
@@ -144,7 +149,16 @@ fun SignUp3Content(
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
-            AppButton(text = "Verificar cuenta", onClick = navigateSignIn, width = 0.8f)
+            AppButton(text = "Verificar cuenta", onClick = {
+                try {
+                    viewModel.verifyEmail(code)
+                    navigateSignIn()
+                }catch (e : Exception){
+                    println(e) //TODO()
+                }
+
+
+            }, width = 0.8f)
         }
     }
 }

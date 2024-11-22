@@ -1,12 +1,19 @@
 package com.lyrio.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.lyrio.LyrioApp
+import com.lyrio.ui.auth.RecoverPass1
+import com.lyrio.ui.auth.RecoverPass2
+import com.lyrio.ui.auth.RecoverPass3
 import com.lyrio.ui.auth.SignIn
 import com.lyrio.ui.auth.SignUp1
 import com.lyrio.ui.auth.SignUp2
+import com.lyrio.ui.data.viewmodels.UserViewModel
 import com.lyrio.ui.auth.SignUp3
 import com.lyrio.ui.layout.DefaultLayout
 import com.lyrio.ui.pages.AddCardSuccessful
@@ -31,7 +38,7 @@ import com.lyrio.ui.pages.TransferSuccessful
 @Composable
 fun NavigationWrapper(){
     val navController = rememberNavController()
-
+    val userViewModel : UserViewModel = viewModel(factory = UserViewModel.provideFactory(LocalContext.current.applicationContext as LyrioApp))
 
     NavHost(navController = navController, startDestination = Screen.Home){
 
@@ -44,26 +51,72 @@ fun NavigationWrapper(){
         }
 
         composable<Screen.SignIn>{
-            SignIn(navigateSignUp = {
+            SignIn(
+            navigateSignUp = {
                 navController.navigate(Screen.SignUp1)
-            })
+            },
+            navigateHome = {
+                navController.navigate(Screen.Home)
+            },
+            navigateRecoverPass1 = {
+                navController.navigate(Screen.RecoverPass1)
+            },
+            viewModel = userViewModel)
         }
 
         composable<Screen.SignUp1>{
-            SignUp1(navigateSignUp2 = {
+            SignUp1(
+            navigateSignUp2 = {
                 navController.navigate(Screen.SignUp2)
-            })
+            },
+            navigateSignIn = {
+                navController.navigate(Screen.SignIn)
+            },
+            viewModel = userViewModel)
         }
 
         composable<Screen.SignUp2>{
-            SignUp2()
+            SignUp2(
+                viewModel = userViewModel,
+                navigateSignUp3 = {
+                    navController.navigate(Screen.SignUp3)
+                }
+            )
         }
 
         composable<Screen.SignUp3> {
             SignUp3(
                 navigateSignIn = {
                     navController.navigate(Screen.SignIn)
-                }
+                },
+                viewModel = userViewModel
+            )
+        }
+
+        composable<Screen.RecoverPass1> {
+            RecoverPass1(
+                navigateRecoverPass2 = {
+                    navController.navigate(Screen.RecoverPass2)
+                },
+                viewModel = userViewModel
+            )
+        }
+
+        composable<Screen.RecoverPass2> {
+            RecoverPass2(
+                navigateRecoverPass3 = {
+                    navController.navigate(Screen.RecoverPass3)
+                },
+                viewModel = userViewModel
+            )
+        }
+
+        composable<Screen.RecoverPass3> {
+            RecoverPass3(
+                navigateSignIn = {
+                    navController.navigate(Screen.SignIn)
+                },
+                viewModel = userViewModel
             )
         }
 

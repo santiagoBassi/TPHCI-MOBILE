@@ -27,15 +27,19 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.components.AppInput
 import com.lyrio.ui.components.AppWindow
+import com.lyrio.ui.data.viewmodels.UserViewModel
 import com.lyrio.ui.layout.AuthHeader
 import com.lyrio.ui.styles.OffWhite
 
-@Preview(showBackground = true)
 @Composable
-fun RecoverPass1() {
+fun RecoverPass1(
+    navigateRecoverPass2: () -> Unit = {},
+    viewModel: UserViewModel
+) {
     var email by rememberSaveable(key = "recover1Email") { mutableStateOf("") }
 
     val configuration = LocalConfiguration.current
@@ -62,6 +66,9 @@ fun RecoverPass1() {
                         landscape = true,
                         email = email,
                         onEmailChange = { email = it },
+                        viewModel = viewModel,
+                        navigateRecoverPass2 = navigateRecoverPass2
+
                     )
                 }
             }
@@ -86,6 +93,8 @@ fun RecoverPass1() {
                         height = 0.7f,
                         email = email,
                         onEmailChange = { email = it },
+                        viewModel = viewModel,
+                        navigateRecoverPass2 = navigateRecoverPass2
                     )
                 }
 
@@ -99,7 +108,9 @@ fun RecoverPass1Content(
     height: Float = 1f,
     landscape: Boolean = false,
     email: String,
-    onEmailChange: (String) -> Unit
+    onEmailChange: (String) -> Unit,
+    viewModel: UserViewModel,
+    navigateRecoverPass2: () -> Unit
 ){
     AppWindow(
         modifier = Modifier
@@ -144,7 +155,14 @@ fun RecoverPass1Content(
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
                 )
             }
-            AppButton(text = "Enviar correo", onClick = { /* TODO */ }, width = 0.8f)
+            AppButton(text = "Enviar correo", onClick = {
+                try {
+                    viewModel.recoverPass1(email)
+                    navigateRecoverPass2()
+                }catch (e: Exception){
+                    e.printStackTrace()
+                }
+            }, width = 0.8f)
         }
     }
 }
