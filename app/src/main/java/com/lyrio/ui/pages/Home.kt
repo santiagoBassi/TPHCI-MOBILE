@@ -60,7 +60,11 @@ data class TransferData(
 
 @Preview(showBackground = true)
 @Composable
-fun Home() {
+fun Home(
+    navigateTransfer1: () -> Unit = {},
+    navigateReceiveMoney: () -> Unit = {},
+    navigateProfile: () -> Unit = {},
+) {
     val configuration = LocalConfiguration.current
 
     when (configuration.orientation) {
@@ -69,7 +73,11 @@ fun Home() {
                 modifier = Modifier.fillMaxSize().padding(20.dp,25.dp,55.dp,15.dp),
                 horizontalArrangement = Arrangement.spacedBy(20.dp)
             ) {
-                HomeContent()
+                HomeContent(
+                    navigateTransfer1,
+                    navigateReceiveMoney,
+                    navigateProfile
+                )
             }
         }
 
@@ -81,14 +89,22 @@ fun Home() {
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                HomeContent()
+                HomeContent(
+                    navigateTransfer1,
+                    navigateReceiveMoney,
+                    navigateProfile
+                )
             }
         }
     }
 }
 
 @Composable
-fun HomeContent() {
+fun HomeContent(
+    navigateTransfer1: () -> Unit = {},
+    navigateReceiveMoney: () -> Unit = {},
+    navigateProfile: () -> Unit = {},
+) {
     val transfers = listOf(
         TransferData("Recibiste", 1234.56, "Juan Pérez", Date()),
         TransferData(
@@ -173,9 +189,9 @@ fun HomeContent() {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            CircularIconButton(icon = transferIconPainter(), text = "Transferir")
-            CircularIconButton(icon = receiveIconPainter(), text = "Recibir")
-            CircularIconButton(icon = cvuAliasIconPainter(), text = "CVU y Alias")
+            CircularIconButton(icon = transferIconPainter(), text = "Transferir", onClickFn = navigateTransfer1)
+            CircularIconButton(icon = receiveIconPainter(), text = "Recibir", onClickFn = navigateReceiveMoney)
+            CircularIconButton(icon = cvuAliasIconPainter(), text = "CVU y Alias", onClickFn = navigateProfile)
         }
     }
     AppWindow(

@@ -48,7 +48,17 @@ fun NavigationWrapper(){
 
         composable<Screen.Home>{
             DefaultLayout(navController) {
-                Home()
+                Home(
+                    navigateTransfer1 = {
+                        navController.navigate(Screen.Transfer1)
+                    },
+                    navigateReceiveMoney = {
+                        navController.navigate(Screen.ReceiveMoney)
+                    },
+                    navigateProfile = {
+                        navController.navigate(Screen.Profile)
+                    }
+                )
             }
         }
 
