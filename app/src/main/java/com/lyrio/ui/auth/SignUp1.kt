@@ -19,7 +19,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,7 +28,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.compose.snippets.components.DatePickerFieldToModal
 import com.lyrio.LyrioApp
 import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.components.AppInput
@@ -42,10 +40,10 @@ import java.util.Date
 
 @Composable
 fun SignUp1(
-    viewModel: SignUpViewModel = viewModel(factory = SignUpViewModel.provideFactory(LocalContext.current.applicationContext as LyrioApp)),
+    viewModel: SignUpViewModel,
     navigateSignUp2: () -> Unit
 ){
-    var birthDate = "hola"
+    var birthDate by remember { mutableStateOf("") }
     var name by remember { mutableStateOf("") }
     var lastname by remember { mutableStateOf("") }
 
@@ -78,7 +76,9 @@ fun SignUp1(
                         name = name,
                         onNameChange = { name = it },
                         lastname = lastname,
-                        onLastnameChange = { lastname = it }
+                        onLastnameChange = { lastname = it },
+                        viewModel = viewModel,
+                        navigateSignUp2 = navigateSignUp2
                     )
                 }
             }
@@ -106,7 +106,9 @@ fun SignUp1(
                         name = name,
                         onNameChange = { name = it },
                         lastname = lastname,
-                        onLastnameChange = { lastname = it }
+                        onLastnameChange = { lastname = it },
+                        viewModel = viewModel,
+                        navigateSignUp2 = navigateSignUp2
                     )
                 }
 
@@ -123,7 +125,9 @@ fun SignUp1Content(
     name: String,
     onNameChange: (String) -> Unit,
     lastname: String,
-    onLastnameChange: (String) -> Unit
+    onLastnameChange: (String) -> Unit,
+    viewModel: SignUpViewModel,
+    navigateSignUp2: () -> Unit
 ){
     AppWindow(
         modifier = Modifier
@@ -159,16 +163,20 @@ fun SignUp1Content(
                     label = "Apellido/s",
                     modifier = Modifier.fillMaxWidth(),
                 )
+
                 AppInput(
                     value = birthDate,
                     onValueChange = { onBirthDateChange(it) },
                     label = "Fecha de nacimiento",
-                    placeholder = "DD/MM/AAAA",
+                    placeholder = "AAAA-MM-DD",
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
-            AppButton(text = "Continuar", onClick = { /* TODO */ }, width = 0.8f)
+            AppButton(text = "Continuar", onClick = {
+                viewModel.completeFormRegister1(firstName = name, lastName = lastname, birthDate = birthDate)
+                navigateSignUp2()
+            }, width = 0.8f)
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center

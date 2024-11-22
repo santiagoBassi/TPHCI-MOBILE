@@ -1,12 +1,16 @@
 package com.lyrio.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.lyrio.LyrioApp
 import com.lyrio.ui.auth.SignIn
 import com.lyrio.ui.auth.SignUp1
 import com.lyrio.ui.auth.SignUp2
+import com.lyrio.ui.data.viewmodels.SignUpViewModel
 import com.lyrio.ui.layout.DefaultLayout
 import com.lyrio.ui.pages.CreditCards
 import com.lyrio.ui.pages.Home
@@ -22,7 +26,7 @@ import com.lyrio.ui.pages.Transfer2
 @Composable
 fun NavigationWrapper(){
     val navController = rememberNavController()
-
+    var viewModel : SignUpViewModel = viewModel(factory = SignUpViewModel.provideFactory(LocalContext.current.applicationContext as LyrioApp))
 
     NavHost(navController = navController, startDestination = Screen.Landing){
 
@@ -43,11 +47,13 @@ fun NavigationWrapper(){
         composable<Screen.SignUp1>{
             SignUp1(navigateSignUp2 = {
                 navController.navigate(Screen.SignUp2)
-            })
+            },
+                viewModel = viewModel
+            )
         }
 
         composable<Screen.SignUp2>{
-            SignUp2()
+            SignUp2(viewModel = viewModel)
         }
 
         composable<Screen.Home>{

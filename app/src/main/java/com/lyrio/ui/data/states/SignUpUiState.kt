@@ -6,7 +6,7 @@ import java.util.Date
 data class SignUpUiState(
     val firstName: String = "",
     val lastName: String = "",
-    val dateOfBirth: Date = Date(),
+    val dateOfBirth: String = "",
     val email: String = "",
     val password: String = "",
     val isFetching: Boolean = false,
