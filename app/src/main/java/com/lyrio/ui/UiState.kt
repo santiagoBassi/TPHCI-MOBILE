@@ -4,6 +4,7 @@ import com.lyrio.data.model.Card
 import com.lyrio.data.model.User
 import com.lyrio.data.model.Error
 import com.lyrio.data.model.Payment
+import java.util.Date
 
 data class UiState(
     val isAuthenticated: Boolean = false,
@@ -20,3 +21,5 @@ val UiState.canGetCurrentUser: Boolean get() = isAuthenticated
 val UiState.canGetAllCards: Boolean get() = isAuthenticated
 val UiState.canAddCard: Boolean get() = isAuthenticated
 val UiState.canDeleteCard: Boolean get() = isAuthenticated && currentCard != null
+
+

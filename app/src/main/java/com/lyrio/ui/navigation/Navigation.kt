@@ -24,7 +24,7 @@ fun NavigationWrapper(){
     val navController = rememberNavController()
 
 
-    NavHost(navController = navController, startDestination = Screen.Home){
+    NavHost(navController = navController, startDestination = Screen.Landing){
 
         composable<Screen.Landing>{
             LandingPage(navigateSignIn = {
@@ -35,11 +35,15 @@ fun NavigationWrapper(){
         }
 
         composable< Screen.SignIn>{
-            SignIn()
+            SignIn(navigateSignUp = {
+                navController.navigate(Screen.SignUp1)
+            })
         }
 
         composable<Screen.SignUp1>{
-            SignUp1()
+            SignUp1(navigateSignUp2 = {
+                navController.navigate(Screen.SignUp2)
+            })
         }
 
         composable<Screen.SignUp2>{

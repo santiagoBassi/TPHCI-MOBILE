@@ -1,5 +1,6 @@
 package com.lyrio.ui.auth
 
+import android.widget.DatePicker
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.DatePicker
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,23 +21,33 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.compose.snippets.components.DatePickerFieldToModal
+import com.lyrio.LyrioApp
 import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.components.AppInput
 import com.lyrio.ui.components.AppWindow
+import com.lyrio.ui.data.states.SignUpUiState
+import com.lyrio.ui.data.viewmodels.SignUpViewModel
 import com.lyrio.ui.layout.AuthHeader
 import com.lyrio.ui.styles.LyrioTheme
 import com.lyrio.ui.styles.OffWhite
+import java.util.Date
 
-@Preview(showBackground = true)
 @Composable
-fun SignUp1(){
-    var birthDate by remember { mutableStateOf("") }
+fun SignUp1(
+    viewModel: SignUpViewModel = viewModel(factory = SignUpViewModel.provideFactory(LocalContext.current.applicationContext as LyrioApp)),
+    navigateSignUp2: () -> Unit
+
+){
+    var selectedDate by remember { mutableStateOf<Long?>(null) }
     var name by remember { mutableStateOf("") }
     var lastname by remember { mutableStateOf("") }
+
     LyrioTheme {
         AuthHeader {
             Column(
@@ -80,16 +92,20 @@ fun SignUp1(){
                                 label = "Apellido/s",
                                 modifier = Modifier.fillMaxWidth(),
                             )
-                            AppInput(
-                                value = birthDate,
-                                onValueChange = { birthDate = it },
-                                label = "Fecha de nacimiento",
-                                placeholder = "DD/MM/AAAA",
-                                modifier = Modifier.fillMaxWidth(),
-                            )
+                            DatePickerFieldToModal()
+//                            AppInput(
+//                                value = birthDate,
+//                                onValueChange = { birthDate = it },
+//                                label = "Fecha de nacimiento",
+//                                placeholder = "DD/MM/AAAA",
+//                                modifier = Modifier.fillMaxWidth(),
+//                            )
                         }
                         Spacer(modifier = Modifier.height(16.dp))
-                        AppButton(text = "Continuar", onClick = { /* TODO */ }, width = 0.8f)
+                        AppButton(text = "Continuar", onClick = {
+                            viewModel.completeForm1(name, lastname, Date(55))
+                            navigateSignUp2() }, width = 0.8f)
+
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Center

@@ -91,33 +91,33 @@ class ViewModel(
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // TODO: FINISH IMPLEMENTING WALLET FUNCTIONS
-
-    fun getCards() = runOnViewModelScope(
-        { walletRepository.getCards(true) },
-        { state, response -> state.copy(cards = response) }
-    )
-
-    fun addCard(card: Card) = runOnViewModelScope(
-        {
-            walletRepository.addCard(card)
-        },
-        { state, response ->
-            state.copy(
-                currentCard = response,
-                cards = null
-            )
-        }
-    )
-
-    fun deleteCard(cardId: Int) = runOnViewModelScope(
-        { walletRepository.deleteCard(cardId) },
-        { state, _ ->
-            state.copy(
-                currentCard = null,
-                cards = null
-            )
-        }
-    )
+//
+//    fun getCards() = runOnViewModelScope(
+//        { walletRepository.getCards(true) },
+//        { state, response -> state.copy(cards = response) }
+//    )
+//
+//    fun addCard(card: Card) = runOnViewModelScope(
+//        {
+//            walletRepository.addCard(card)
+//        },
+//        { state, response ->
+//            state.copy(
+//                currentCard = response,
+//                cards = null
+//            )
+//        }
+//    )
+//
+//    fun deleteCard(cardId: Int) = runOnViewModelScope(
+//        { walletRepository.deleteCard(cardId) },
+//        { state, _ ->
+//            state.copy(
+//                currentCard = null,
+//                cards = null
+//            )
+//        }
+//    )
 
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

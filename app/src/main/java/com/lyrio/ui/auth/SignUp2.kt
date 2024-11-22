@@ -19,20 +19,26 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.lyrio.LyrioApp
 import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.components.AppInput
 import com.lyrio.ui.components.AppWindow
+import com.lyrio.ui.data.viewmodels.SignUpViewModel
 import com.lyrio.ui.layout.AuthHeader
 import com.lyrio.ui.styles.LyrioTheme
 import com.lyrio.ui.styles.OffWhite
 
 @Preview(showBackground = true)
 @Composable
-fun SignUp2(){
+fun SignUp2(
+    viewModel: SignUpViewModel = viewModel(factory = SignUpViewModel.provideFactory(LocalContext.current.applicationContext as LyrioApp))
+){
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
@@ -92,7 +98,7 @@ fun SignUp2(){
                             )
                         }
                         Spacer(modifier = Modifier.height(16.dp))
-                        AppButton(text = "Crear cuenta", onClick = { /* TODO */ }, width = 0.8f)
+                        AppButton(text = "Crear cuenta", onClick = { viewModel.register(email, password) }, width = 0.8f)
                     }
                 }
             }

@@ -7,15 +7,15 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface PaymentApiService {
-    @POST("payment")
-    suspend fun makePayment(@Body paymentRequest: NetworkPaymentRequest): Response<Unit>
-
-    @GET("payment")
-    suspend fun getPayments(): Response<List<NetworkPayment>>
-    // TODO: Pass params to this function
-
-    @GET("payment/{paymentId}")
-    suspend fun getPaymentById(@Path("paymentId") paymentId: String): Response<NetworkPayment>
+//    @POST("payment")
+//    suspend fun makePayment(@Body paymentRequest: NetworkPaymentRequest): Response<Unit>
+//
+//    @GET("payment")
+//    suspend fun getPayments(): Response<List<NetworkPayment>>
+//    // TODO: Pass params to this function
+//
+//    @GET("payment/{paymentId}")
+//    suspend fun getPaymentById(@Path("paymentId") paymentId: String): Response<NetworkPayment>
 
     @GET("payment/link/{linkUuid}")
     suspend fun getPaymentByLink(@Path("linkUuid") linkUuid: String)
