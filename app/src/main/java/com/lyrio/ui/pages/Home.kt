@@ -253,7 +253,7 @@ fun HomeContent(
                             transactionType = if(transfer.payerEmail == userState.email) "Enviaste" else "Recibiste",
                             amount = transfer.amount,
                             recipient = if(transfer.payerEmail == userState.email) transfer.receiverName else transfer.payerName,
-                            date = transfer.createdAt
+                            date = transfer.createdAt.toString()
                         )
                     }
                 }

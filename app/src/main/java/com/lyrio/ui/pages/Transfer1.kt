@@ -13,8 +13,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.lyrio.R
@@ -32,11 +35,14 @@ import com.lyrio.ui.components.RecentContact
 import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.components.AppInput
 import com.lyrio.ui.components.AppWindow
+import com.lyrio.ui.data.viewmodels.PaymentsViewModel
 import com.lyrio.ui.styles.Typography
 
-@Preview(showBackground = true)
 @Composable
-fun Transfer1() {
+fun Transfer1(
+    navigateTransfer2: () -> Unit,
+    paymentsViewModel: PaymentsViewModel
+) {
     val maxWidth = LocalConfiguration.current.screenWidthDp.dp
     val maxHeight = LocalConfiguration.current.screenHeightDp.dp
     val isTablet = maxWidth > 1000.dp || maxHeight > 1000.dp
@@ -54,7 +60,10 @@ fun Transfer1() {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(20.dp),
                 ) {
-                    Transfer1Content()
+                    Transfer1Content(
+                        navigateTransfer2 = navigateTransfer2,
+                        paymentsViewModel = paymentsViewModel
+                    )
                 }
             }
         }
@@ -67,7 +76,11 @@ fun Transfer1() {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Transfer1Content(isTablet)
+                Transfer1Content(
+                    isTablet,
+                    navigateTransfer2,
+                    paymentsViewModel
+                )
             }
         }
     }
@@ -83,6 +96,8 @@ data class RecentContactData(
 @Composable
 fun Transfer1Content(
     isTablet: Boolean = false,
+    navigateTransfer2: () -> Unit,
+    paymentsViewModel: PaymentsViewModel
 ) {
     val recentContacts = remember { // Lista de contactos de ejemplo
         listOf(
@@ -94,7 +109,7 @@ fun Transfer1Content(
         )
     }
 
-    var cvuOrAlias by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
 
     AppWindow(
         modifier = Modifier
@@ -113,14 +128,18 @@ fun Transfer1Content(
                 color = Color.Black
             )
             AppInput(
-                value = cvuOrAlias,
-                onValueChange = { cvuOrAlias = it },
-                label = stringResource(R.string.cvu_or_alias),
-                modifier = Modifier.fillMaxWidth(0.95f)
+                value = email,
+                onValueChange = { email = it },
+                label = stringResource(R.string.email),
+                modifier = Modifier.fillMaxWidth(0.95f),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
             )
             AppButton(
                 text = stringResource(R.string.continue_),
-                onClick = { /* TODO */ },
+                onClick = {
+                    paymentsViewModel.setReceiver(email)
+                    navigateTransfer2()
+                },
                 width = 0.8f
             )
         }

@@ -17,7 +17,7 @@ data class NetworkPayment(
     val linkUuid: String?,
     val createdAt: String,
     val updatedAt: String?,
-    val card: NetworkCard?,
+    val card: NetworkCardAux?,
     val payer: NetworkUser,
     val receiver: NetworkUser
 ) {
@@ -33,7 +33,7 @@ data class NetworkPayment(
             pending = pending,
             linkUuid = linkUuid,
             createdAt = createdAt,
-            card = card?.asModel(),
+            card = card,
             payerName = payer.firstName + payer.lastName,
             receiverName = receiver.firstName + receiver.lastName,
             payerEmail = payer.email,
@@ -46,3 +46,13 @@ data class NetworkPayment(
 data class NetworkPaymentsResponse(
     val payments: List<NetworkPayment>
 )
+
+@Serializable
+data class NetworkCardAux(
+    val id: Int,
+    val number: String,
+    val expirationDate: String,
+    val fullName: String,
+    val type: String?,
+)
+

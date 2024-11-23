@@ -179,13 +179,25 @@ fun NavigationWrapper() {
 
         composable<Screen.Transfer1> {
             DefaultLayout(navController) {
-                Transfer1()
+                Transfer1(
+                    navigateTransfer2 = {
+                        navController.navigate(Screen.Transfer2)
+                    },
+                    paymentsViewModel = paymentsViewModel
+                )
             }
         }
 
         composable<Screen.Transfer2> {
             DefaultLayout(navController) {
-                Transfer2()
+                Transfer2(
+                    navigateTransferSuccessful = {
+                    navController.navigate(Screen.TransferSuccessful)
+                },
+                    paymentsViewModel = paymentsViewModel,
+                    walletViewModel = walletViewModel,
+                    userViewModel = userViewModel
+                )
             }
         }
 

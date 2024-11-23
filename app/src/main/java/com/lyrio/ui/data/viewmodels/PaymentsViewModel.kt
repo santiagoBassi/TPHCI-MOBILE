@@ -18,9 +18,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import com.lyrio.data.model.Error
 import com.lyrio.data.repository.PaymentRepository
-import com.lyrio.data.repository.WalletRepository
 import com.lyrio.ui.data.states.PaymentsUiState
-import com.lyrio.ui.data.states.WalletUiState
 
 class PaymentsViewModel(
     sessionManager: SessionManager,
@@ -45,6 +43,24 @@ class PaymentsViewModel(
             paymentRepository.getPayments()
         },
         { state, response -> state.copy(lastTransfers = response) }
+    )
+
+    fun setReceiver(email: String) {
+         _uiStatePayments.value = _uiStatePayments.value.copy(receiver = email)
+    }
+
+    fun setSelectedPaymentMethod(index: Int) {
+        _uiStatePayments.value = _uiStatePayments.value.copy(selectedPaymentMethod = index)
+    }
+
+    fun transfer(amount: Double, cardId: Int) = runOnViewModelScope(
+        {
+            if(_uiStatePayments.value.selectedPaymentMethod == 0)
+                paymentRepository.makePaymentWithBalance(amount,"-","BALANCE",_uiStatePayments.value.receiver)
+            else
+                paymentRepository.makePaymentWithCard(amount,"-","CARD",cardId,_uiStatePayments.value.receiver)
+        },
+        { state, _ -> state.copy() }
     )
 
 

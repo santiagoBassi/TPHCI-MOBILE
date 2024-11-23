@@ -48,7 +48,7 @@ class WalletViewModel(
         {
             walletRepository.getCards()
         },
-        { state, _ -> state.copy() }
+        { state, response -> state.copy(cards = response) }
     )
 
     fun getWalletData() = runOnViewModelScope(
