@@ -24,6 +24,8 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -46,20 +48,32 @@ import com.lyrio.R
 import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.components.AppInput
 import com.lyrio.ui.components.AppWindow
+import com.lyrio.ui.data.viewmodels.UserViewModel
+import com.lyrio.ui.data.viewmodels.WalletViewModel
 import com.lyrio.ui.styles.LightGray
 import com.lyrio.ui.styles.Orange
 import com.lyrio.ui.styles.Red
 
-@Preview(showBackground = true)
+
 @Composable
 fun Profile(
-    navigateChangeAlias: () -> Unit = {}
+    navigateChangeAlias: () -> Unit,
+    viewModelUser: UserViewModel,
+    viewModelWallet: WalletViewModel,
 ) {
+    val userState by viewModelUser.uiStateUser.collectAsState()
+
+    LaunchedEffect(Unit, userState.isAuthenticated) {
+        if (userState.isAuthenticated) {
+            viewModelUser.getCurrentUser()
+        }
+    }
+
+    var firstName by rememberSaveable(key = "firstName") { mutableStateOf(userState.firstName) }
+    var lastName by rememberSaveable(key = "lastName") { mutableStateOf(userState.lastName) }
     var isEditing by rememberSaveable(key = "isEditing") { mutableStateOf(false) }
-    var firstName by rememberSaveable(key = "firstName") { mutableStateOf("Ezequiel") }
-    var lastName by rememberSaveable(key = "lastName") { mutableStateOf("Testoni") }
-    var email by rememberSaveable(key = "email") { mutableStateOf("etestoni@gmail.com") }
-    var birthDate by rememberSaveable(key = "birthDate") { mutableStateOf("-") }
+    var email by rememberSaveable(key = "email") { mutableStateOf(userState.email) }
+    var birthDate by rememberSaveable(key = "birthDate") { mutableStateOf(userState.dateOfBirth) }
 
     var maxWidth = 800.dp
     val configuration = LocalConfiguration.current
@@ -94,7 +108,12 @@ fun Profile(
                         Column(
                             modifier = Modifier.weight(1f),
                         ) {
-                            CVUAlias { navigateChangeAlias() }
+                            CVUAlias(
+                                navigateChangeAlias = navigateChangeAlias,
+                                viewModelWallet = viewModelWallet,
+                                userViewModel = viewModelUser
+
+                            )
                         }
                         Column(
                             modifier = Modifier.weight(1f),
@@ -109,7 +128,8 @@ fun Profile(
                                 birthDate = birthDate,
                                 onBirthDateChange = { birthDate = it },
                                 isEditing = isEditing,
-                                onEditClick = { isEditing = it }
+                                onEditClick = { isEditing = it },
+                                viewModelUser = viewModelUser
                             )
                         }
                     }
@@ -130,7 +150,12 @@ fun Profile(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Welcome(firstName)
-                    CVUAlias { navigateChangeAlias() }
+                    CVUAlias(
+                        viewModelWallet = viewModelWallet,
+                        navigateChangeAlias = navigateChangeAlias,
+                        userViewModel = viewModelUser
+                    )
+
                     PersonalData(
                         firstName = firstName,
                         onFirstNameChange = { firstName = it },
@@ -141,7 +166,8 @@ fun Profile(
                         birthDate = birthDate,
                         onBirthDateChange = { birthDate = it },
                         isEditing = isEditing,
-                        onEditClick = { isEditing = it }
+                        onEditClick = { isEditing = it },
+                        viewModelUser
                     )
                 }
             }
@@ -160,8 +186,15 @@ fun PersonalData(
     birthDate: String,
     onBirthDateChange: (String) -> Unit,
     isEditing: Boolean,
-    onEditClick: (Boolean) -> Unit
+    onEditClick: (Boolean) -> Unit,
+    viewModelUser: UserViewModel,
 ){
+    val userState by viewModelUser.uiStateUser.collectAsState()
+    LaunchedEffect(Unit, userState.isAuthenticated) {
+        if (userState.isAuthenticated) {
+            viewModelUser.getCurrentUser()
+        }
+    }
     AppWindow(title = stringResource(R.string.personal_data),
         modifier = Modifier.widthIn(300.dp,390.dp)
     ) {
@@ -225,8 +258,18 @@ fun PersonalData(
 
 @Composable
 fun CVUAlias(
-    navigateChangeAlias: () -> Unit = {}
+    navigateChangeAlias: () -> Unit,
+    viewModelWallet: WalletViewModel,
+    userViewModel: UserViewModel
 ){
+    val walletState by viewModelWallet.uiStateWallet.collectAsState()
+    val userState by userViewModel.uiStateUser.collectAsState()
+
+    LaunchedEffect(Unit,userState.isAuthenticated) {
+        if(userState.isAuthenticated)
+            viewModelWallet.getWalletData()
+    }
+
     AppWindow(title = stringResource(R.string.cvu_alias),
         modifier = Modifier.padding(bottom = 16.dp).widthIn(300.dp, 390.dp)
     ) {
@@ -243,7 +286,7 @@ fun CVUAlias(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(stringResource(R.string.cvu), fontWeight = FontWeight.Bold, color = Color.Black)
-                Text("000000123019231200", color = Color.Black)
+                Text(walletState.cbu, color = Color.Black)
             }
             Spacer(modifier = Modifier.width(8.dp))
             Row(
@@ -254,7 +297,7 @@ fun CVUAlias(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(stringResource(R.string.alias), fontWeight = FontWeight.Bold, color = Color.Black)
-                Text("mi.alias.lyrio", color = Color.Black)
+                Text(walletState.alias, color = Color.Black)
             }
             Spacer(modifier = Modifier.height(4.dp))
             Row(

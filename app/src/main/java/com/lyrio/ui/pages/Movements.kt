@@ -69,7 +69,7 @@ fun Movements(
             }
         }
 
-        else -> { 
+        else -> {
             Column(
                 modifier = Modifier
                     .fillMaxSize().onSizeChanged { size -> if(size.height.dp > maxHeight) maxHeight = size.height.dp }
