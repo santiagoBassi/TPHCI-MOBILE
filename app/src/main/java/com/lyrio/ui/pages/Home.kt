@@ -45,10 +45,13 @@ import com.lyrio.ui.components.CircularIconButton
 import com.lyrio.ui.components.TransferItem
 import com.lyrio.ui.components.eyeIconPainter
 import com.lyrio.ui.components.eyeOffIconPainter
+import com.lyrio.ui.data.viewmodels.PaymentsViewModel
+import com.lyrio.ui.data.viewmodels.UserViewModel
 import com.lyrio.ui.data.viewmodels.WalletViewModel
 import com.lyrio.ui.styles.LightGray
 import com.lyrio.utils.formatCurrencyWhole
 import com.lyrio.utils.getDecimalPart
+import com.lyrio.utils.stringToLocalDate
 import java.util.Calendar
 import java.util.Date
 import java.text.DecimalFormat
@@ -67,21 +70,17 @@ fun receiveIconPainter(): Painter = painterResource(id = R.drawable.receive)
 @Composable
 fun cvuAliasIconPainter(): Painter = painterResource(id = R.drawable.cvu_alias)
 
-data class TransferData(
-    val transactionType: Int,
-    val amount: Double,
-    val recipient: String,
-    val date: Date
-)
 
 @Composable
 fun Home(
-    navigateTransfer1: () -> Unit = {},
-    navigateReceiveMoney: () -> Unit = {},
-    navigateProfile: () -> Unit = {},
-    navigateMovements: () -> Unit = {},
-    navigateMoney: () -> Unit = {},
-    viewModelWallet: WalletViewModel
+    navigateTransfer1 : () -> Unit = {},
+    navigateReceiveMoney : () -> Unit = {},
+    navigateProfile : () -> Unit = {},
+    navigateMovements : () -> Unit = {},
+    navigateMoney : () -> Unit = {},
+    viewModelWallet : WalletViewModel,
+    viewModelPayments : PaymentsViewModel,
+    viewModelUser: UserViewModel
 ) {
     val configuration = LocalConfiguration.current
 
@@ -99,11 +98,13 @@ fun Home(
                     navigateMovements,
                     navigateMoney,
                     viewModelWallet,
+                    viewModelPayments,
+                    viewModelUser
                 )
             }
         }
 
-        else -> { // Modo vertical u otras orientaciones
+        else -> {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -117,7 +118,9 @@ fun Home(
                     navigateProfile,
                     navigateMovements,
                     navigateMoney,
-                    viewModelWallet
+                    viewModelWallet,
+                    viewModelPayments,
+                    viewModelUser
                 )
             }
         }
@@ -131,47 +134,19 @@ fun HomeContent(
     navigateProfile: () -> Unit = {},
     navigateMovements: () -> Unit = {},
     navigateMoney: () -> Unit = {},
-    viewModelWallet: WalletViewModel
+    viewModelWallet: WalletViewModel,
+    viewModelPayments : PaymentsViewModel,
+    viewModelUser: UserViewModel
 ) {
     val walletState by viewModelWallet.uiStateWallet.collectAsState()
+    val paymentsState by viewModelPayments.uiStatePayments.collectAsState()
+    val userState by viewModelUser.uiStateUser.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModelWallet.getBalance()
+        viewModelPayments.getPayments()
+        viewModelUser.getCurrentUser()
     }
-
-    val transfers = listOf(
-        TransferData(R.string.received, 1234.56, "Juan Pérez", Date()),
-        TransferData(
-            R.string.sent,
-            -567.89,
-            "María García",
-            Calendar.getInstance().apply {
-                add(
-                    Calendar.HOUR_OF_DAY,
-                    -3
-                ) // Resta 3 horas a la hora actual
-            }.time
-        ),
-        TransferData(
-            R.string.received,
-            345.67,
-            "Pedro López",
-            Calendar.getInstance().apply {
-                add(Calendar.DAY_OF_MONTH, -5) // Resta 5 días al día actual
-            }.time
-        ),
-        TransferData(
-            R.string.sent,
-            -567.89,
-            "María García",
-            Calendar.getInstance().apply {
-                add(
-                    Calendar.HOUR_OF_DAY,
-                    -3
-                ) // Resta 3 horas a la hora actual
-            }.time
-        )
-    )
 
     var showBalance by remember { mutableStateOf(true) } // Estado para mostrar/ocultar
 
@@ -265,12 +240,12 @@ fun HomeContent(
                         .padding(vertical = 10.dp)
                         .weight(1f),
                 ) {
-                    items(transfers.take(4)) { transferData ->
+                    items(paymentsState.lastTransfers) { transfer -> // Use items() here
                         TransferItem(
-                            transactionType = stringResource(transferData.transactionType),
-                            amount = transferData.amount,
-                            recipient = transferData.recipient,
-                            date = transferData.date
+                            transactionType = if(transfer.payerEmail == userState.email) "Enviaste" else "Recibiste",
+                            amount = transfer.amount,
+                            recipient = if(transfer.payerEmail == userState.email) transfer.receiverName else transfer.payerName,
+                            date = stringToLocalDate(transfer.createdAt)
                         )
                     }
                 }

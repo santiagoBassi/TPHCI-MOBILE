@@ -9,20 +9,9 @@ data class Payment(
     val pending: Boolean,
     val linkUuid: String?,
     val createdAt: String,
-    val card: Card? = null
-) {
-    fun asNetworkModel(): NetworkPayment {
-        return NetworkPayment(
-            id = id,
-            type = when (type) { PaymentType.BALANCE -> "BALANCE"; PaymentType.CARD -> "CARD" else -> "LINK" },
-            amount = amount,
-            balanceBefore = null,
-            balanceAfter = null,
-            pending = pending,
-            linkUuid = linkUuid,
-            createdAt = createdAt,
-            updatedAt = null,
-            card = card?.asNetworkModel()
-        )
-    }
-}
+    val card: Card? = null,
+    val payerName: String,
+    val receiverName: String,
+    val payerEmail: String,
+    val receiverEmail: String
+)

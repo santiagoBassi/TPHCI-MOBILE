@@ -9,10 +9,7 @@ import com.lyrio.data.network.model.NetworkResetPasswordInfo
 import com.lyrio.data.network.model.NetworkToken
 import com.lyrio.data.network.model.NetworkUser
 import com.lyrio.data.network.model.NetworkVerificationCode
-import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
+
 
 class UserRemoteDataSource(
     private val sessionManager: SessionManager,

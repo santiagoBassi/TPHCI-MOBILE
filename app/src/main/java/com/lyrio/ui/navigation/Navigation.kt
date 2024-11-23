@@ -15,6 +15,7 @@ import com.lyrio.ui.auth.SignUp1
 import com.lyrio.ui.auth.SignUp2
 import com.lyrio.ui.data.viewmodels.UserViewModel
 import com.lyrio.ui.auth.SignUp3
+import com.lyrio.ui.data.viewmodels.PaymentsViewModel
 import com.lyrio.ui.data.viewmodels.WalletViewModel
 import com.lyrio.ui.layout.DefaultLayout
 import com.lyrio.ui.pages.AddCardSuccessful
@@ -42,6 +43,7 @@ fun NavigationWrapper(){
 
     val userViewModel : UserViewModel = viewModel(factory = UserViewModel.provideFactory(LocalContext.current.applicationContext as LyrioApp))
     val walletViewModel : WalletViewModel = viewModel(factory = WalletViewModel.provideFactory(LocalContext.current.applicationContext as LyrioApp, userViewModel))
+    val paymentsViewModel : PaymentsViewModel = viewModel(factory = PaymentsViewModel.provideFactory(LocalContext.current.applicationContext as LyrioApp, userViewModel))
 
     NavHost(navController = navController, startDestination = Screen.Landing){
 
@@ -125,7 +127,7 @@ fun NavigationWrapper(){
 
         composable<Screen.Home>{
             DefaultLayout(navController) {
-                Home(
+                H-ome(
                     navigateTransfer1 = {
                         navController.navigate(Screen.Transfer1)
                     },
@@ -141,7 +143,9 @@ fun NavigationWrapper(){
                     navigateMoney = {
                         navController.navigate(Screen.Money)
                     },
-                    viewModelWallet = walletViewModel
+                    viewModelWallet = walletViewModel,
+                    viewModelPayments = paymentsViewModel,
+                    viewModelUser = userViewModel
 
                 )
             }
