@@ -95,13 +95,15 @@ fun MoneyContent(maxBarHeight: Dp = 200.dp, vertical: Boolean = false) {
                     fontWeight = FontWeight.Bold,
                     fontSize = 38.sp,
                     modifier = Modifier.padding(end = 4.dp),
+                    color = Color.Black
                 )
                 if (showBalance) {
                     Text(
                         text = "58",
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp,
-                        modifier = Modifier.padding(top = 2.dp)
+                        modifier = Modifier.padding(top = 2.dp),
+                        color = Color.Black
                     )
                 }
             }
@@ -109,7 +111,8 @@ fun MoneyContent(maxBarHeight: Dp = 200.dp, vertical: Boolean = false) {
                 Icon(
                     painter = if (showBalance) eyeIconPainter() else eyeOffIconPainter(),
                     contentDescription = if (showBalance) "Ocultar saldo" else "Mostrar saldo",
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier.size(24.dp),
+                    tint = Color.Black
                 )
             }
         }

@@ -36,7 +36,7 @@ fun ChangeAliasSuccessful(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                ChangeAliasSuccesfulContent(height = 1f, navigateProfile)
+                ChangeAliasSuccessfulContent(height = 1f, navigateProfile)
             }
         }
 
@@ -48,7 +48,7 @@ fun ChangeAliasSuccessful(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                ChangeAliasSuccesfulContent(
+                ChangeAliasSuccessfulContent(
                     navigateProfile = navigateProfile
                 )
             }
@@ -58,7 +58,7 @@ fun ChangeAliasSuccessful(
 }
 
 @Composable
-fun ChangeAliasSuccesfulContent(height: Float = 0.5f, navigateProfile: () -> Unit = {}){
+fun ChangeAliasSuccessfulContent(height: Float = 0.5f, navigateProfile: () -> Unit = {}){
     val fakeAlias = "mi.nuevo.alias"
 
     Successful(
@@ -73,7 +73,7 @@ fun ChangeAliasSuccesfulContent(height: Float = 0.5f, navigateProfile: () -> Uni
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(stringResource(R.string.your_new_alias), color = Color.Gray, fontWeight = FontWeight.Medium)
-                Text(" $fakeAlias", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                Text(" $fakeAlias", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color.Black)
 
             }
         }

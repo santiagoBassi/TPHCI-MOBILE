@@ -4,11 +4,22 @@
     <string name="profile">Profile</string>
     <string name="transfer">Transfer</string>
     <string name="invest">Invest</string>
+    <string name="investments">Investments</string>
     <string name="money">Money</string>
     <string name="activity">Activity</string>
-    <string name="pay_link">Receive with payment link</string>
+    <string name="pay_link">Payment link</string>
     <string name="add_card">Add Card</string>
     <string name="cards">Cards</string>
+    <string name="logout">Logout</string>
+    <string name="qr">QR</string>
+
+    <!-- LandingPage -->
+    <string name="landing_1">The new way of</string>
+    <string name="landing_2">administrating your money</string>
+    <string name="landing_3">Save, invest and pay.</string>
+    <string name="landing_4">Lyrio makes managing your money</string>
+    <string name="landing_5">easy and safe</string>
+    <string name="register_reflex">Registrarse</string>
 
     <!-- SignIn -->
     <string name="sign_in">Sign In</string>

@@ -22,6 +22,6 @@ fun AppButton(text: String, modifier: Modifier = Modifier, onClick: () -> Unit, 
             contentColor = Color.Black
         )
     ) {
-        Text(text = text, style = MaterialTheme.typography.titleMedium)
+        Text(text = text, style = MaterialTheme.typography.titleMedium, color = Color.Black)
     }
 }

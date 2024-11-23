@@ -80,7 +80,8 @@ fun ReceiveMoneyContentH(
                     text = stringResource(R.string.receive_lore),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Medium,
-                    modifier = Modifier.padding(0.dp, 10.dp, 0.dp, 10.dp)
+                    modifier = Modifier.padding(0.dp, 10.dp, 0.dp, 10.dp),
+                    color = Color.Black
                 )
                 Row(
                     modifier = Modifier.fillMaxWidth().padding(start = 15.dp),
@@ -133,8 +134,8 @@ fun ReceiveMoneyContentV(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    Text(text = stringResource(R.string.receive_lore1), fontWeight = FontWeight.Medium)
-                    Text(text = stringResource(R.string.receive_lore2), fontWeight = FontWeight.Medium)
+                    Text(text = stringResource(R.string.receive_lore1), fontWeight = FontWeight.Medium, color = Color.Black)
+                    Text(text = stringResource(R.string.receive_lore2), fontWeight = FontWeight.Medium, color = Color.Black)
                 }
                 cvuAlias()
                 AppButton(
@@ -171,8 +172,8 @@ fun CVUAliasWindow(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(stringResource(R.string.cvu))
-                Text(cvu)
+                Text(stringResource(R.string.cvu), fontWeight = FontWeight.Bold, color = Color.Black)
+                Text(cvu, color = Color.Black)
             }
             Spacer(modifier = Modifier.width(8.dp))
             Row(
@@ -182,8 +183,8 @@ fun CVUAliasWindow(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(stringResource(R.string.alias))
-                Text(alias)
+                Text(stringResource(R.string.alias), fontWeight = FontWeight.Bold, color = Color.Black)
+                Text(alias, color = Color.Black)
             }
             Spacer(modifier = Modifier.height(15.dp))
             Row(

@@ -58,23 +58,22 @@ fun isMobile(): Boolean {
 
 
 val itemsNavBar = listOf(
-    NavItem(R.drawable.home_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Home", "Home Icon", false,
+    NavItem(R.drawable.home_24dp_e8eaed_fill0_wght400_grad0_opsz24, R.string.home, "Home Icon", false,
         Screen.Home),
-    NavItem(R.drawable.account_circle_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Perfil", "Profile Icon", false,
+    NavItem(R.drawable.account_circle_24dp_e8eaed_fill0_wght400_grad0_opsz24, R.string.profile, "Profile Icon", false,
         Screen.Profile),
-    NavItem(R.drawable.qr_code_2_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Pago QR", "QR Icon", false, Screen.Home) ,
-    NavItem(R.drawable.send_money_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Transferir", "Transfer Icon", false,
+    NavItem(R.drawable.qr_code_2_24dp_e8eaed_fill0_wght400_grad0_opsz24, R.string.qr, "QR Icon", false, Screen.Home) ,
+    NavItem(R.drawable.send_money_24dp_e8eaed_fill0_wght400_grad0_opsz24, R.string.transfer, "Transfer Icon", false,
         Screen.Transfer1) ,
-    NavItem(R.drawable.account_balance_wallet_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Dinero", "Money Icon", false, Screen.Money),
-    NavItem(R.drawable.list_alt_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Movimientos", "Movements Icon", false, Screen.Movements) ,
-    NavItem(R.drawable.currency_exchange_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Inversiones", "Invest Icon", false, Screen.Invest) ,
-    NavItem(R.drawable.link_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Link de pago", "Link Icon", false, Screen.Home),
-    NavItem(R.drawable.credit_card_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Tarjetas", "Card Icon", false,
+    NavItem(R.drawable.account_balance_wallet_24dp_e8eaed_fill0_wght400_grad0_opsz24, R.string.money, "Money Icon", false, Screen.Money),
+    NavItem(R.drawable.list_alt_24dp_e8eaed_fill0_wght400_grad0_opsz24, R.string.movements, "Movements Icon", false, Screen.Movements) ,
+    NavItem(R.drawable.currency_exchange_24dp_e8eaed_fill0_wght400_grad0_opsz24, R.string.investments, "Invest Icon", false, Screen.Invest) ,
+    NavItem(R.drawable.link_24dp_e8eaed_fill0_wght400_grad0_opsz24, R.string.pay_link, "Link Icon", false, Screen.Home),
+    NavItem(R.drawable.credit_card_24dp_e8eaed_fill0_wght400_grad0_opsz24, R.string.cards, "Card Icon", false,
         Screen.CreditCards) ,
-    NavItem(R.drawable.logout_24dp_e8eaed_fill0_wght400_grad0_opsz24, "Cerrar sesion", "Logout Icon", false,
+    NavItem(R.drawable.logout_24dp_e8eaed_fill0_wght400_grad0_opsz24, R.string.logout, "Logout Icon", false,
         Screen.Home),
     )
-
 
 
 @Composable
@@ -241,7 +240,7 @@ fun ItemContent(item: NavItem, selectedItem: Int){
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
     Icon(
         painter = painterResource(id = item.icon),
-        contentDescription = item.title,
+        contentDescription = stringResource(item.title),
         modifier = Modifier.size(30.dp)
     )
     if (windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.EXPANDED)
@@ -249,7 +248,7 @@ fun ItemContent(item: NavItem, selectedItem: Int){
             modifier = Modifier.size(15.dp)
         )
     Text(
-        text = item.title,
+        text = stringResource(item.title),
         style = MaterialTheme.typography.titleMedium.copy(
             color = if (selectedItem == item.icon) {
                 MaterialTheme.colorScheme.primary
