@@ -52,8 +52,8 @@ fun AddInvestment(
             ) {
                 Column(
                     modifier = Modifier
-                        .fillMaxWidth(if (isTablet) 0.8f else 1f)
-                        .fillMaxHeight(if (isTablet) 0.6f else 1f)
+                        .fillMaxWidth(if (isTablet) 0.5f else 0.6f)
+                        .fillMaxHeight(if (isTablet) 0.7f else 1f)
                         .padding(16.dp),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -69,19 +69,26 @@ fun AddInvestment(
         }
 
         else -> { // Modo vertical u otras orientaciones
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
             ) {
-                AddInvestmentContent(0.8f,
-                    amount = amount,
-                    onAmountChange = { amount = it },
-                    availableBalance = availableBalance,
-                    navigateInvest = navigateInvest
-                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth(if (isTablet) 0.7f else 1f)
+                        .fillMaxHeight(if (isTablet) 0.6f else 1f)
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    AddInvestmentContent(
+                        0.8f,
+                        amount = amount,
+                        onAmountChange = { amount = it },
+                        availableBalance = availableBalance,
+                        navigateInvest = navigateInvest
+                    )
+                }
             }
         }
     }
