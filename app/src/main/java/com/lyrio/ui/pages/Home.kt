@@ -143,9 +143,11 @@ fun HomeContent(
     val userState by viewModelUser.uiStateUser.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModelWallet.getBalance()
-        viewModelPayments.getPayments()
-        viewModelUser.getCurrentUser()
+        if (userState.isAuthenticated) {
+            viewModelWallet.getBalance()
+            viewModelPayments.getPayments()
+            viewModelUser.getCurrentUser()
+        }
     }
 
     var showBalance by remember { mutableStateOf(true) } // Estado para mostrar/ocultar

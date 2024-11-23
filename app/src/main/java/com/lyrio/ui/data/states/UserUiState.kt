@@ -10,5 +10,6 @@ data class UserUiState(
     val password: String = "",
     val code: String = "",
     val isFetching: Boolean = false,
+    val isAuthenticated: Boolean = false,
     val error: Error? = null
 )
