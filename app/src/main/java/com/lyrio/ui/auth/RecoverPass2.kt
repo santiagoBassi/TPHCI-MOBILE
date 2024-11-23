@@ -3,6 +3,7 @@ package com.lyrio.ui.auth
 import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -44,31 +45,41 @@ fun RecoverPass2(
 
     val configuration = LocalConfiguration.current
 
+    val maxHeight = configuration.screenHeightDp.dp
+    val maxWidth = configuration.screenWidthDp.dp
+    val isTablet = maxWidth > 1000.dp || maxHeight > 1000.dp
+
     when (configuration.orientation) {
         Configuration.ORIENTATION_LANDSCAPE -> { // Modo horizontal
             Column(
                 modifier = Modifier
                     .fillMaxWidth().verticalScroll(rememberScrollState())
-                    .height(800.dp)
+                    .height(if(isTablet) maxHeight + 100.dp else maxHeight * 2)
                     .background(OffWhite),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 AuthHeader()
-                Column(
-                    modifier = Modifier
-                        .fillMaxHeight().fillMaxWidth(0.6f)
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                Box(
+                    modifier = Modifier.fillMaxSize().padding(bottom = 16.dp),
+                    contentAlignment = Alignment.Center
                 ) {
-                    RecoverPass2Content(
-                        height = 0.82f,
-                        landscape = true,
-                        code = code,
-                        onCodeChange = { code = it },
-                        navigateRecoverPass3 = navigateRecoverPass3,
-                        viewModel = viewModel
-                    )
+                    Column(
+                        modifier = Modifier
+                            .fillMaxHeight(if (isTablet) 0.9f else 1f)
+                            .fillMaxWidth(if (isTablet) 0.35f else 0.6f)
+                            .padding(16.dp),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        RecoverPass2Content(
+                            height = 0.82f,
+                            landscape = true,
+                            code = code,
+                            onCodeChange = { code = it },
+                            navigateRecoverPass3 = navigateRecoverPass3,
+                            viewModel = viewModel
+                        )
+                    }
                 }
             }
         }
@@ -81,22 +92,27 @@ fun RecoverPass2(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 AuthHeader()
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
                 ) {
-                    RecoverPass2Content(
-                        height = 0.7f,
-                        code = code,
-                        onCodeChange = { code = it },
-                        navigateRecoverPass3 = navigateRecoverPass3,
-                        viewModel = viewModel
-                    )
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth(if (isTablet) 0.6f else 1f)
+                            .fillMaxHeight(if (isTablet) 0.8f else 1f)
+                            .padding(16.dp),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        RecoverPass2Content(
+                            height = 0.7f,
+                            code = code,
+                            onCodeChange = { code = it },
+                            navigateRecoverPass3 = navigateRecoverPass3,
+                            viewModel = viewModel
+                        )
+                    }
                 }
-
             }
         }
     }

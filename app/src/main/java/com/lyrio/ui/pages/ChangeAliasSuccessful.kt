@@ -2,7 +2,9 @@ package com.lyrio.ui.pages
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -27,30 +29,45 @@ fun ChangeAliasSuccessful(
 ) {
     val configuration = LocalConfiguration.current
 
+    val maxHeight = configuration.screenHeightDp.dp
+    val maxWidth = configuration.screenWidthDp.dp
+    val isTablet = maxWidth > 1000.dp || maxHeight > 1000.dp
+
     when (configuration.orientation) {
         Configuration.ORIENTATION_LANDSCAPE -> { // Modo horizontal
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(50.dp,20.dp,100.dp,15.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
             ) {
-                ChangeAliasSuccessfulContent(height = 1f, navigateProfile)
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth(if (isTablet) 0.4f else 0.7f)
+                        .fillMaxHeight(if (isTablet) 0.6f else 0.8f),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    ChangeAliasSuccessfulContent(height = 1f, navigateProfile)
+                }
             }
         }
 
         else -> { // Modo vertical u otras orientaciones
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
             ) {
-                ChangeAliasSuccessfulContent(
-                    navigateProfile = navigateProfile
-                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth(if (isTablet) 0.7f else 1f)
+                        .fillMaxHeight(if (isTablet) 0.8f else 1f)
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    ChangeAliasSuccessfulContent(
+                        navigateProfile = navigateProfile
+                    )
+                }
             }
         }
     }
