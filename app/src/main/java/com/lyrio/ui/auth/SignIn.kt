@@ -148,7 +148,8 @@ fun SignInContent(
 ){
     var emailErrorMsg by rememberSaveable(key = "signin_error_msg_email") { mutableIntStateOf(-1) }
     var passwordErrorMsg by rememberSaveable(key = "signin_error_msg_password") { mutableIntStateOf(-1) }
-    var isError by rememberSaveable(key = "signin_is_error") { mutableStateOf(false) }
+    var isErrorEmail by rememberSaveable(key = "signin_is_error_email") { mutableStateOf(false) }
+    var isErrorPassword by rememberSaveable(key = "signin_is_error_pass") { mutableStateOf(false) }
 
     AppWindow(
        modifier = if(height < 1f) Modifier.fillMaxWidth().fillMaxHeight(height) else Modifier.fillMaxSize(),
@@ -171,19 +172,25 @@ fun SignInContent(
             ) {
                 AppInput(
                     value = email,
-                    onValueChange = { onEmailChange(it) },
+                    onValueChange = {
+                        onEmailChange(it)
+                        if(isErrorEmail) isErrorEmail = false
+                                    },
                     label = stringResource(R.string.email),
-                    error = stringResource(emailErrorMsg),
-                    isError = isError,
+                    error = if(emailErrorMsg != -1) stringResource(emailErrorMsg) else null,
+                    isError = isErrorEmail,
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 )
                 AppInput(
                     value = password,
-                    onValueChange = {  onPasswordChange(it) },
+                    onValueChange = {
+                        onPasswordChange(it)
+                        if(isErrorPassword) isErrorPassword = false
+                                    },
                     label = stringResource(R.string.password),
-                    error = stringResource(passwordErrorMsg),
-                    isError = isError,
+                    error = if(passwordErrorMsg != -1) stringResource(passwordErrorMsg) else null,
+                    isError = isErrorPassword,
                     hint = stringResource(R.string.pass_rule),
                     modifier = Modifier.fillMaxWidth(),
                     isPassword = true
@@ -198,7 +205,15 @@ fun SignInContent(
             Spacer(modifier = Modifier.height(16.dp))
             AppButton(text = stringResource(R.string.continue_), onClick = {
                 try {
-                    if(validateQueries(email, password, { emailErrorMsg = it }, { passwordErrorMsg = it })) {
+                   val onInvalidEmail: (Int) -> Unit = {
+                        emailErrorMsg = it
+                        isErrorEmail = it != -1
+                    }
+                    val onInvalidPassword: (Int) -> Unit = {
+                        passwordErrorMsg = it
+                        isErrorPassword = it != -1
+                    }
+                    if(validateQueries(email, password, onInvalidEmail, onInvalidPassword)) {
                         viewModel.login(email, password)
                         navigateHome()
                     }
@@ -224,18 +239,20 @@ fun SignInContent(
 }
 
 fun validateQueries(email: String, password: String, onInvalidEmail: (Int) -> Unit, onInvalidPassword: (Int) -> Unit): Boolean {
-    return validateEmail(email, onInvalidEmail) && validatePassword(password, onInvalidPassword)
+    val checkEmail = validateEmail(email, onInvalidEmail)
+    return validatePassword(password, onInvalidPassword) && checkEmail
 }
 
 fun validateEmail(email: String, onInvalidEmail: (Int) -> Unit): Boolean {
-    if(!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-        onInvalidEmail(R.string.invalid_email)
-        return false
-    }
     if(email.isEmpty()) {
         onInvalidEmail(R.string.empty_field)
         return false
     }
+    if(!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        onInvalidEmail(R.string.invalid_email)
+        return false
+    }
+    onInvalidEmail(-1)
     return true
 }
 
@@ -244,6 +261,7 @@ fun validatePassword(password: String, onInvalidPassword: (Int) -> Unit): Boolea
         onInvalidPassword(R.string.empty_field)
         return false
     }
+    onInvalidPassword(-1)
     return true
 }
 
