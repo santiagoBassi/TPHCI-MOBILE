@@ -21,7 +21,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,7 +40,6 @@ import com.lyrio.ui.components.AppWindow
 import com.lyrio.ui.layout.AuthHeader
 import com.lyrio.ui.styles.OffWhite
 import com.lyrio.ui.data.viewmodels.UserViewModel
-import com.lyrio.ui.styles.Red
 
 @Composable
 fun SignIn(
@@ -145,6 +146,9 @@ fun SignInContent(
     navigateHome: () -> Unit,
     navigateRecoverPass1: () -> Unit
 ){
+    var errorMsg by rememberSaveable(key = "signin_error_msg") { mutableIntStateOf(-1) }
+    var isError by rememberSaveable(key = "signin_is_error") { mutableStateOf(false) }
+
     AppWindow(
        modifier = if(height < 1f) Modifier.fillMaxWidth().fillMaxHeight(height) else Modifier.fillMaxSize(),
     ) {
@@ -168,8 +172,10 @@ fun SignInContent(
                     value = email,
                     onValueChange = { onEmailChange(it) },
                     label = stringResource(R.string.email),
+                    error = if(errorMsg != -1) stringResource(errorMsg) else null,
+                    isError = isError,
                     modifier = Modifier.fillMaxWidth(),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 )
                 AppInput(
                     value = password,
@@ -189,8 +195,13 @@ fun SignInContent(
             Spacer(modifier = Modifier.height(16.dp))
             AppButton(text = stringResource(R.string.continue_), onClick = {
                 try {
-                    viewModel.login(email, password)
-                    navigateHome()
+                    if(validateEmail(email)){
+                        viewModel.login(email, password)
+                        navigateHome()
+                    } else {
+                        errorMsg = R.string.invalid_email
+                        isError = true
+                    }
                 }catch (e: Exception){
                     e.printStackTrace()
                 }
@@ -210,5 +221,9 @@ fun SignInContent(
             }
         }
     }
+}
+
+fun validateEmail(email: String): Boolean {
+    return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
 }
 

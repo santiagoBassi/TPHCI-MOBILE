@@ -2,13 +2,11 @@ package com.lyrio.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -28,6 +26,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.lyrio.R
 import com.lyrio.ui.styles.Orange
+import com.lyrio.ui.styles.Red
 
 @Composable
 fun eyeIconPainter(): Painter = painterResource(id = R.drawable.eye)
@@ -43,6 +42,8 @@ fun AppInput(
     modifier: Modifier = Modifier,
     placeholder: String? = null,
     hint: String? = null,
+    error: String? = null,
+    isError: Boolean = false,
     isPassword: Boolean = false,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     visualTransformation: VisualTransformation = VisualTransformation.None,
@@ -67,7 +68,22 @@ fun AppInput(
                 onFocusAction(it.isFocused)
                                                },
             readOnly = readOnly,
+            isError = isError,
             keyboardOptions = keyboardOptions,
+            supportingText = {
+                if(isError && error != null){
+                    Text(
+                        text = error,
+                        color = Red,
+                    )
+                }
+                if (hint != null && isFocused) { // Solo muestra el hint si está presente
+                    Text(
+                        text = hint,
+                        color = Color.Gray,
+                    )
+                }
+            },
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = if(readOnly) Color.Gray else Orange,
                 focusedLabelColor = if(readOnly) Color.Gray else Orange,
@@ -90,15 +106,5 @@ fun AppInput(
                 }
             }
         )
-        if (hint != null && isFocused) { // Solo muestra el hint si está presente
-            Text(
-                text = hint,
-                style = MaterialTheme.typography.bodySmall, // Puedes personalizar el estilo del hint
-                color = Color.Gray,
-                modifier = Modifier
-                    .padding(start = 8.dp)
-                    .padding(top = 5.dp)
-            )
-        }
     }
 }
