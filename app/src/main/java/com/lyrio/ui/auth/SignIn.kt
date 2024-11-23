@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -37,6 +38,7 @@ import com.lyrio.ui.components.AppWindow
 import com.lyrio.ui.layout.AuthHeader
 import com.lyrio.ui.styles.OffWhite
 import com.lyrio.ui.data.viewmodels.UserViewModel
+import com.lyrio.ui.styles.Red
 
 @Composable
 fun SignIn(
@@ -51,34 +53,43 @@ fun SignIn(
 
     val configuration = LocalConfiguration.current
 
+    val maxHeight = configuration.screenHeightDp.dp
+    val maxWidth = configuration.screenWidthDp.dp
+    val isTablet = maxWidth > 1000.dp || maxHeight > 1000.dp
+
     when (configuration.orientation) {
         Configuration.ORIENTATION_LANDSCAPE -> { // Modo horizontal
             Column(
                 modifier = Modifier
                     .fillMaxWidth().verticalScroll(rememberScrollState())
-                    .height(700.dp)
-                    .background(OffWhite),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .height(if(isTablet) maxHeight + 100.dp else maxHeight * 2),
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 AuthHeader()
-                Column(
-                    modifier = Modifier
-                        .fillMaxHeight().fillMaxWidth(0.6f)
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    SignInContent(
-                        height = 0.9f,
-                        email = email,
-                        onEmailChange = { email = it },
-                        password = password,
-                        onPasswordChange = { password = it },
-                        navigateSignUp = navigateSignUp,
-                        navigateHome = navigateHome,
-                        viewModel = viewModel,
-                        navigateRecoverPass1 = navigateRecoverPass1
-                    )
+                Box(
+                    modifier = Modifier.fillMaxSize().padding(bottom = 16.dp),
+                    contentAlignment = Alignment.Center
+                ){
+                    Column(
+                        modifier = Modifier
+                            .fillMaxHeight(if(isTablet) 0.9f else 1f)
+                            .fillMaxWidth(if(isTablet) 0.35f else 0.6f)
+                            .padding(16.dp),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        SignInContent(
+                            height = 0.9f,
+                            email = email,
+                            onEmailChange = { email = it },
+                            password = password,
+                            onPasswordChange = { password = it },
+                            navigateSignUp = navigateSignUp,
+                            navigateHome = navigateHome,
+                            viewModel = viewModel,
+                            navigateRecoverPass1 = navigateRecoverPass1
+                        )
+                    }
                 }
             }
         }
@@ -91,27 +102,32 @@ fun SignIn(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 AuthHeader()
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ){
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth(if (isTablet) 0.6f else 1f)
+                            .fillMaxHeight(if (isTablet) 0.8f else 1f)
+                            .padding(16.dp),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
 
-                    SignInContent(
-                        height = 0.7f,
-                        email = email,
-                        onEmailChange = { email = it },
-                        password = password,
-                        onPasswordChange = { password = it },
-                        navigateSignUp = navigateSignUp,
-                        navigateHome = navigateHome,
-                        viewModel = viewModel,
-                        navigateRecoverPass1 = navigateRecoverPass1
-                    )
+                        SignInContent(
+                            height = 0.7f,
+                            email = email,
+                            onEmailChange = { email = it },
+                            password = password,
+                            onPasswordChange = { password = it },
+                            navigateSignUp = navigateSignUp,
+                            navigateHome = navigateHome,
+                            viewModel = viewModel,
+                            navigateRecoverPass1 = navigateRecoverPass1
+                        )
+                    }
                 }
-
             }
         }
     }

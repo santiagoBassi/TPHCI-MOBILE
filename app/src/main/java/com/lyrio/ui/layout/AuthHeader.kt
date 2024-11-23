@@ -31,7 +31,7 @@ fun AuthHeader() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(80.dp)
+            .height(90.dp)
             .background(DarkGray)
             .windowInsetsPadding(WindowInsets.statusBars)
             .padding(25.dp, 0.dp),

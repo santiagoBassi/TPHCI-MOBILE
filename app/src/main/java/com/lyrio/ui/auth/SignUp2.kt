@@ -3,6 +3,7 @@ package com.lyrio.ui.auth
 import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -47,35 +48,45 @@ fun SignUp2(
 
     val configuration = LocalConfiguration.current
 
+    val maxHeight = configuration.screenHeightDp.dp
+    val maxWidth = configuration.screenWidthDp.dp
+    val isTablet = maxWidth > 1000.dp || maxHeight > 1000.dp
+
     when (configuration.orientation) {
         Configuration.ORIENTATION_LANDSCAPE -> { // Modo horizontal
             Column(
                 modifier = Modifier
                     .fillMaxWidth().verticalScroll(rememberScrollState())
-                    .height(800.dp)
+                    .height(if(isTablet) maxHeight + 100.dp else maxHeight * 2)
                     .background(OffWhite),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 AuthHeader()
-                Column(
-                    modifier = Modifier
-                        .fillMaxHeight().fillMaxWidth(0.6f)
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
+                Box(
+                    modifier = Modifier.fillMaxSize().padding(bottom = 16.dp),
+                    contentAlignment = Alignment.Center
+                ){
+                    Column(
+                        modifier = Modifier
+                            .fillMaxHeight(if(isTablet) 0.9f else 1f)
+                            .fillMaxWidth(if(isTablet) 0.35f else 0.6f)
+                            .padding(16.dp),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
 
-                    SignUp2Content(
-                        height = 0.82f,
-                        email = email,
-                        onEmailChange = { email = it },
-                        password = password,
-                        onPasswordChange = { password = it },
-                        confirmPassword = confirmPassword,
-                        onConfirmPasswordChange = { confirmPassword = it },
-                        viewModel = viewModel,
-                        navigateSignUp3 = navigateSignUp3
-                    )
+                        SignUp2Content(
+                            height = 0.82f,
+                            email = email,
+                            onEmailChange = { email = it },
+                            password = password,
+                            onPasswordChange = { password = it },
+                            confirmPassword = confirmPassword,
+                            onConfirmPasswordChange = { confirmPassword = it },
+                            viewModel = viewModel,
+                            navigateSignUp3 = navigateSignUp3
+                        )
+                    }
                 }
             }
         }
@@ -88,24 +99,30 @@ fun SignUp2(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 AuthHeader()
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    SignUp2Content(
-                        height = 0.8f,
-                        email = email,
-                        onEmailChange = { email = it },
-                        password = password,
-                        onPasswordChange = { password = it },
-                        confirmPassword = confirmPassword,
-                        onConfirmPasswordChange = { confirmPassword = it },
-                        viewModel = viewModel,
-                        navigateSignUp3 = navigateSignUp3
-                    )
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ){
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth(if (isTablet) 0.6f else 1f)
+                            .fillMaxHeight(if (isTablet) 0.8f else 1f)
+                            .padding(16.dp),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        SignUp2Content(
+                            height = 0.8f,
+                            email = email,
+                            onEmailChange = { email = it },
+                            password = password,
+                            onPasswordChange = { password = it },
+                            confirmPassword = confirmPassword,
+                            onConfirmPasswordChange = { confirmPassword = it },
+                            viewModel = viewModel,
+                            navigateSignUp3 = navigateSignUp3
+                        )
+                    }
                 }
 
             }
