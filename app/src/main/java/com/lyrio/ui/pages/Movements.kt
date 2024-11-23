@@ -43,7 +43,8 @@ import java.util.Date
 
 @Composable
 fun Movements() {
-
+}
+/*
     var maxHeight = 1000.dp
 
     val configuration = LocalConfiguration.current
@@ -163,5 +164,86 @@ fun MovementsContent(maxHeight: Dp = 1000.dp){
             }
         }
     }
-}
 
+    fun MovementsContent(){
+//    var searchText by remember { mutableStateOf("") }
+//    val recentTransfers = remember {
+//        mutableStateListOf(
+//            TransferData(transactionType = R.string.sent, amount = 1500.0, recipient = "Supermercado", date = Date()),
+//            TransferData(transactionType = R.string.received, amount = 5000.0, recipient = "Juan Pérez", date = Date()),
+//            TransferData(transactionType = R.string.sent, amount = 1000.0, recipient = "Celular", date = Date()),
+//            TransferData(transactionType = R.string.sent, amount = 200.0, recipient = "Kiosco", date = Date()),
+//            TransferData(transactionType = R.string.received, amount = 10000.0, recipient = "María García", date = Date()),
+//            TransferData(transactionType = R.string.sent, amount = 1500.0, recipient = "Supermercado", date = Date()),
+//            TransferData(transactionType = R.string.received, amount = 5000.0, recipient = "Juan Pérez", date = Date()),
+//            TransferData(transactionType = R.string.sent, amount = 1000.0, recipient = "Celular", date = Date()),
+//            TransferData(transactionType = R.string.sent, amount = 200.0, recipient = "Kiosco", date = Date()),
+//            TransferData(transactionType = R.string.received, amount = 10000.0, recipient = "María García", date = Date()),
+//            TransferData(transactionType = R.string.sent, amount = 1500.0, recipient = "Supermercado", date = Date()),
+//            TransferData(transactionType = R.string.received, amount = 5000.0, recipient = "Juan Pérez", date = Date()),
+//            TransferData(transactionType = R.string.sent, amount = 1000.0, recipient = "Celular", date = Date()),
+//            TransferData(transactionType = R.string.sent, amount = 200.0, recipient = "Kiosco", date = Date()),
+//            TransferData(transactionType = R.string.received, amount = 10000.0, recipient = "María García", date = Date())
+//        )
+//    }
+//
+//    AppWindow(
+//        title = stringResource(R.string.movements),
+//    ) {
+//        Column(modifier = Modifier.padding(horizontal = 10.dp)) {
+//            SearchBar(
+//                query = searchText,
+//                onQueryChange = { searchText = it },
+//                onSearch = { },
+//                active = false,
+//                onActiveChange = { },
+//                leadingIcon = {
+//                    Icon(
+//                        painter = painterResource(id = R.drawable.search),
+//                        contentDescription = null,
+//                        modifier = Modifier.size(24.dp),
+//                        tint = Color.Gray
+//                    )
+//                },
+//                trailingIcon = {
+//                    IconButton(
+//                        onClick = { searchText = "" },
+//                    ) {
+//                        if (searchText.isNotEmpty()) {
+//                            Icon(
+//                                painter = painterResource(id = R.drawable.clear),
+//                                contentDescription = null,
+//                                modifier = Modifier.size(24.dp)
+//                            )
+//                        }
+//                    }
+//                },
+//                placeholder = { Text(stringResource(R.string.search), color = Color.Gray) },
+//                shape = RoundedCornerShape(16.dp),
+//                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
+//                colors = SearchBarDefaults.colors(OffWhite),
+//            ) {
+//
+//            }
+//
+//            Spacer(modifier = Modifier.height(16.dp))
+//
+//            LazyColumn {
+//                items(recentTransfers.filter { transfer ->
+//                    transfer.recipient.contains(searchText, ignoreCase = true) ||
+//                            transfer.amount.toString()
+//                                .contains(searchText, ignoreCase = true) ||
+//                            transfer.date.toString().contains(searchText, ignoreCase = true)
+//                }) { transfer ->
+//                    TransferItem(
+//                        transactionType = stringResource(transfer.transactionType),
+//                        amount = transfer.amount,
+//                        recipient = transfer.recipient,
+//                        date = transfer.date
+//                    )
+//                }
+//            }
+//        }
+//    }
+}
+        */

@@ -23,11 +23,33 @@ import com.lyrio.ui.data.states.WalletUiState
 class WalletViewModel(
     sessionManager: SessionManager,
     private val walletRepository: WalletRepository,
+    userViewModel: UserViewModel
 ) : ViewModel() {
 
     private val _uiStateWallet = MutableStateFlow(WalletUiState())
     val uiStateWallet: StateFlow<WalletUiState> = _uiStateWallet.asStateFlow()
 
+
+    fun getBalance() = runOnViewModelScope(
+        {
+            walletRepository.getBalance()
+        },
+        { state, balance -> state.copy(balance = balance) }
+    )
+
+    fun getInvested() = runOnViewModelScope(
+        {
+            walletRepository.getInvestment()
+        },
+        { state, _ -> state.copy() }
+    )
+
+    fun getCards() = runOnViewModelScope(
+        {
+            walletRepository.getCards()
+        },
+        { state, _ -> state.copy() }
+    )
 
 
     private fun <T> collectOnViewModelScope(
@@ -67,13 +89,15 @@ class WalletViewModel(
         const val TAG = "UI Layer"
 
         fun provideFactory(
-            application: LyrioApp
+            application: LyrioApp,
+            userViewModel: UserViewModel
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 return WalletViewModel(
                     application.sessionManager,
-                    application.walletRepository) as T
+                    application.walletRepository,
+                    userViewModel) as T
             }
         }
     }

@@ -17,7 +17,7 @@ class PaymentRepository(private val remoteDataSource: PaymentRemoteDataSource) {
     }
 
     suspend fun getPayments(): List<Payment> {
-        return remoteDataSource.getPayments().map { it.asModel() }
+        return remoteDataSource.getPayments().payments.map { it.asModel() }
     }
 
     suspend fun getPaymentById(paymentId: String): Payment {

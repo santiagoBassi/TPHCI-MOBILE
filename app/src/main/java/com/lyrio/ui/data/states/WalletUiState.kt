@@ -1,5 +1,6 @@
 package com.lyrio.ui.data.states
 
+import com.lyrio.data.model.Card
 import com.lyrio.data.model.Error
 
 data class WalletUiState(
@@ -7,6 +8,7 @@ data class WalletUiState(
     val investedMoney: Double = 0.0,
     val alias: String = "",
     val cbu: String = "",
+    val cards: List<Card> = emptyList(),
     val isFetching: Boolean = false,
     val error: Error? = null
 )

@@ -1,5 +1,6 @@
 package com.lyrio.ui.pages
 
+import android.annotation.SuppressLint
 import android.content.res.Configuration
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -19,6 +20,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,21 +31,35 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.lyrio.LyrioApp
 import com.lyrio.R
 import com.lyrio.ui.components.AppWindow
 import com.lyrio.ui.components.CircularIconButton
 import com.lyrio.ui.components.TransferItem
 import com.lyrio.ui.components.eyeIconPainter
 import com.lyrio.ui.components.eyeOffIconPainter
+import com.lyrio.ui.data.viewmodels.PaymentsViewModel
+import com.lyrio.ui.data.viewmodels.UserViewModel
+import com.lyrio.ui.data.viewmodels.WalletViewModel
 import com.lyrio.ui.styles.LightGray
+import com.lyrio.utils.formatCurrencyWhole
+import com.lyrio.utils.getDecimalPart
+import com.lyrio.utils.stringToLocalDate
 import java.util.Calendar
 import java.util.Date
+import java.text.DecimalFormat
+import java.util.Locale
+
+
+
+
 
 @Composable
 fun transferIconPainter(): Painter = painterResource(id = R.drawable.transfer)
@@ -53,23 +70,20 @@ fun receiveIconPainter(): Painter = painterResource(id = R.drawable.receive)
 @Composable
 fun cvuAliasIconPainter(): Painter = painterResource(id = R.drawable.cvu_alias)
 
-data class TransferData(
-    val transactionType: Int,
-    val amount: Double,
-    val recipient: String,
-    val date: Date
-)
 
-@Preview(showBackground = true)
 @Composable
 fun Home(
-    navigateTransfer1: () -> Unit = {},
-    navigateReceiveMoney: () -> Unit = {},
-    navigateProfile: () -> Unit = {},
-    navigateMovements: () -> Unit = {},
-    navigateMoney: () -> Unit = {}
+    navigateTransfer1 : () -> Unit = {},
+    navigateReceiveMoney : () -> Unit = {},
+    navigateProfile : () -> Unit = {},
+    navigateMovements : () -> Unit = {},
+    navigateMoney : () -> Unit = {},
+    viewModelWallet : WalletViewModel,
+    viewModelPayments : PaymentsViewModel,
+    viewModelUser: UserViewModel
 ) {
     val configuration = LocalConfiguration.current
+
 
     when (configuration.orientation) {
         Configuration.ORIENTATION_LANDSCAPE -> { // Modo horizontal
@@ -82,12 +96,15 @@ fun Home(
                     navigateReceiveMoney,
                     navigateProfile,
                     navigateMovements,
-                    navigateMoney
+                    navigateMoney,
+                    viewModelWallet,
+                    viewModelPayments,
+                    viewModelUser
                 )
             }
         }
 
-        else -> { // Modo vertical u otras orientaciones
+        else -> {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -100,7 +117,10 @@ fun Home(
                     navigateReceiveMoney,
                     navigateProfile,
                     navigateMovements,
-                    navigateMoney
+                    navigateMoney,
+                    viewModelWallet,
+                    viewModelPayments,
+                    viewModelUser
                 )
             }
         }
@@ -113,41 +133,20 @@ fun HomeContent(
     navigateReceiveMoney: () -> Unit = {},
     navigateProfile: () -> Unit = {},
     navigateMovements: () -> Unit = {},
-    navigateMoney: () -> Unit = {}
+    navigateMoney: () -> Unit = {},
+    viewModelWallet: WalletViewModel,
+    viewModelPayments : PaymentsViewModel,
+    viewModelUser: UserViewModel
 ) {
-    val transfers = listOf(
-        TransferData(R.string.received, 1234.56, "Juan Pérez", Date()),
-        TransferData(
-            R.string.sent,
-            -567.89,
-            "María García",
-            Calendar.getInstance().apply {
-                add(
-                    Calendar.HOUR_OF_DAY,
-                    -3
-                ) // Resta 3 horas a la hora actual
-            }.time
-        ),
-        TransferData(
-            R.string.received,
-            345.67,
-            "Pedro López",
-            Calendar.getInstance().apply {
-                add(Calendar.DAY_OF_MONTH, -5) // Resta 5 días al día actual
-            }.time
-        ),
-        TransferData(
-            R.string.sent,
-            -567.89,
-            "María García",
-            Calendar.getInstance().apply {
-                add(
-                    Calendar.HOUR_OF_DAY,
-                    -3
-                ) // Resta 3 horas a la hora actual
-            }.time
-        )
-    )
+    val walletState by viewModelWallet.uiStateWallet.collectAsState()
+    val paymentsState by viewModelPayments.uiStatePayments.collectAsState()
+    val userState by viewModelUser.uiStateUser.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModelWallet.getBalance()
+        viewModelPayments.getPayments()
+        viewModelUser.getCurrentUser()
+    }
 
     var showBalance by remember { mutableStateOf(true) } // Estado para mostrar/ocultar
 
@@ -173,7 +172,7 @@ fun HomeContent(
                 horizontalArrangement = Arrangement.Start
             ) {
                 Text(
-                    text = if (showBalance) "$120367" else "****",
+                    text = if (showBalance) formatCurrencyWhole(walletState.balance) else "****",
                     fontWeight = FontWeight.Bold,
                     fontSize = 38.sp,
                     modifier = Modifier.padding(end = 4.dp),
@@ -181,7 +180,7 @@ fun HomeContent(
                 )
                 if (showBalance) {
                     Text(
-                        text = "58",
+                        text = getDecimalPart(walletState.balance),
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp,
                         modifier = Modifier.padding(top = 2.dp),
@@ -241,12 +240,12 @@ fun HomeContent(
                         .padding(vertical = 10.dp)
                         .weight(1f),
                 ) {
-                    items(transfers.take(4)) { transferData ->
+                    items(paymentsState.lastTransfers) { transfer -> // Use items() here
                         TransferItem(
-                            transactionType = stringResource(transferData.transactionType),
-                            amount = transferData.amount,
-                            recipient = transferData.recipient,
-                            date = transferData.date
+                            transactionType = if(transfer.payerEmail == userState.email) "Enviaste" else "Recibiste",
+                            amount = transfer.amount,
+                            recipient = if(transfer.payerEmail == userState.email) transfer.receiverName else transfer.payerName,
+                            date = stringToLocalDate(transfer.createdAt)
                         )
                     }
                 }

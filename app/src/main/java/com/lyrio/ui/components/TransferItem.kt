@@ -23,6 +23,8 @@ import com.lyrio.R
 import com.lyrio.ui.styles.Green
 import java.text.NumberFormat
 import java.time.Instant
+import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
@@ -34,7 +36,7 @@ fun TransferItem(
     transactionType: String,
     amount: Double,
     recipient: String,
-    date: Date
+    date: LocalDate
 ) {
     val formattedDate = remember { formatDate(date) }
 
@@ -91,11 +93,11 @@ fun TransferItem(
 }
 
 
-fun formatDate(date: Date): String {
-    val instant = date.toInstant()
+
+fun formatDate(localDate: LocalDate): String {
     val zoneId = ZoneId.systemDefault()
-    val localDateTime = instant.atZone(zoneId).toLocalDateTime()
-    val now = Instant.now().atZone(zoneId).toLocalDateTime()
+    val localDateTime = localDate.atStartOfDay() // Convierte LocalDate a LocalDateTime al inicio del día
+    val now = LocalDateTime.now(zoneId)
 
     return if (ChronoUnit.DAYS.between(localDateTime, now) == 0L) {
         if (ChronoUnit.HOURS.between(localDateTime, now) == 0L) {
@@ -104,6 +106,6 @@ fun formatDate(date: Date): String {
             "Hace ${ChronoUnit.HOURS.between(localDateTime, now)} horas"
         }
     } else {
-        DateTimeFormatter.ofPattern("dd-MM-yyyy").format(localDateTime)
+        DateTimeFormatter.ofPattern("dd-MM-yyyy").format(localDate)
     }
 }

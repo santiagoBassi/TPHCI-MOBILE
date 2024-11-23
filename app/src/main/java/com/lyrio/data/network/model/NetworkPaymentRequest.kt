@@ -10,3 +10,4 @@ data class NetworkPaymentRequest(
     val cardId: Int?,
     val receiverEmail: String?
 )
+

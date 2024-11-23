@@ -73,6 +73,13 @@ class UserViewModel(
 
     }
 
+    fun getCurrentUser() = runOnViewModelScope(
+        {
+            userRepository.getCurrentUser(false)
+        },
+        {state, response -> state.copy(email = response?.email ?: "")}
+    )
+
 
 
 
