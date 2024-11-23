@@ -146,7 +146,8 @@ fun SignInContent(
     navigateHome: () -> Unit,
     navigateRecoverPass1: () -> Unit
 ){
-    var errorMsg by rememberSaveable(key = "signin_error_msg") { mutableIntStateOf(-1) }
+    var emailErrorMsg by rememberSaveable(key = "signin_error_msg_email") { mutableIntStateOf(-1) }
+    var passwordErrorMsg by rememberSaveable(key = "signin_error_msg_password") { mutableIntStateOf(-1) }
     var isError by rememberSaveable(key = "signin_is_error") { mutableStateOf(false) }
 
     AppWindow(
@@ -172,7 +173,7 @@ fun SignInContent(
                     value = email,
                     onValueChange = { onEmailChange(it) },
                     label = stringResource(R.string.email),
-                    error = if(errorMsg != -1) stringResource(errorMsg) else null,
+                    error = stringResource(emailErrorMsg),
                     isError = isError,
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
@@ -181,6 +182,8 @@ fun SignInContent(
                     value = password,
                     onValueChange = {  onPasswordChange(it) },
                     label = stringResource(R.string.password),
+                    error = stringResource(passwordErrorMsg),
+                    isError = isError,
                     hint = stringResource(R.string.pass_rule),
                     modifier = Modifier.fillMaxWidth(),
                     isPassword = true
@@ -195,12 +198,9 @@ fun SignInContent(
             Spacer(modifier = Modifier.height(16.dp))
             AppButton(text = stringResource(R.string.continue_), onClick = {
                 try {
-                    if(validateEmail(email)){
+                    if(validateQueries(email, password, { emailErrorMsg = it }, { passwordErrorMsg = it })) {
                         viewModel.login(email, password)
                         navigateHome()
-                    } else {
-                        errorMsg = R.string.invalid_email
-                        isError = true
                     }
                 }catch (e: Exception){
                     e.printStackTrace()
@@ -223,7 +223,27 @@ fun SignInContent(
     }
 }
 
-fun validateEmail(email: String): Boolean {
-    return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+fun validateQueries(email: String, password: String, onInvalidEmail: (Int) -> Unit, onInvalidPassword: (Int) -> Unit): Boolean {
+    return validateEmail(email, onInvalidEmail) && validatePassword(password, onInvalidPassword)
+}
+
+fun validateEmail(email: String, onInvalidEmail: (Int) -> Unit): Boolean {
+    if(!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        onInvalidEmail(R.string.invalid_email)
+        return false
+    }
+    if(email.isEmpty()) {
+        onInvalidEmail(R.string.empty_field)
+        return false
+    }
+    return true
+}
+
+fun validatePassword(password: String, onInvalidPassword: (Int) -> Unit): Boolean {
+    if(password.isEmpty()) {
+        onInvalidPassword(R.string.empty_field)
+        return false
+    }
+    return true
 }
 
