@@ -19,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -144,6 +145,13 @@ fun SignUp2Content(
 ) {
     val signUpUiState by viewModel.uiStateUser.collectAsState()
 
+    var isErrorEmail by remember { mutableStateOf(false) }
+    var isErrorPassword by remember { mutableStateOf(false) }
+    var isErrorConfirmPassword by remember { mutableStateOf(false) }
+    var errorMsgEmail by remember { mutableIntStateOf(-1) }
+    var errorMsgPassword by remember { mutableIntStateOf(-1) }
+    var errorMsgConfirmPassword by remember { mutableIntStateOf(-1) }
+
     AppWindow(
         modifier = Modifier
             .fillMaxWidth(0.95f)
@@ -170,6 +178,8 @@ fun SignUp2Content(
                     value = email,
                     onValueChange = { onEmailChange(it) },
                     label = stringResource(R.string.email),
+                    error = if(errorMsgEmail != -1) stringResource(errorMsgEmail) else null,
+                    isError = isErrorEmail,
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
                 )
@@ -177,6 +187,8 @@ fun SignUp2Content(
                     value = password,
                     onValueChange = { onPasswordChange(it) },
                     label = stringResource(R.string.password),
+                    error = if(errorMsgPassword != -1) stringResource(errorMsgPassword) else null,
+                    isError = isErrorPassword,
                     hint = stringResource(R.string.pass_rule),
                     modifier = Modifier.fillMaxWidth(),
                     isPassword = true
@@ -185,6 +197,8 @@ fun SignUp2Content(
                     value = confirmPassword,
                     onValueChange = { onConfirmPasswordChange(it) },
                     label = stringResource(R.string.confirm_pass),
+                    error = if(errorMsgConfirmPassword != -1) stringResource(errorMsgConfirmPassword) else null,
+                    isError = isErrorConfirmPassword,
                     modifier = Modifier.fillMaxWidth(),
                     isPassword = true
                 )
@@ -193,14 +207,28 @@ fun SignUp2Content(
 
             AppButton(text = stringResource(R.string.continue_), onClick = {
                 try {
-                    viewModel.register(
-                        firstName = signUpUiState.firstName,
-                        lastName = signUpUiState.lastName,
-                        dateOfBirth = signUpUiState.dateOfBirth,
-                        email = email,
-                        password = password
-                    )
-                    navigateSignUp3()
+                    val onInvalidEmail: (Int) -> Unit = {
+                        errorMsgEmail = it
+                        isErrorEmail = it != -1
+                    }
+                    val onInvalidPassword: (Int) -> Unit = {
+                        errorMsgPassword = it
+                        isErrorPassword = it != -1
+                    }
+                    val onInvalidConfirmPassword: (Int) -> Unit = {
+                        errorMsgConfirmPassword = it
+                        isErrorConfirmPassword = it != -1
+                    }
+                    if(validateQueries(email, password, confirmPassword, onInvalidEmail, onInvalidPassword, onInvalidConfirmPassword)) {
+                        viewModel.register(
+                            firstName = signUpUiState.firstName,
+                            lastName = signUpUiState.lastName,
+                            dateOfBirth = signUpUiState.dateOfBirth,
+                            email = email,
+                            password = password
+                        )
+                        navigateSignUp3()
+                    }
                 }catch (e : Exception){
                     e.printStackTrace()
                 }
@@ -208,4 +236,34 @@ fun SignUp2Content(
             }, width = 0.8f)
         }
     }
+}
+
+private fun validateQueries(email: String, password: String, confirmPassword: String, onInvalidEmail: (Int) -> Unit, onInvalidPassword: (Int) -> Unit, onInvalidConfirmPassword: (Int) -> Unit): Boolean {
+    val checkEmail = validateEmail(email, onInvalidEmail)
+    val checkPassword = validatePasswordSignUp(password, onInvalidPassword)
+    return validateConfirmPassword(confirmPassword, password, onInvalidConfirmPassword) && checkEmail && checkPassword
+}
+
+fun validatePasswordSignUp(password: String, onInvalidPassword: (Int) -> Unit): Boolean {
+    if(password.isEmpty()) {
+        onInvalidPassword(R.string.empty_field)
+        return false
+    }
+    if(password.length < 8) {
+        onInvalidPassword(R.string.invalid_password)
+        return false
+    }
+    return true
+}
+
+fun validateConfirmPassword(confirmPassword: String, password: String, onInvalidConfirmPassword: (Int) -> Unit): Boolean {
+    if(confirmPassword.isEmpty()) {
+        onInvalidConfirmPassword(R.string.empty_field)
+        return false
+    }
+    if(confirmPassword != password) {
+        onInvalidConfirmPassword(R.string.pass_not_match)
+        return false
+    }
+    return true
 }
