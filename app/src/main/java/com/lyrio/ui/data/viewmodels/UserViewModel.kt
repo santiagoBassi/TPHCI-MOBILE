@@ -44,7 +44,7 @@ class UserViewModel(
         {
             userRepository.login(email, password)
         },
-        { state, _ -> state.copy() }
+        { state, _ -> state.copy(isAuthenticated = true) }
     )
 
     fun verifyEmail(code: String) = runOnViewModelScope(

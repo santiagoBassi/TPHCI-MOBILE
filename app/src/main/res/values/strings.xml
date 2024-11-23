@@ -192,4 +192,33 @@
     <string name="card_added">Card added!</string>
     <string name="add_another_card">Add another card</string>
 
+
+    <!-- StateBar -->
+    <string name="com.lyrio.ui.navigation.Screen.SignIn">Sign In</string>
+    <string name="com.lyrio.ui.navigation.Screen.SignUp1">Sign Up Step (1/3)</string>
+    <string name="com.lyrio.ui.navigation.Screen.SignUp2">Sign Up Step (2/3)</string>
+    <string name="com.lyrio.ui.navigation.Screen.SignUp3">Sign Up Step (3/3)</string>
+    <string name="com.lyrio.ui.navigation.Screen.RecoverPass1">Recover Password Step 1</string>
+    <string name="com.lyrio.ui.navigation.Screen.RecoverPass2">Recover Password Step 2</string>
+    <string name="com.lyrio.ui.navigation.Screen.RecoverPass3">Recover Password Step 3</string>
+    <string name="com.lyrio.ui.navigation.Screen.Landing">Landing</string>
+    <string name="com.lyrio.ui.navigation.Screen.Home">Home</string>
+    <string name="com.lyrio.ui.navigation.Screen.AddCardSuccessful">Add Card Successful</string>
+    <string name="com.lyrio.ui.navigation.Screen.AddCreditCard">Add Credit Card</string>
+    <string name="com.lyrio.ui.navigation.Screen.AddInvestment">Add Investment</string>
+    <string name="com.lyrio.ui.navigation.Screen.ChangeAlias">Change Alias</string>
+    <string name="com.lyrio.ui.navigation.Screen.ChangeAliasSuccessful">Change Alias Successful</string>
+    <string name="com.lyrio.ui.navigation.Screen.CreditCards">Credit Cards</string>
+    <string name="com.lyrio.ui.navigation.Screen.Invest">Invest</string>
+    <string name="com.lyrio.ui.navigation.Screen.Money">Money</string>
+    <string name="com.lyrio.ui.navigation.Screen.Movements">Movements</string>
+    <string name="com.lyrio.ui.navigation.Screen.Paylink">Paylink</string>
+    <string name="com.lyrio.ui.navigation.Screen.Profile">Profile</string>
+    <string name="com.lyrio.ui.navigation.Screen.ReceiveMoney">Receive Money</string>
+    <string name="com.lyrio.ui.navigation.Screen.Transfer1">Transfer Step (1/2)</string>
+    <string name="com.lyrio.ui.navigation.Screen.Transfer2">Transfer Step (2/2)</string>
+    <string name="com.lyrio.ui.navigation.Screen.TransferSuccessful">Transfer Successful</string>
+    <string name="com.lyrio.ui.navigation.Screen.WithdrawInvestment">Withdraw Investment</string>
+
+
 </resources>

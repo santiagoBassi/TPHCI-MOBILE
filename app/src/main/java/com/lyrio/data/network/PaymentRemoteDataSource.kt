@@ -3,8 +3,8 @@ package com.lyrio.data.network
 import com.lyrio.data.network.api.PaymentApiService
 import com.lyrio.data.network.model.NetworkPayment
 import com.lyrio.data.network.model.NetworkPaymentRequest
+import com.lyrio.data.network.model.NetworkPaymentsResponse
 import com.lyrio.data.network.model.NetworkSuccess
-import com.lyrio.data.network.model.PaymentsResponse
 
 class PaymentRemoteDataSource(
     private val paymentApiService: PaymentApiService
@@ -22,7 +22,7 @@ class PaymentRemoteDataSource(
         return handleApiResponse { paymentApiService.makePayment(NetworkPaymentRequest(amount, description, type, null, null)) }
     }
 
-    suspend fun getPayments(): PaymentsResponse {
+    suspend fun getPayments(): NetworkPaymentsResponse {
         return handleApiResponse { paymentApiService.getPayments() }
     }
 

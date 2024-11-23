@@ -1,8 +1,6 @@
 package com.lyrio.data.model
 
-import com.lyrio.data.network.model.NetworkPayment
-
-data class Payment(
+data class PaymentResponse(
     val id: Int,
     val type: PaymentType,
     val amount: Double,

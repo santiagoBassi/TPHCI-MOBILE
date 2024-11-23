@@ -194,4 +194,33 @@
     <string name="card_added">¡Tarjeta agregada!</string>
     <string name="add_another_card">Agregar otra tarjeta</string>
 
+
+    <!-- Status Bar-->
+    <!-- StateBar -->
+    <string name="com.lyrio.ui.navigation.Screen.SignIn">Iniciar Sesión</string>
+    <string name="com.lyrio.ui.navigation.Screen.SignUp1">Registro Paso (1/3)</string>
+    <string name="com.lyrio.ui.navigation.Screen.SignUp2">Registro Paso (2/3)</string>
+    <string name="com.lyrio.ui.navigation.Screen.SignUp3">Registro Paso (3/3)</string>
+    <string name="com.lyrio.ui.navigation.Screen.RecoverPass1">Recuperar Contraseña Paso 1</string>
+    <string name="com.lyrio.ui.navigation.Screen.RecoverPass2">Recuperar Contraseña Paso 2</string>
+    <string name="com.lyrio.ui.navigation.Screen.RecoverPass3">Recuperar Contraseña Paso 3</string>
+    <string name="com.lyrio.ui.navigation.Screen.Landing">Inicio</string>
+    <string name="com.lyrio.ui.navigation.Screen.Home">Inicio</string>
+    <string name="com.lyrio.ui.navigation.Screen.AddCardSuccessful">Tarjeta Agregada con Éxito</string>
+    <string name="com.lyrio.ui.navigation.Screen.AddCreditCard">Agregar Tarjeta de Crédito</string>
+    <string name="com.lyrio.ui.navigation.Screen.AddInvestment">Agregar Inversión</string>
+    <string name="com.lyrio.ui.navigation.Screen.ChangeAlias">Cambiar Alias</string>
+    <string name="com.lyrio.ui.navigation.Screen.ChangeAliasSuccessful">Alias Cambiado con Éxito</string>
+    <string name="com.lyrio.ui.navigation.Screen.CreditCards">Tarjetas de Crédito</string>
+    <string name="com.lyrio.ui.navigation.Screen.Invest">Invertir</string>
+    <string name="com.lyrio.ui.navigation.Screen.Money">Dinero</string>
+    <string name="com.lyrio.ui.navigation.Screen.Movements">Movimientos</string>
+    <string name="com.lyrio.ui.navigation.Screen.Paylink">Enlace de Pago</string>
+    <string name="com.lyrio.ui.navigation.Screen.Profile">Perfil</string>
+    <string name="com.lyrio.ui.navigation.Screen.ReceiveMoney">Recibir Dinero</string>
+    <string name="com.lyrio.ui.navigation.Screen.Transfer1">Transferencia Paso (1/2)</string>
+    <string name="com.lyrio.ui.navigation.Screen.Transfer2">Transferencia Paso (2/2)</string>
+    <string name="com.lyrio.ui.navigation.Screen.TransferSuccessful">Transferencia Exitosa</string>
+    <string name="com.lyrio.ui.navigation.Screen.WithdrawInvestment">Retirar Inversión</string>
+
 </resources>

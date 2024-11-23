@@ -3,8 +3,7 @@ package com.lyrio.ui
 import com.lyrio.data.model.Card
 import com.lyrio.data.model.User
 import com.lyrio.data.model.Error
-import com.lyrio.data.model.Payment
-import java.util.Date
+import com.lyrio.data.model.PaymentResponse
 
 data class UiState(
     val isAuthenticated: Boolean = false,
@@ -12,8 +11,8 @@ data class UiState(
     val currentUser: User? = null,
     val cards: List<Card>? = null,
     val currentCard: Card? = null,
-    val payments: List<Payment>? = null,
-    val currentPayment: Payment? = null,
+    val payments: List<PaymentResponse>? = null,
+    val currentPayment: PaymentResponse? = null,
     val error: Error? = null
 )
 
