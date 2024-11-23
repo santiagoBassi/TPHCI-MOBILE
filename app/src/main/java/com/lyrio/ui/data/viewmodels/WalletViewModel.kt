@@ -34,7 +34,7 @@ class WalletViewModel(
         {
             walletRepository.getBalance()
         },
-        { state, _ -> state.copy() }
+        { state, balance -> state.copy(balance = balance) }
     )
 
     fun getInvested() = runOnViewModelScope(

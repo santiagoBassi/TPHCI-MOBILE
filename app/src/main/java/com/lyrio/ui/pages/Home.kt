@@ -1,5 +1,6 @@
 package com.lyrio.ui.pages
 
+import android.annotation.SuppressLint
 import android.content.res.Configuration
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -19,6 +20,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,8 +47,16 @@ import com.lyrio.ui.components.eyeIconPainter
 import com.lyrio.ui.components.eyeOffIconPainter
 import com.lyrio.ui.data.viewmodels.WalletViewModel
 import com.lyrio.ui.styles.LightGray
+import com.lyrio.utils.formatCurrencyWhole
+import com.lyrio.utils.getDecimalPart
 import java.util.Calendar
 import java.util.Date
+import java.text.DecimalFormat
+import java.util.Locale
+
+
+
+
 
 @Composable
 fun transferIconPainter(): Painter = painterResource(id = R.drawable.transfer)
@@ -74,6 +85,7 @@ fun Home(
 ) {
     val configuration = LocalConfiguration.current
 
+
     when (configuration.orientation) {
         Configuration.ORIENTATION_LANDSCAPE -> { // Modo horizontal
             Row(
@@ -86,7 +98,7 @@ fun Home(
                     navigateProfile,
                     navigateMovements,
                     navigateMoney,
-                    viewModelWallet
+                    viewModelWallet,
                 )
             }
         }
@@ -121,6 +133,12 @@ fun HomeContent(
     navigateMoney: () -> Unit = {},
     viewModelWallet: WalletViewModel
 ) {
+    val walletState by viewModelWallet.uiStateWallet.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModelWallet.getBalance()
+    }
+
     val transfers = listOf(
         TransferData(R.string.received, 1234.56, "Juan Pérez", Date()),
         TransferData(
@@ -179,7 +197,7 @@ fun HomeContent(
                 horizontalArrangement = Arrangement.Start
             ) {
                 Text(
-                    text = if (showBalance) "$120367" else "****",
+                    text = if (showBalance) formatCurrencyWhole(walletState.balance) else "****",
                     fontWeight = FontWeight.Bold,
                     fontSize = 38.sp,
                     modifier = Modifier.padding(end = 4.dp),
@@ -187,7 +205,7 @@ fun HomeContent(
                 )
                 if (showBalance) {
                     Text(
-                        text = "58",
+                        text = getDecimalPart(walletState.balance),
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp,
                         modifier = Modifier.padding(top = 2.dp),
