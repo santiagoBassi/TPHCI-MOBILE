@@ -219,5 +219,9 @@
     <string name="com.lyrio.ui.navigation.Screen.TransferSuccessful">Transfer Successful</string>
     <string name="com.lyrio.ui.navigation.Screen.WithdrawInvestment">Withdraw Investment</string>
 
+    <!-- New ones -->
+    <string name="invalid_email">Invalid email</string>
+    <string name="empty_field">Required field</string>
+
 
 </resources>

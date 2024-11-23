@@ -222,4 +222,7 @@
     <string name="com.lyrio.ui.navigation.Screen.TransferSuccessful">Transferencia Exitosa</string>
     <string name="com.lyrio.ui.navigation.Screen.WithdrawInvestment">Retirar Inversión</string>
 
+    <!-- New ones -->
+    <string name="invalid_email">Email inválido</string>
+
 </resources>

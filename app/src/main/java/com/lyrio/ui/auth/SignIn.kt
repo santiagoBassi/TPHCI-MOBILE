@@ -21,7 +21,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,7 +40,6 @@ import com.lyrio.ui.components.AppWindow
 import com.lyrio.ui.layout.AuthHeader
 import com.lyrio.ui.styles.OffWhite
 import com.lyrio.ui.data.viewmodels.UserViewModel
-import com.lyrio.ui.styles.Red
 
 @Composable
 fun SignIn(
@@ -145,6 +146,11 @@ fun SignInContent(
     navigateHome: () -> Unit,
     navigateRecoverPass1: () -> Unit
 ){
+    var emailErrorMsg by rememberSaveable(key = "signin_error_msg_email") { mutableIntStateOf(-1) }
+    var passwordErrorMsg by rememberSaveable(key = "signin_error_msg_password") { mutableIntStateOf(-1) }
+    var isErrorEmail by rememberSaveable(key = "signin_is_error_email") { mutableStateOf(false) }
+    var isErrorPassword by rememberSaveable(key = "signin_is_error_pass") { mutableStateOf(false) }
+
     AppWindow(
        modifier = if(height < 1f) Modifier.fillMaxWidth().fillMaxHeight(height) else Modifier.fillMaxSize(),
     ) {
@@ -166,15 +172,25 @@ fun SignInContent(
             ) {
                 AppInput(
                     value = email,
-                    onValueChange = { onEmailChange(it) },
+                    onValueChange = {
+                        onEmailChange(it)
+                        if(isErrorEmail) isErrorEmail = false
+                                    },
                     label = stringResource(R.string.email),
+                    error = if(emailErrorMsg != -1) stringResource(emailErrorMsg) else null,
+                    isError = isErrorEmail,
                     modifier = Modifier.fillMaxWidth(),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 )
                 AppInput(
                     value = password,
-                    onValueChange = {  onPasswordChange(it) },
+                    onValueChange = {
+                        onPasswordChange(it)
+                        if(isErrorPassword) isErrorPassword = false
+                                    },
                     label = stringResource(R.string.password),
+                    error = if(passwordErrorMsg != -1) stringResource(passwordErrorMsg) else null,
+                    isError = isErrorPassword,
                     hint = stringResource(R.string.pass_rule),
                     modifier = Modifier.fillMaxWidth(),
                     isPassword = true
@@ -189,8 +205,18 @@ fun SignInContent(
             Spacer(modifier = Modifier.height(16.dp))
             AppButton(text = stringResource(R.string.continue_), onClick = {
                 try {
-                    viewModel.login(email, password)
-                    navigateHome()
+                   val onInvalidEmail: (Int) -> Unit = {
+                        emailErrorMsg = it
+                        isErrorEmail = it != -1
+                    }
+                    val onInvalidPassword: (Int) -> Unit = {
+                        passwordErrorMsg = it
+                        isErrorPassword = it != -1
+                    }
+                    if(validateQueries(email, password, onInvalidEmail, onInvalidPassword)) {
+                        viewModel.login(email, password)
+                        navigateHome()
+                    }
                 }catch (e: Exception){
                     e.printStackTrace()
                 }
@@ -210,5 +236,32 @@ fun SignInContent(
             }
         }
     }
+}
+
+fun validateQueries(email: String, password: String, onInvalidEmail: (Int) -> Unit, onInvalidPassword: (Int) -> Unit): Boolean {
+    val checkEmail = validateEmail(email, onInvalidEmail)
+    return validatePassword(password, onInvalidPassword) && checkEmail
+}
+
+fun validateEmail(email: String, onInvalidEmail: (Int) -> Unit): Boolean {
+    if(email.isEmpty()) {
+        onInvalidEmail(R.string.empty_field)
+        return false
+    }
+    if(!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        onInvalidEmail(R.string.invalid_email)
+        return false
+    }
+    onInvalidEmail(-1)
+    return true
+}
+
+fun validatePassword(password: String, onInvalidPassword: (Int) -> Unit): Boolean {
+    if(password.isEmpty()) {
+        onInvalidPassword(R.string.empty_field)
+        return false
+    }
+    onInvalidPassword(-1)
+    return true
 }
 
