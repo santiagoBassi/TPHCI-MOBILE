@@ -34,6 +34,15 @@ class PaymentsViewModel(
     fun getPayments() = runOnViewModelScope(
         {
             paymentRepository.getPayments()
+                .sortedByDescending { it.createdAt }
+                .take(10)
+        },
+        { state, response -> state.copy(lastTransfers = response) }
+    )
+
+    fun getLastPayments() = runOnViewModelScope(
+        {
+            paymentRepository.getPayments()
         },
         { state, response -> state.copy(lastTransfers = response) }
     )
