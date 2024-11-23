@@ -1,6 +1,6 @@
 package com.lyrio.data.network.model
 
-import com.lyrio.data.model.Payment
+import com.lyrio.data.model.PaymentResponse
 import com.lyrio.data.model.PaymentType
 import kotlinx.serialization.Serializable
 
@@ -21,8 +21,8 @@ data class NetworkPayment(
     val payer: NetworkUser,
     val receiver: NetworkUser
 ) {
-    fun asModel(): Payment {
-        return Payment(
+    fun asModel(): PaymentResponse {
+        return PaymentResponse(
             id = id,
             type = when (type) {
                 "BALANCE" -> PaymentType.BALANCE
@@ -43,16 +43,6 @@ data class NetworkPayment(
 }
 
 @Serializable
-data class TransferNetworkUser(
-    val id: Int,
-    val firstName: String,
-    val lastName: String,
-    val email: String,
-    val birthDate: String
-)
-
-
-@Serializable
-data class PaymentsResponse(
+data class NetworkPaymentsResponse(
     val payments: List<NetworkPayment>
 )
