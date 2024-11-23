@@ -77,8 +77,13 @@ class UserViewModel(
         {
             userRepository.getCurrentUser(false)
         },
-        {state, response -> state.copy(email = response?.email ?: "")}
+        {state, response -> state.copy(
+            email = response?.email ?: "",
+            firstName = response?.firstName ?: "",
+            lastName = response?.lastName ?: "",
+            dateOfBirth = response?.birthDate ?: "")}
     )
+
 
 
 

@@ -57,7 +57,7 @@ fun NavigationWrapper() {
         )
     )
 
-    NavHost(navController = navController, startDestination = Screen.Home) {
+    NavHost(navController = navController, startDestination = Screen.Landing) {
 
         composable<Screen.Landing> {
             LandingPage(navigateSignIn = {
@@ -170,7 +170,9 @@ fun NavigationWrapper() {
                 Profile(
                     navigateChangeAlias = {
                         navController.navigate(Screen.ChangeAlias)
-                    }
+                    },
+                    viewModelUser = userViewModel,
+                    viewModelWallet = walletViewModel
                 )
             }
         }

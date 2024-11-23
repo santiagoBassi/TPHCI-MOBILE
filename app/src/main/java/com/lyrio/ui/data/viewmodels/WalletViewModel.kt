@@ -51,6 +51,18 @@ class WalletViewModel(
         { state, _ -> state.copy() }
     )
 
+    fun getWalletData() = runOnViewModelScope(
+        {
+            walletRepository.getDetails()
+        },
+        { state, response -> state.copy(
+            alias = response.alias,
+            cbu = response.cbu,
+            balance = response.balance,
+            investedMoney = response.invested
+        ) }
+    )
+
 
     private fun <T> collectOnViewModelScope(
         flow: Flow<T>,
