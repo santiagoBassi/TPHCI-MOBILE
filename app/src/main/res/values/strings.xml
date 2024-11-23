@@ -222,6 +222,9 @@
     <!-- New ones -->
     <string name="invalid_email">Invalid email</string>
     <string name="empty_field">Required field</string>
+    <string name="invalid_birthdate">Inavlid birth date</string>
+    <string name="pass_not_match">Passwords don´t match</string>
+    <string name="invalid_password">Invalid password</string>
 
 
 </resources>

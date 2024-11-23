@@ -238,9 +238,9 @@ fun SignInContent(
     }
 }
 
-fun validateQueries(email: String, password: String, onInvalidEmail: (Int) -> Unit, onInvalidPassword: (Int) -> Unit): Boolean {
+private fun validateQueries(email: String, password: String, onInvalidEmail: (Int) -> Unit, onInvalidPassword: (Int) -> Unit): Boolean {
     val checkEmail = validateEmail(email, onInvalidEmail)
-    return validatePassword(password, onInvalidPassword) && checkEmail
+    return validatePasswordSignIn(password, onInvalidPassword) && checkEmail
 }
 
 fun validateEmail(email: String, onInvalidEmail: (Int) -> Unit): Boolean {
@@ -256,7 +256,7 @@ fun validateEmail(email: String, onInvalidEmail: (Int) -> Unit): Boolean {
     return true
 }
 
-fun validatePassword(password: String, onInvalidPassword: (Int) -> Unit): Boolean {
+fun validatePasswordSignIn(password: String, onInvalidPassword: (Int) -> Unit): Boolean {
     if(password.isEmpty()) {
         onInvalidPassword(R.string.empty_field)
         return false

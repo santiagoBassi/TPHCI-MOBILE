@@ -2,6 +2,7 @@ package com.lyrio.ui.auth
 
 import androidx.compose.runtime.remember
 import android.content.res.Configuration
+import android.icu.text.SimpleDateFormat
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -20,6 +21,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -27,8 +29,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import androidx.core.net.ParseException
 import com.lyrio.R
 import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.components.AppInput
@@ -36,6 +40,9 @@ import com.lyrio.ui.components.AppWindow
 import com.lyrio.ui.data.viewmodels.UserViewModel
 import com.lyrio.ui.layout.AuthHeader
 import com.lyrio.ui.styles.OffWhite
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 
 @Composable
 fun SignUp1(
@@ -59,20 +66,23 @@ fun SignUp1(
 
             Column(
                 modifier = Modifier
-                    .fillMaxWidth().verticalScroll(rememberScrollState())
-                    .height(if(isTablet) maxHeight + 100.dp else maxHeight * 2)
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState())
+                    .height(if (isTablet) maxHeight + 100.dp else maxHeight * 2)
                     .background(OffWhite),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 AuthHeader()
                 Box(
-                    modifier = Modifier.fillMaxSize().padding(bottom = 16.dp),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(bottom = 16.dp),
                     contentAlignment = Alignment.Center
                 ){
                     Column(
                         modifier = Modifier
-                            .fillMaxHeight(if(isTablet) 0.9f else 1f)
-                            .fillMaxWidth(if(isTablet) 0.35f else 0.6f)
+                            .fillMaxHeight(if (isTablet) 0.9f else 1f)
+                            .fillMaxWidth(if (isTablet) 0.35f else 0.6f)
                             .padding(16.dp),
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
@@ -148,6 +158,15 @@ fun SignUp1Content(
     navigateSignUp2: () -> Unit,
     navigateSignIn: () -> Unit
 ){
+
+    var isErrorBirthDate by remember { mutableStateOf(false) }
+    var isErrorName by remember { mutableStateOf(false) }
+    var isErrorLastname by remember { mutableStateOf(false) }
+    var birthDateErrorMsg by remember { mutableIntStateOf(-1) }
+    var nameErrorMsg by remember { mutableIntStateOf(-1) }
+    var lastnameErrorMsg by remember { mutableIntStateOf(-1) }
+
+
     AppWindow(
         modifier = Modifier
             .fillMaxWidth(0.95f)
@@ -174,27 +193,46 @@ fun SignUp1Content(
                     value = name,
                     onValueChange = { onNameChange(it) },
                     label = stringResource(R.string.name_s),
+                    error = if(nameErrorMsg != -1) stringResource(nameErrorMsg) else null,
+                    isError = isErrorName,
                     modifier = Modifier.fillMaxWidth(),
                 )
                 AppInput(
                     value = lastname,
                     onValueChange = { onLastnameChange(it) },
                     label = stringResource(R.string.surname_s),
+                    error = if(lastnameErrorMsg != -1) stringResource(lastnameErrorMsg) else null,
+                    isError = isErrorLastname,
                     modifier = Modifier.fillMaxWidth(),
                 )
-
                 AppInput(
                     value = birthDate,
                     onValueChange = { onBirthDateChange(it) },
                     label = stringResource(R.string.birthdate),
+                    error = if(birthDateErrorMsg != -1) stringResource(birthDateErrorMsg) else null,
+                    isError = isErrorBirthDate,
                     placeholder = stringResource(R.string.date_format),
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
             AppButton(text = stringResource(R.string.continue_), onClick = {
-                viewModel.completeFormRegister1(firstName = name, lastName = lastname, birthDate = birthDate)
-                navigateSignUp2()
+                val onInvalidBirthDate: (Int) -> Unit = {
+                    birthDateErrorMsg = it
+                    isErrorBirthDate = it != -1
+                }
+                val onInvalidName: (Int) -> Unit = {
+                    nameErrorMsg = it
+                    isErrorName = it != -1
+                }
+                val onInvalidLastname: (Int) -> Unit = {
+                    lastnameErrorMsg = it
+                    isErrorLastname = it != -1
+                }
+                if(validateQueries(birthDate, name, lastname, onInvalidName, onInvalidLastname, onInvalidBirthDate)) {
+                    viewModel.completeFormRegister1(firstName = name, lastName = lastname, birthDate = birthDate)
+                    navigateSignUp2()
+                }
             }, width = 0.8f)
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -211,3 +249,46 @@ fun SignUp1Content(
         }
     }
 }
+
+private fun validateQueries(birthDate: String, name: String, lastname: String, onInvalidName: (Int) -> Unit, onInvalidLastname: (Int) -> Unit, onInvalidBirthDate: (Int) -> Unit): Boolean {
+    val checkBirthDate = validateBirthDate(birthDate, onInvalidBirthDate)
+    val checkName = validateName(name, onInvalidName)
+    return validateLastname(lastname, onInvalidLastname) && checkBirthDate && checkName
+}
+
+fun validateBirthDate(birthDate: String, onInvalidBirthDate: (Int) -> Unit): Boolean {
+    val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
+
+    try {
+        val parsedDate = LocalDate.parse(birthDate, formatter)
+
+        if (parsedDate.isAfter(LocalDate.now())) {
+            onInvalidBirthDate(R.string.invalid_birthdate)
+            return false
+        }
+
+        return true
+
+    } catch (e: DateTimeParseException) {
+        onInvalidBirthDate(R.string.invalid_birthdate)
+        return false
+    }
+}
+
+fun validateName(name: String, onInvalidName: (Int) -> Unit): Boolean {
+    if(name.isEmpty()) {
+        onInvalidName(R.string.empty_field)
+        return false
+    }
+    return true
+}
+
+fun validateLastname(lastname: String, onInvalidLastname: (Int) -> Unit): Boolean {
+    if(lastname.isEmpty()) {
+        onInvalidLastname(R.string.empty_field)
+        return false
+    }
+    return true
+}
+
+
