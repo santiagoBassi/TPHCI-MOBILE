@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -17,13 +18,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.times
 import com.lyrio.R
 import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.styles.DarkGray
@@ -56,6 +60,10 @@ fun LandingContentH(
     navigateSignIn: () -> Unit = {},
     navigateSignUp: () -> Unit
 ) {
+    var maxHeight = 550.dp
+    val maxWidth = LocalConfiguration.current.screenWidthDp.dp
+    val isTablet = maxWidth > 1000.dp
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -65,51 +73,50 @@ fun LandingContentH(
     ) {
         Row(
             modifier = Modifier.fillMaxSize(),
-            horizontalArrangement = Arrangement.SpaceEvenly,
+            horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.Top
         ) {
             Column(
-                modifier = Modifier.weight(0.55f),
-                horizontalAlignment = Alignment.Start,
-                verticalArrangement = Arrangement.SpaceBetween
+                modifier = Modifier.weight(0.55f).fillMaxHeight(),
             ) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(20.dp, 8.dp, 0.dp, 0.dp),
-                ){
-                    Brand()
-                }
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(10.dp, 20.dp, 0.dp, 0.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
+                        .padding(20.dp, 18.dp, 0.dp, 0.dp),
+                    verticalArrangement = Arrangement.spacedBy(20.dp),
                 ) {
-                    LoreH()
+                    if(isTablet) Spacer(Modifier.height(20.dp))
+                    Brand(if(isTablet) 1.4f else 1f)
+                    if(isTablet) Spacer(Modifier.height(20.dp))
+                    Column (
+                        modifier = Modifier
+                            .fillMaxWidth().weight(1f)
+                            .padding(start = 25.dp),
+                        horizontalAlignment = Alignment.Start
+                    ) {
+                        LoreH(if(isTablet) 1.4f else 1f)
+                    }
                 }
             }
             Column(
                 modifier = Modifier
-                    .weight(0.45f)
+                    .weight(0.45f).fillMaxHeight()
                     .padding(bottom = 15.dp),
                 horizontalAlignment = Alignment.End,
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                verticalArrangement = Arrangement.SpaceEvenly
             ) {
                 Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(0.45f),
-                    verticalArrangement = Arrangement.Top,
+                        .onSizeChanged { size -> if(size.height.dp > maxHeight) maxHeight = size.height.dp }
+                        .fillMaxWidth().weight(1f),
                     horizontalAlignment = Alignment.End
                 ) {
-                    LandingImg()
+                    LandingImg(maxHeight)
                 }
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(end = 8.dp),
+                        .padding(0.dp,12.dp, 12.dp,12.dp),
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -135,16 +142,24 @@ fun LandingContentV(
     navigateSignIn: () -> Unit = {},
     navigateSignUp: () -> Unit
 ){
+    val maxWidth = LocalConfiguration.current.screenWidthDp.dp
+    val isTablet = maxWidth >= 800.dp
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 20.dp, bottom = 50.dp),
+            .padding(top = 40.dp, bottom = 50.dp),
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Brand()
-        Lore()
-        LandingImg()
+        Brand(if (isTablet) 1.4f else 1f)
+        Column(
+            modifier = Modifier
+                .fillMaxWidth(),
+        ) {
+            Lore(if (isTablet) 1.4f else 1f)
+        }
+        LandingImg(if(isTablet) 0.6.times(maxWidth) else 0.8.times(maxWidth))
         Column(
             modifier = Modifier
                 .fillMaxWidth(),
@@ -155,12 +170,12 @@ fun LandingContentV(
             AppButton(
                 text = stringResource(R.string.sign_in),
                 onClick = navigateSignIn,
-                width = 0.7f
+                width = if(isTablet) 0.5f else 0.7f
             )
             AppButton(
                 text = stringResource(R.string.register_reflex),
                 onClick = navigateSignUp,
-                width = 0.7f,
+                width = if(isTablet) 0.5f else 0.7f,
                 background = LightGray
             )
         }
@@ -168,7 +183,7 @@ fun LandingContentV(
 }
 
 @Composable
-fun Brand(){
+fun Brand(factor: Float = 1f){
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
@@ -176,13 +191,13 @@ fun Brand(){
         Icon(
             painter = painterResource(id = R.drawable.logo),
             contentDescription = "Logo",
-            modifier = Modifier.size(80.dp),
+            modifier = Modifier.size(factor.times(80.dp)),
             tint = DarkGray
         )
         Text(
             text = "Lyrio",
             modifier = Modifier.padding(start = 8.dp),
-            fontSize = 60.sp,
+            fontSize = factor.times(60.sp),
             fontWeight = FontWeight.Bold,
             color = DarkGray
         )
@@ -190,104 +205,78 @@ fun Brand(){
 }
 
 @Composable
-fun Lore(){
+fun Lore(
+    factor: Float = 1f
+){
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 25.dp),
-        horizontalAlignment = Alignment.Start
+            .padding(horizontal = factor.times(25.dp)),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "La nueva forma de",
+            text = stringResource(R.string.landing_1),
             fontWeight = FontWeight.Medium,
-            fontSize = 24.sp,
+            fontSize = factor.times(24.sp),
             color = DarkGray
         )
         Text(
-            text = "administrar tu dinero",
+            text = stringResource(R.string.landing_2),
             fontWeight = FontWeight.Black,
-            fontSize = 26.sp,
+            fontSize = factor.times(26.sp),
             color = DarkGray
         )
         Spacer(modifier = Modifier.height(26.dp))
-        Text(
-            text = "Ahorrá, cobrá y pagá.",
-            fontWeight = FontWeight.Medium,
-            fontSize = 18.sp,
-            color = Color.Gray,
-            fontStyle = FontStyle.Italic
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = "Lyrio te permite manejar tu dinero de",
-            fontWeight = FontWeight.Medium,
-            fontSize = 18.sp,
-            color = Color.Gray,
-            fontStyle = FontStyle.Italic
-        )
-        Text(
-            text = "forma fácil y segura.",
-            fontWeight = FontWeight.Medium,
-            fontSize = 18.sp,
-            color = Color.Gray,
-            fontStyle = FontStyle.Italic
-        )
     }
 }
 
 @Composable
-fun LoreH(){
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 25.dp),
-        horizontalAlignment = Alignment.Start
-    ) {
-        Text(
-            text = "La nueva forma de",
-            fontWeight = FontWeight.Medium,
-            fontSize = 28.sp,
-            color = DarkGray
-        )
-        Text(
-            text = "administrar tu dinero",
-            fontWeight = FontWeight.Black,
-            fontSize = 30.sp,
-            color = DarkGray
-        )
-        Spacer(modifier = Modifier.height(26.dp))
-        Text(
-            text = "Ahorrá, cobrá y pagá.",
-            fontWeight = FontWeight.Medium,
-            fontSize = 20.sp,
-            color = Color.Gray,
-            fontStyle = FontStyle.Italic
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = "Lyrio te permite manejar tu dinero de",
-            fontWeight = FontWeight.Medium,
-            fontSize = 20.sp,
-            color = Color.Gray,
-            fontStyle = FontStyle.Italic
-        )
-        Text(
-            text = "forma fácil y segura.",
-            fontWeight = FontWeight.Medium,
-            fontSize = 20.sp,
-            color = Color.Gray,
-            fontStyle = FontStyle.Italic
-        )
-    }
+fun LoreH(factor: Float = 1f) {
+
+    Text(
+        text = stringResource(R.string.landing_1),
+        fontWeight = FontWeight.Medium,
+        fontSize = factor.times(28.sp),
+        color = DarkGray
+    )
+    Text(
+        text = stringResource(R.string.landing_2),
+        fontWeight = FontWeight.Black,
+        fontSize = factor.times(30.sp),
+        color = DarkGray
+    )
+    Spacer(modifier = Modifier.height(factor.times(26.dp)))
+    Text(
+        text = stringResource(R.string.landing_3),
+        fontWeight = FontWeight.Medium,
+        fontSize = factor.times(20.sp),
+        color = Color.Gray,
+        fontStyle = FontStyle.Italic
+    )
+    Spacer(modifier = Modifier.height(factor.times(8.dp)))
+    Text(
+        text = stringResource(R.string.landing_4),
+        fontWeight = FontWeight.Medium,
+        fontSize = factor.times(20.sp),
+        color = Color.Gray,
+        fontStyle = FontStyle.Italic
+    )
+    Text(
+        text = stringResource(R.string.landing_5),
+        fontWeight = FontWeight.Medium,
+        fontSize = factor.times(20.sp),
+        color = Color.Gray,
+        fontStyle = FontStyle.Italic
+    )
 }
 
 @Composable
-fun LandingImg(){
+fun LandingImg(size: Dp = 320.dp){
     Image(
         painter = painterResource(id = R.drawable.landing_logo),
         contentDescription = "Landing page",
         modifier = Modifier
-            .size(320.dp)
+            .size(size)
             .padding(vertical = 14.dp)
     )
 }

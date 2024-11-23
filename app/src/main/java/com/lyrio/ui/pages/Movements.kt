@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,6 +19,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -27,9 +29,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.lyrio.R
 import com.lyrio.ui.components.AppWindow
@@ -39,6 +43,8 @@ import java.util.Date
 
 @Composable
 fun Movements() {
+
+    var maxHeight = 1000.dp
 
     val configuration = LocalConfiguration.current
 
@@ -58,12 +64,12 @@ fun Movements() {
         else -> { // Modo vertical u otras orientaciones
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
+                    .fillMaxSize().onSizeChanged { size -> if(size.height.dp > maxHeight) maxHeight = size.height.dp }
                     .padding(16.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                MovementsContent()
+                MovementsContent(maxHeight)
             }
         }
     }
@@ -71,7 +77,7 @@ fun Movements() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MovementsContent(){
+fun MovementsContent(maxHeight: Dp = 1000.dp){
     var searchText by remember { mutableStateOf("") }
     val recentTransfers = remember {
         mutableStateListOf(
@@ -95,6 +101,8 @@ fun MovementsContent(){
 
     AppWindow(
         title = stringResource(R.string.movements),
+        modifier = Modifier.widthIn(max = 400.dp)
+            .height(maxHeight)
     ) {
         Column(modifier = Modifier.padding(horizontal = 10.dp)) {
             SearchBar(
@@ -127,7 +135,11 @@ fun MovementsContent(){
                 placeholder = { Text(stringResource(R.string.search), color = Color.Gray) },
                 shape = RoundedCornerShape(16.dp),
                 modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
-                colors = SearchBarDefaults.colors(OffWhite),
+                colors = SearchBarDefaults.colors(OffWhite,
+                        contentColorFor(
+                            backgroundColor = Color.Black
+                        )
+                    ),
             ) {
 
             }

@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.lyrio.R
@@ -48,11 +49,11 @@ fun TransferItem(
             ) {
                 Icon(
                     painter = painterResource(
-                        id = if (transactionType == "Recibiste") R.drawable.arrow_left_bold
+                        id = if (transactionType == stringResource(R.string.received)) R.drawable.arrow_left_bold
                         else R.drawable.arrow_right_bold
                     ),
                     contentDescription = null,
-                    tint = if (transactionType == "Recibiste") Green else MaterialTheme.colorScheme.error,
+                    tint = if (transactionType == stringResource(R.string.received)) Green else MaterialTheme.colorScheme.error,
                     modifier = Modifier.size(24.dp)
                 )
                 Text(
@@ -60,7 +61,7 @@ fun TransferItem(
                         .format(kotlin.math.abs(amount)),
                     style = MaterialTheme.typography.bodyMedium.copy(
                         fontWeight = FontWeight.Bold,
-                        color = if (transactionType == "Recibiste") Green else MaterialTheme.colorScheme.error
+                        color = if (transactionType == stringResource(R.string.received)) Green else MaterialTheme.colorScheme.error
                     )
                 )
             }
@@ -70,7 +71,7 @@ fun TransferItem(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = "${if (transactionType == "Recibiste") "de" else "a"} $recipient",
+                    text = "${if (transactionType == stringResource(R.string.received)) "de" else "a"} $recipient",
                     style = MaterialTheme.typography.bodySmall.copy(color = Color.Gray)
                 )
                 Text(
