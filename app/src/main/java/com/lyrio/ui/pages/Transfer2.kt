@@ -27,8 +27,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -41,32 +42,50 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.lyrio.R
+import com.lyrio.data.model.Card
 import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.components.AppInput
 import com.lyrio.ui.components.AppWindow
 import com.lyrio.ui.components.CreditCard
+import com.lyrio.ui.data.viewmodels.PaymentsViewModel
+import com.lyrio.ui.data.viewmodels.UserViewModel
+import com.lyrio.ui.data.viewmodels.WalletViewModel
 import com.lyrio.ui.styles.Orange
 import kotlinx.coroutines.launch
 
-@Preview(showBackground = true)
-@Composable
-fun Transfer2() {
-    var amount by rememberSaveable (key = "transferAmount") { mutableLongStateOf(0L) }
-    var selectedMethod by rememberSaveable (key = "selectedMethod") { mutableIntStateOf(0) }
 
+@Composable
+fun Transfer2(
+    navigateTransferSuccessful: () -> Unit,
+    paymentsViewModel: PaymentsViewModel,
+    walletViewModel: WalletViewModel,
+    userViewModel: UserViewModel
+) {
+    var amount by rememberSaveable (key = "transferAmount") { mutableDoubleStateOf(0.0) }
 
     val configuration = LocalConfiguration.current
 
     val maxWidth = configuration.screenWidthDp.dp
     val maxHeight = configuration.screenHeightDp.dp
     val isTablet = maxWidth > 1000.dp || maxHeight > 1000.dp
+    val paymentsUiState by paymentsViewModel.uiStatePayments.collectAsState()
+    val walletState by walletViewModel.uiStateWallet.collectAsState()
+    val userState by userViewModel.uiStateUser.collectAsState()
+
+    LaunchedEffect(Unit, userState.isAuthenticated) {
+        if (userState.isAuthenticated) {
+            walletViewModel.getCards()
+        }
+        println("Cards:")
+        println(walletState.cards)
+
+    }
 
     when (configuration.orientation) {
-        Configuration.ORIENTATION_LANDSCAPE -> { // Modo horizontal
+        Configuration.ORIENTATION_LANDSCAPE -> {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -79,15 +98,19 @@ fun Transfer2() {
                     recipient = "Ezequiel Testoni",
                     amount = amount,
                     onAmountChange = { amount = it },
-                    selectedMethod = selectedMethod,
-                ) {
-                    PaymentMethodsCarousel(
-                        cards,
-                        selectedMethod,
-                        onCurrentPageChanged = { selectedMethod = it },
-                        isTablet
-                    )
-                }
+                    carousel = {
+                        PaymentMethodsCarousel(
+                            walletState.cards,
+                            paymentsUiState.selectedPaymentMethod,
+                            onCurrentPageChanged = {  paymentsViewModel.setSelectedPaymentMethod(it) },
+                            isTablet
+                        )
+                    },
+                    navigateTransferSuccessful = navigateTransferSuccessful,
+                    paymentsViewModel = paymentsViewModel,
+                    walletViewModel = walletViewModel
+
+                )
             }
         }
 
@@ -104,41 +127,39 @@ fun Transfer2() {
                     recipient = "Ezequiel Testoni",
                     amount = amount,
                     onAmountChange = { amount = it },
-                    selectedMethod = selectedMethod,
-                ){
-                    PaymentMethodsCarousel(cards, selectedMethod, onCurrentPageChanged = { selectedMethod = it }, isTablet)
-                }
+                    carousel = {
+                        PaymentMethodsCarousel(
+                            walletState.cards,
+                            paymentsUiState.selectedPaymentMethod,
+                            onCurrentPageChanged = {
+                                paymentsViewModel.setSelectedPaymentMethod(it)
+                            },
+                            isTablet
+                        )
+                    },
+                    navigateTransferSuccessful = navigateTransferSuccessful,
+                    paymentsViewModel = paymentsViewModel,
+                    walletViewModel = walletViewModel
+                )
             }
         }
     }
 }
 
-val cards = listOf(
-    CreditCardData(
-        cardNumber = "4734 5678 9012 3456",
-        logo = R.drawable.visa_white,
-        primaryColor = Color(0xFF120269),
-        secondaryColor = Color(0xFF2204C6),
-        logoSize = 80.dp
-    ),
-    CreditCardData(
-        cardNumber = "2345 5678 9012 3456",
-        logo = R.drawable.mastercard,
-        primaryColor = Color(0xFF000000),
-        secondaryColor = Color(0xFF5f5f5f),
-        logoSize = 80.dp
-    )
-)
 
 @Composable
 fun Transfer2ContentH(
     isTablet: Boolean = false,
     recipient: String = "",
-    amount: Long = 0L,
-    onAmountChange: (Long) -> Unit = {},
-    selectedMethod: Int = 0,
+    amount: Double = 0.0,
+    onAmountChange: (Double) -> Unit = {},
     carousel: @Composable () -> Unit = {},
+    navigateTransferSuccessful: () -> Unit,
+    paymentsViewModel: PaymentsViewModel,
+    walletViewModel: WalletViewModel
 ) {
+    val walletUiState by walletViewModel.uiStateWallet.collectAsState()
+    val paymentsUiState by paymentsViewModel.uiStatePayments.collectAsState()
     AppWindow(
         modifier = Modifier
             .fillMaxWidth().fillMaxHeight(if(isTablet) 0.8f else 1f)
@@ -176,13 +197,13 @@ fun Transfer2ContentH(
                             color = Orange
                         )
                         AppInput(
-                            value = if (amount == 0L) "" else amount.toString(),
-                            onValueChange = { onAmountChange(it.toLongOrNull() ?: 0L) },
+                            value = if (amount == 0.0) "" else amount.toString(),
+                            onValueChange = { onAmountChange(it.toDoubleOrNull() ?: 0.0) },
                             label = stringResource(R.string.amount),
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         )
                         Text(
-                            stringResource(R.string.to) + " $recipient   $selectedMethod",
+                            stringResource(R.string.to) + " $recipient   ${paymentsUiState.selectedPaymentMethod}",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = Color.Gray,
@@ -214,7 +235,10 @@ fun Transfer2ContentH(
             ) {
                 AppButton(
                     text = stringResource(R.string.transfer),
-                    onClick = { /*TODO*/ },
+                    onClick = {
+                        paymentsViewModel.transfer(amount, walletUiState.cards[paymentsUiState.selectedPaymentMethod - 1].id)
+                        navigateTransferSuccessful()
+                    },
                     modifier = Modifier.fillMaxWidth(0.35f)
                 )
             }
@@ -226,11 +250,16 @@ fun Transfer2ContentH(
 fun Transfer2ContentV(
     isTablet: Boolean = false,
     recipient: String = "",
-    amount: Long = 0L,
-    onAmountChange: (Long) -> Unit = {},
-    selectedMethod: Int = 0,
+    amount: Double = 0.0,
+    onAmountChange: (Double) -> Unit = {},
     carousel: @Composable () -> Unit = {},
+    navigateTransferSuccessful: () -> Unit,
+    paymentsViewModel: PaymentsViewModel,
+    walletViewModel: WalletViewModel
 ) {
+    val walletUiState by walletViewModel.uiStateWallet.collectAsState()
+    val paymentsUiState by paymentsViewModel.uiStatePayments.collectAsState()
+
     AppWindow (
         modifier = Modifier
             .padding(vertical = 8.dp).fillMaxHeight(if(isTablet) 0.7f else 1f)
@@ -249,21 +278,28 @@ fun Transfer2ContentV(
             ){
                 Text("$$amount", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold, color = Orange)
                 AppInput(
-                    value = if(amount == 0L) "" else amount.toString(),
-                    onValueChange = { onAmountChange(it.toLongOrNull() ?: 0L) },
+                    value = if(amount == 0.0) "" else amount.toString(),
+                    onValueChange = { onAmountChange(it.toDoubleOrNull() ?: 0.0) },
                     label = stringResource(R.string.amount),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 )
-                Text("a $recipient   $selectedMethod", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold, color = Color.Gray,
+                Text("a $recipient   ${paymentsUiState.selectedPaymentMethod}", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold, color = Color.Gray,
                     modifier = Modifier.padding(top = 10.dp))
             }
             carousel()
-            AppButton(text = stringResource(R.string.transfer), onClick = { /*TODO*/ }, modifier = Modifier.fillMaxWidth(if(isTablet) 0.6f else 0.75f))
+            AppButton(text = stringResource(R.string.transfer),  onClick = {
+                if (paymentsUiState.selectedPaymentMethod > 0)
+                    paymentsViewModel.transfer(amount, walletUiState.cards[paymentsUiState.selectedPaymentMethod - 1].id)
+                else
+                    paymentsViewModel.transfer(amount, -1)
+
+                navigateTransferSuccessful()
+            }, modifier = Modifier.fillMaxWidth(if(isTablet) 0.6f else 0.75f))
         }
     }
 }
 @Composable
-fun PaymentMethodsCarousel(cards: List<CreditCardData>, initialPage: Int = 0, onCurrentPageChanged: (Int) -> Unit = {}, isTablet: Boolean = false) {
+fun PaymentMethodsCarousel(cards: List<Card>, initialPage: Int = 0, onCurrentPageChanged: (Int) -> Unit = {}, isTablet: Boolean = false) {
     val pagerState = rememberPagerState(initialPage = initialPage ){ cards.size + 1 }
     val coroutineScope = rememberCoroutineScope()
 
@@ -282,12 +318,9 @@ fun PaymentMethodsCarousel(cards: List<CreditCardData>, initialPage: Int = 0, on
                 AccountBalanceOption()
             } else {
                 CreditCard(
-                    cardNumber = cards[page - 1].cardNumber,
-                    logo = cards[page - 1].logo,
-                    primaryColor = cards[page - 1].primaryColor,
-                    secondaryColor = cards[page - 1].secondaryColor,
-                    logoSize = cards[page - 1].logoSize,
-                    clickEnabled = false,
+                    cardNumber = cards[page - 1].number,
+                    logo = getCardType(cards[page - 1].number),
+
                 )
             }
         }

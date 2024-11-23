@@ -78,7 +78,6 @@
 
     <!-- Transfer1 -->
     <string name="who_to_transfer">¿A quién le querés transferir?</string>
-    <string name="cvu_or_alias">CVU o Alias</string>
     <string name="continue_">Continuar</string>
     <string name="recent_contacts">Contactos Recientes</string>
 
