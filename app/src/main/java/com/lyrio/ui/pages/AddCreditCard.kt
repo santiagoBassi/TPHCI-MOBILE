@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -55,96 +56,113 @@ fun AddCreditCard(
 
     val configuration = LocalConfiguration.current
 
+    val maxWidth = configuration.screenWidthDp.dp
+    val maxHeight = configuration.screenHeightDp.dp
+    val isTablet = maxWidth > 1000.dp || maxHeight > 1000.dp
+
     when (configuration.orientation) {
         Configuration.ORIENTATION_LANDSCAPE -> { // Modo horizontal
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(20.dp,20.dp,70.dp,10.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
             ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth(if (isTablet) 0.8f else 1f)
+                        .fillMaxHeight(if (isTablet) 0.6f else 1f)
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
 
-                AddCardContentH(
-                    flippableCard = {
-                        FlippableCard(
-                            cardFace = state,
-                            onClick = {
-                                state = it.next
-                            },
-                            axis = RotationAxis.AxisY,
-                            back = { NewCreditCardBack(cvv = cvv) },
-                            front = {
-                                NewCreditCardFront(
-                                    cardNumber = formatNumber(cardNumber),
-                                    holderName = formatName(holderName),
-                                    expiryDate = expiryDate,
-                                    logo = getCardType(cardNumber)
-                                )
-                            }
-                        )
-                    },
-                    cardInputs = {
-                        CardInputs(
-                            cardNumber = cardNumber,
-                            onCardNumberChange = { cardNumber = it },
-                            holderName = holderName,
-                            onHolderNameChange = { holderName = it },
-                            expiryDate = expiryDate,
-                            onExpiryDateChange = { expiryDate = it },
-                            cvv = cvv,
-                            onCvvChange = { cvv = it },
-                            onStateChange = {state = it}
-                        )
-                    },
-                    navigateAddCardSuccessful = navigateAddCardSuccessful
-                )
+                    AddCardContentH(
+                        flippableCard = {
+                            FlippableCard(
+                                cardFace = state,
+                                onClick = {
+                                    state = it.next
+                                },
+                                axis = RotationAxis.AxisY,
+                                back = { NewCreditCardBack(cvv = cvv) },
+                                front = {
+                                    NewCreditCardFront(
+                                        cardNumber = formatNumber(cardNumber),
+                                        holderName = formatName(holderName),
+                                        expiryDate = expiryDate,
+                                        logo = getCardType(cardNumber)
+                                    )
+                                }
+                            )
+                        },
+                        cardInputs = {
+                            CardInputs(
+                                cardNumber = cardNumber,
+                                onCardNumberChange = { cardNumber = it },
+                                holderName = holderName,
+                                onHolderNameChange = { holderName = it },
+                                expiryDate = expiryDate,
+                                onExpiryDateChange = { expiryDate = it },
+                                cvv = cvv,
+                                onCvvChange = { cvv = it },
+                                onStateChange = { state = it }
+                            )
+                        },
+                        navigateAddCardSuccessful = navigateAddCardSuccessful,
+                        isTablet = isTablet
+                    )
 
+                }
             }
         }
 
         else -> { // Modo vertical u otras orientaciones
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
             ) {
-                AddCardContentV(
-                    flippableCard = {
-                        FlippableCard(
-                            cardFace = state,
-                            onClick = {
-                                state = it.next
-                            },
-                            axis = RotationAxis.AxisY,
-                            back = { NewCreditCardBack(cvv = cvv) },
-                            front = {
-                                NewCreditCardFront(
-                                    cardNumber = formatNumber(cardNumber),
-                                    holderName = formatName(holderName),
-                                    expiryDate = expiryDate,
-                                    logo = getCardType(cardNumber)
-                                )
-                            }
-                        )
-                    },
-                    cardInputs = {
-                        CardInputs(
-                            cardNumber = cardNumber,
-                            onCardNumberChange = { cardNumber = it },
-                            holderName = holderName,
-                            onHolderNameChange = { holderName = it },
-                            expiryDate = expiryDate,
-                            onExpiryDateChange = { expiryDate = it },
-                            cvv = cvv,
-                            onCvvChange = { cvv = it },
-                            onStateChange = {state = it}
-                        )
-                    },
-                    navigateAddCardSuccessful = navigateAddCardSuccessful
-                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth(if (isTablet) 0.8f else 1f)
+                        .fillMaxHeight(if (isTablet) 0.6f else 1f)
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    AddCardContentV(
+                        flippableCard = {
+                            FlippableCard(
+                                cardFace = state,
+                                onClick = {
+                                    state = it.next
+                                },
+                                axis = RotationAxis.AxisY,
+                                back = { NewCreditCardBack(cvv = cvv) },
+                                front = {
+                                    NewCreditCardFront(
+                                        cardNumber = formatNumber(cardNumber),
+                                        holderName = formatName(holderName),
+                                        expiryDate = expiryDate,
+                                        logo = getCardType(cardNumber)
+                                    )
+                                }
+                            )
+                        },
+                        cardInputs = {
+                            CardInputs(
+                                cardNumber = cardNumber,
+                                onCardNumberChange = { cardNumber = it },
+                                holderName = holderName,
+                                onHolderNameChange = { holderName = it },
+                                expiryDate = expiryDate,
+                                onExpiryDateChange = { expiryDate = it },
+                                cvv = cvv,
+                                onCvvChange = { cvv = it },
+                                onStateChange = { state = it }
+                            )
+                        },
+                        navigateAddCardSuccessful = navigateAddCardSuccessful
+                    )
+                }
             }
         }
     }
@@ -154,13 +172,14 @@ fun AddCreditCard(
 fun AddCardContentH(
     flippableCard: @Composable () -> Unit = {},
     cardInputs: @Composable () -> Unit = {},
-    navigateAddCardSuccessful: () -> Unit
+    navigateAddCardSuccessful: () -> Unit,
+    isTablet: Boolean = false
 ) {
     AppWindow (
         modifier = Modifier.fillMaxSize()
     ){
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize().padding(vertical = if(isTablet) 16.dp else 0.dp),
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -255,7 +274,7 @@ fun CardInputs(
     AppInput(
         label = stringResource(R.string.holder_name),
         value = holderName,
-        onValueChange = {if (it.length <= 25) onHolderNameChange(it)},
+        onValueChange = {if (it.length <= 35) onHolderNameChange(it)},
         modifier = Modifier.fillMaxWidth(),
         onFocusAction = {onStateChange(if(it) CardFace.Front else CardFace.Back)}
     )

@@ -9,12 +9,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -39,71 +41,85 @@ fun ReceiveMoney(
 ){
     val configuration = LocalConfiguration.current
 
+    val maxWidth = configuration.screenWidthDp.dp
+    val maxHeight = configuration.screenHeightDp.dp
+    val isTablet = maxWidth > 1000.dp || maxHeight > 1000.dp
+
     when (configuration.orientation) {
         Configuration.ORIENTATION_LANDSCAPE -> { // Modo horizontal
-            ReceiveMoneyContentH(
-                cvuAlias = { CVUAliasWindow(context) },
-                navigatePaylink = navigatePaylink
-            )
-
+            Column(
+                modifier = Modifier.fillMaxSize().padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                ReceiveMoneyContentH(
+                    isTablet = isTablet,
+                    cvuAlias = { CVUAliasWindow(isTablet, context) },
+                    navigatePaylink = navigatePaylink
+                )
+            }
         }
 
         else -> { // Modo vertical u otras orientaciones
-            ReceiveMoneyContentV(
-                cvuAlias = { CVUAliasWindow(context) },
-                navigatePaylink = navigatePaylink
-            )
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                ReceiveMoneyContentV(
+                    isTablet = isTablet,
+                    cvuAlias = { CVUAliasWindow(isTablet, context) },
+                    navigatePaylink = navigatePaylink
+                )
+            }
         }
     }
 }
 
 @Composable
 fun ReceiveMoneyContentH(
+    isTablet: Boolean = false,
     cvuAlias: @Composable () -> Unit,
     navigatePaylink: () -> Unit = {}
-){
-    Column(
-        modifier = Modifier.fillMaxSize().padding(20.dp, 25.dp, 70.dp, 10.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ){
-        AppWindow(
-            title = stringResource(R.string.receive_money),
-            modifier = Modifier.fillMaxSize()
-        ){
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.SpaceEvenly,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ){
-                Text(
-                    text = stringResource(R.string.receive_lore),
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium,
-                    modifier = Modifier.padding(0.dp, 10.dp, 0.dp, 10.dp),
-                    color = Color.Black
-                )
-                Row(
-                    modifier = Modifier.fillMaxWidth().padding(start = 15.dp),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ){
-                    Column(
-                        modifier = Modifier.weight(0.55f),
-                    ){
-                        cvuAlias()
-                    }
-                    Column(
-                        modifier = Modifier.weight(0.45f),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ){
-                        AppButton(
-                            text = stringResource(R.string.generate_link),
-                            onClick = navigatePaylink,
-                            width = 0.8f
-                        )
-                    }
+) {
+    AppWindow(
+        title = stringResource(R.string.receive_money),
+        modifier = Modifier
+            .fillMaxWidth(if(isTablet) 0.8f else 1f)
+            .fillMaxHeight(if(isTablet) 0.65f else 1f)
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceEvenly,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = stringResource(R.string.receive_lore),
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium,
+                modifier = Modifier.padding(0.dp, 10.dp, 0.dp, 10.dp),
+                color = Color.Black
+            )
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(start = 15.dp),
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(
+                    modifier = Modifier.weight(0.55f),
+                ) {
+                    cvuAlias()
+                }
+                Column(
+                    modifier = Modifier.weight(0.45f),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    AppButton(
+                        text = stringResource(R.string.generate_link),
+                        onClick = navigatePaylink,
+                        width = 0.8f
+                    )
                 }
             }
         }
@@ -112,18 +128,20 @@ fun ReceiveMoneyContentH(
 
 @Composable
 fun ReceiveMoneyContentV(
+    isTablet: Boolean = false,
     cvuAlias: @Composable () -> Unit,
     navigatePaylink: () -> Unit = {}
 ){
     Column(
         modifier = Modifier
-            .fillMaxSize().padding(16.dp),
+            .fillMaxWidth().padding(16.dp)
+            .fillMaxHeight(if(isTablet) 0.6f else 1f),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         AppWindow(
             title = stringResource(R.string.receive_money),
-            modifier = Modifier
+            modifier = Modifier.widthIn(max = 550.dp)
         ) {
             Column(
                 modifier = Modifier.fillMaxSize(),
@@ -141,7 +159,7 @@ fun ReceiveMoneyContentV(
                 AppButton(
                     text = stringResource(R.string.generate_link),
                     onClick = navigatePaylink,
-                    width = 0.8f
+                    width = if(isTablet) 0.6f else 0.8f
                 )
             }
         }
@@ -150,6 +168,7 @@ fun ReceiveMoneyContentV(
 
 @Composable
 fun CVUAliasWindow(
+    isTablet: Boolean = false,
     context: Context,
 ){
     val cvu = "000000123019231200"
@@ -157,7 +176,8 @@ fun CVUAliasWindow(
 
     AppWindow(
         title = stringResource(R.string.cvu_alias),
-        modifier = Modifier.padding(bottom = 16.dp),
+        modifier = Modifier.padding(bottom = 16.dp).padding(top = if(!isTablet) 12.dp else 0.dp)
+            .widthIn(max = 450.dp),
         background = Color(0xFFF5F5F5)
     ) {
         Column(

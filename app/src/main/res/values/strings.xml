@@ -135,11 +135,11 @@
     <!-- ChangeAlias -->
     <string name="enter_new_alias">Enter your new alias</string>
     <string name="new_alias">New alias</string>
-    <string name="rule1"> -  Must have between 6 and 20 characters</string>
-    <string name="rule2"> -  Do not use the letter ñ</string>
-    <string name="rule3"> -  The only special characters allowed are \'_\' and \'.\'</string>
-    <string name="rule3_1"> -  The only special characters</string>
-    <string name="rule3_2">    allowed are \'_\' and \'.\'</string>
+    <string name="rule1">-\ \ Must have between 6 and 20 characters</string>
+    <string name="rule2">-\ \ Do not use the letter ñ</string>
+    <string name="rule3">-\ \ The only special characters allowed are \'_\' and \'.\'</string>
+    <string name="rule3_1">-\ \ The only special characters allowed</string>
+    <string name="rule3_2">\ \ \ are \'_\' and \'.\'</string>
 
     <!-- ChangeAliasSuccessful -->
     <string name="alias_changed">Changed your alias!</string>

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,34 +26,36 @@ fun Successful(
     height: Float = 0.5f,
     onClick: () -> Unit = {},
     content: @Composable () -> Unit = {}
-){
+) {
 
-    LyrioTheme {
-        Column(
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        AppWindow(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ){
-            AppWindow(
+                .widthIn(max = 500.dp)
+                .fillMaxHeight(fraction = height)
+        ) {
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth(fraction = 0.95f)
-                    .fillMaxHeight(fraction = height)
+                    .fillMaxSize()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.SpaceEvenly,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.SpaceEvenly,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(text = message, style = MaterialTheme.typography.titleLarge,
-                        color = Green)
-                    content()
-                    AppButton(text = buttonLabel, onClick = onClick, width = if (height == 1f) 0.6f else 0.8f,
-                        background = if(variant == "secondary") LightGray else Orange)
-                }
+                Text(
+                    text = message, style = MaterialTheme.typography.titleLarge,
+                    color = Green
+                )
+                content()
+                AppButton(
+                    text = buttonLabel, onClick = onClick, width = if (height == 1f) 0.6f else 0.8f,
+                    background = if (variant == "secondary") LightGray else Orange
+                )
             }
         }
     }

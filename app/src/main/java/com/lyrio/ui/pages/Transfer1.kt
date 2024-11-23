@@ -2,6 +2,7 @@ package com.lyrio.ui.pages
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
@@ -36,15 +37,25 @@ import com.lyrio.ui.styles.Typography
 @Preview(showBackground = true)
 @Composable
 fun Transfer1() {
+    val maxWidth = LocalConfiguration.current.screenWidthDp.dp
+    val maxHeight = LocalConfiguration.current.screenHeightDp.dp
+    val isTablet = maxWidth > 1000.dp || maxHeight > 1000.dp
+
     val configuration = LocalConfiguration.current
 
     when (configuration.orientation) {
         Configuration.ORIENTATION_LANDSCAPE -> { // Modo horizontal
-            Row(
-                modifier = Modifier.fillMaxSize().padding(20.dp,25.dp,70.dp,15.dp),
-                horizontalArrangement = Arrangement.spacedBy(20.dp)
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                contentAlignment = Alignment.Center
             ) {
-                Transfer1Content()
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(20.dp),
+                ) {
+                    Transfer1Content()
+                }
             }
         }
 
@@ -53,10 +64,10 @@ fun Transfer1() {
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(16.dp),
-                verticalArrangement = Arrangement.Top,
+                verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Transfer1Content()
+                Transfer1Content(isTablet)
             }
         }
     }
@@ -70,7 +81,9 @@ data class RecentContactData(
 )
 
 @Composable
-fun Transfer1Content() {
+fun Transfer1Content(
+    isTablet: Boolean = false,
+) {
     val recentContacts = remember { // Lista de contactos de ejemplo
         listOf(
             RecentContactData("Juan", "Pérez", "1234567890", "juan.perez"),
@@ -85,11 +98,11 @@ fun Transfer1Content() {
 
     AppWindow(
         modifier = Modifier
-            .padding(bottom = 16.dp)
-            .widthIn(max = 380.dp)
+            .padding(bottom = 20.dp)
+            .widthIn(max = if(isTablet) 450.dp else 380.dp)
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth().defaultMinSize(100.dp,250.dp),
+            modifier = Modifier.fillMaxWidth().defaultMinSize(minHeight = 250.dp),
             verticalArrangement = Arrangement.SpaceEvenly,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -116,9 +129,8 @@ fun Transfer1Content() {
     AppWindow(
         title = stringResource(R.string.recent_contacts),
         modifier = Modifier
-            .fillMaxHeight()
-            .widthIn(max = 450.dp)
-            .defaultMinSize(450.dp,0.dp)
+            .fillMaxHeight(if(isTablet) 0.7f else 1f)
+            .widthIn(350.dp, 450.dp)
     ) {
         LazyColumn(
             modifier = Modifier.padding(top = 5.dp)

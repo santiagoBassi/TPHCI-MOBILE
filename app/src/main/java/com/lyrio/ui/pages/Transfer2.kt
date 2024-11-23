@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -57,19 +58,37 @@ fun Transfer2() {
     var amount by rememberSaveable (key = "transferAmount") { mutableLongStateOf(0L) }
     var selectedMethod by rememberSaveable (key = "selectedMethod") { mutableIntStateOf(0) }
 
+
     val configuration = LocalConfiguration.current
+
+    val maxWidth = configuration.screenWidthDp.dp
+    val maxHeight = configuration.screenHeightDp.dp
+    val isTablet = maxWidth > 1000.dp || maxHeight > 1000.dp
 
     when (configuration.orientation) {
         Configuration.ORIENTATION_LANDSCAPE -> { // Modo horizontal
-            Transfer2ContentH(
-                recipient = "Ezequiel Testoni",
-                amount = amount,
-                onAmountChange = { amount = it },
-                selectedMethod = selectedMethod,
-            ){
-                PaymentMethodsCarousel(cards,  selectedMethod, onCurrentPageChanged = { selectedMethod = it })
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Transfer2ContentH(
+                    isTablet = isTablet,
+                    recipient = "Ezequiel Testoni",
+                    amount = amount,
+                    onAmountChange = { amount = it },
+                    selectedMethod = selectedMethod,
+                ) {
+                    PaymentMethodsCarousel(
+                        cards,
+                        selectedMethod,
+                        onCurrentPageChanged = { selectedMethod = it },
+                        isTablet
+                    )
+                }
             }
-
         }
 
         else -> { // Modo vertical u otras orientaciones
@@ -81,12 +100,13 @@ fun Transfer2() {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Transfer2ContentV(
+                    isTablet = isTablet,
                     recipient = "Ezequiel Testoni",
                     amount = amount,
                     onAmountChange = { amount = it },
                     selectedMethod = selectedMethod,
                 ){
-                    PaymentMethodsCarousel(cards, selectedMethod, onCurrentPageChanged = { selectedMethod = it })
+                    PaymentMethodsCarousel(cards, selectedMethod, onCurrentPageChanged = { selectedMethod = it }, isTablet)
                 }
             }
         }
@@ -112,6 +132,7 @@ val cards = listOf(
 
 @Composable
 fun Transfer2ContentH(
+    isTablet: Boolean = false,
     recipient: String = "",
     amount: Long = 0L,
     onAmountChange: (Long) -> Unit = {},
@@ -120,8 +141,7 @@ fun Transfer2ContentH(
 ) {
     AppWindow(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(20.dp, 25.dp, 70.dp, 10.dp)
+            .fillMaxWidth().fillMaxHeight(if(isTablet) 0.8f else 1f)
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -131,10 +151,11 @@ fun Transfer2ContentH(
             Row(
                 modifier = Modifier.fillMaxWidth().weight(1f),
                 horizontalArrangement = Arrangement.spacedBy(15.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(
-                    modifier = Modifier.fillMaxSize().weight(1f).padding(top = 20.dp),
-                    verticalArrangement = Arrangement.spacedBy(25.dp),
+                    modifier = Modifier.weight(1f).fillMaxHeight(if(isTablet) 0.7f else 0.8f),
+                    verticalArrangement = Arrangement.Top,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
@@ -143,8 +164,8 @@ fun Transfer2ContentH(
                         fontWeight = FontWeight.SemiBold,
                         color = Color.Black
                     )
+                    Spacer(modifier = Modifier.height(if(isTablet) 50.dp else 30.dp))
                     Column(
-                        modifier = Modifier.fillMaxSize(),
                         verticalArrangement = Arrangement.spacedBy(12.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
@@ -171,8 +192,8 @@ fun Transfer2ContentH(
                 }
                 Divider(color = Orange, modifier = Modifier.fillMaxHeight().width(1.dp).padding(vertical = 15.dp))
                 Column(
-                    modifier = Modifier.fillMaxSize().weight(1f),
-                    verticalArrangement = Arrangement.SpaceEvenly,
+                    modifier = Modifier.weight(1f).fillMaxHeight(if(isTablet) 0.7f else 1f),
+                    verticalArrangement = Arrangement.Top,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
@@ -180,8 +201,9 @@ fun Transfer2ContentH(
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.SemiBold,
                         color = Color.Black,
-                        modifier = Modifier.padding(top = 12.dp)
+                        modifier = Modifier.padding(top = if(isTablet) 0.dp else 30.dp)
                     )
+                    Spacer(modifier = Modifier.height(if(isTablet) 50.dp else 15.dp))
                     carousel()
                 }
             }
@@ -202,6 +224,7 @@ fun Transfer2ContentH(
 
 @Composable
 fun Transfer2ContentV(
+    isTablet: Boolean = false,
     recipient: String = "",
     amount: Long = 0L,
     onAmountChange: (Long) -> Unit = {},
@@ -210,7 +233,8 @@ fun Transfer2ContentV(
 ) {
     AppWindow (
         modifier = Modifier
-            .padding(vertical = 8.dp)
+            .padding(vertical = 8.dp).fillMaxHeight(if(isTablet) 0.7f else 1f)
+            .widthIn(max = 520.dp)
     ){
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -234,16 +258,20 @@ fun Transfer2ContentV(
                     modifier = Modifier.padding(top = 10.dp))
             }
             carousel()
-            AppButton(text = stringResource(R.string.transfer), onClick = { /*TODO*/ }, modifier = Modifier.fillMaxWidth(0.75f))
+            AppButton(text = stringResource(R.string.transfer), onClick = { /*TODO*/ }, modifier = Modifier.fillMaxWidth(if(isTablet) 0.6f else 0.75f))
         }
     }
 }
 @Composable
-fun PaymentMethodsCarousel(cards: List<CreditCardData>, initialPage: Int = 0, onCurrentPageChanged: (Int) -> Unit = {}) {
+fun PaymentMethodsCarousel(cards: List<CreditCardData>, initialPage: Int = 0, onCurrentPageChanged: (Int) -> Unit = {}, isTablet: Boolean = false) {
     val pagerState = rememberPagerState(initialPage = initialPage ){ cards.size + 1 }
     val coroutineScope = rememberCoroutineScope()
 
-    Column {
+    Column (
+        modifier = Modifier.fillMaxWidth(if(isTablet) 0.8f else 1f),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ){
         HorizontalPager(
             state = pagerState,
             modifier = Modifier.fillMaxWidth(),

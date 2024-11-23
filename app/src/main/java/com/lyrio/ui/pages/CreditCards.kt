@@ -2,12 +2,16 @@ package com.lyrio.ui.pages
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
@@ -60,35 +64,52 @@ fun CreditCards(
 
     val configuration = LocalConfiguration.current
 
+    val maxWidth = configuration.screenWidthDp.dp
+    val maxHeight = configuration.screenHeightDp.dp
+    val isTablet = maxWidth > 1000.dp || maxHeight > 1000.dp
+
     when (configuration.orientation) {
         Configuration.ORIENTATION_LANDSCAPE -> { // Modo horizontal
-            Column(
-                modifier = Modifier
-                    .fillMaxSize().verticalScroll(rememberScrollState())
-                    .padding(120.dp,20.dp,170.dp,15.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                CreditCardsContent(creditCards, onCardDelete = { creditCards.remove(it)}, navigateAddCreditCard)
+            Box(
+                modifier = Modifier.fillMaxSize()
+                .verticalScroll(rememberScrollState()),
+                contentAlignment = Alignment.Center
+            ){
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth(if (isTablet) 0.8f else 0.85f)
+                        .fillMaxHeight(if (isTablet) 0.7f else 0.85f)
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    CreditCardsContent(creditCards, onCardDelete = { creditCards.remove(it)}, navigateAddCreditCard, true)
+                }
             }
         }
 
         else -> { // Modo vertical u otras orientaciones
-            Column(
-                modifier = Modifier
-                    .fillMaxSize().verticalScroll(rememberScrollState())
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                CreditCardsContent(creditCards, onCardDelete = { creditCards.remove(it)}, navigateAddCreditCard)
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ){
+                Column(
+                    modifier = Modifier
+                        .fillMaxHeight().verticalScroll(rememberScrollState())
+                        .fillMaxWidth(if (isTablet) 0.8f else 1f)
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    CreditCardsContent(creditCards, onCardDelete = { creditCards.remove(it)}, navigateAddCreditCard)
+                }
             }
         }
     }
 }
 
 @Composable
-fun CreditCardsContent(cards: List<CreditCardData>, onCardDelete: (CreditCardData) -> Unit, navigateAddCreditCard: () -> Unit) {
+fun CreditCardsContent(cards: List<CreditCardData>, onCardDelete: (CreditCardData) -> Unit, navigateAddCreditCard: () -> Unit, isLandscape: Boolean = false) {
     var openAlertDialog by remember { mutableStateOf(false) }
     var cardToDelete by remember { mutableStateOf<CreditCardData?>(null) }
 
@@ -110,6 +131,7 @@ fun CreditCardsContent(cards: List<CreditCardData>, onCardDelete: (CreditCardDat
 
     AppWindow(
         title = stringResource(R.string.credit_cards),
+        modifier = Modifier.defaultMinSize(minHeight = 300.dp)
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -119,7 +141,7 @@ fun CreditCardsContent(cards: List<CreditCardData>, onCardDelete: (CreditCardDat
             if (cards.isNotEmpty()) {
                 Column(
                     modifier = Modifier
-                        .fillMaxWidth().padding(vertical = 12.dp)
+                        .padding(vertical = 12.dp)
                 ) {
                     for (card in cards) {
                         CardRow(card = card, onDelete = {
@@ -128,13 +150,21 @@ fun CreditCardsContent(cards: List<CreditCardData>, onCardDelete: (CreditCardDat
                     }
                 }
             } else {
-                Text(
-                    text = stringResource(R.string.no_cards_associated),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color.Gray,
-                )
+                Box(
+                    modifier = Modifier
+                        .padding(vertical = 50.dp)
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ){
+                    Text(
+                        text = stringResource(R.string.no_cards_associated),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.Gray,
+                    )
+                }
             }
-            AppButton(text = stringResource(R.string.add_card), width = 0.8f,onClick = navigateAddCreditCard, modifier = Modifier.padding(vertical = 15.dp))
+            AppButton(text = stringResource(R.string.add_card), width = if(isLandscape) 0.5f else 0.8f,
+                onClick = navigateAddCreditCard, modifier = Modifier.padding(vertical = 15.dp))
         }
     }
 }
@@ -143,7 +173,7 @@ fun CreditCardsContent(cards: List<CreditCardData>, onCardDelete: (CreditCardDat
 fun CardRow(card: CreditCardData, onDelete: () -> Unit) {
     Row(
         modifier = Modifier
-            .fillMaxWidth()
+            .widthIn(max = 600.dp)
             .padding(vertical = 2.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {

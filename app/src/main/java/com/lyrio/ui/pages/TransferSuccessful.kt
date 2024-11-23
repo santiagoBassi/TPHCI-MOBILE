@@ -28,19 +28,22 @@ fun TransferSuccessful(
     navigateHome: () -> Unit = {},
     navigateTransfer1: () -> Unit = {}
 ) {
+
+    val maxWidth = LocalConfiguration.current.screenWidthDp.dp
+    val isTablet = maxWidth > 1000.dp
+
     val configuration = LocalConfiguration.current
 
     when (configuration.orientation) {
         Configuration.ORIENTATION_LANDSCAPE -> { // Modo horizontal
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(50.dp,20.dp,100.dp,15.dp),
+                    .fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 TransferSuccessfulContent(
-                    height = 1f,
+                    height = if(isTablet) 0.7f else 1f,
                     navigateHome = navigateHome,
                     navigateTransfer1 = navigateTransfer1
                 )

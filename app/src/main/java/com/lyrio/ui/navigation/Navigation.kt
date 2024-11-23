@@ -40,7 +40,7 @@ fun NavigationWrapper(){
     val navController = rememberNavController()
     val userViewModel : UserViewModel = viewModel(factory = UserViewModel.provideFactory(LocalContext.current.applicationContext as LyrioApp))
 
-    NavHost(navController = navController, startDestination = Screen.Landing){
+    NavHost(navController = navController, startDestination = Screen.ChangeAlias){
 
         composable<Screen.Landing>{
             LandingPage(navigateSignIn = {

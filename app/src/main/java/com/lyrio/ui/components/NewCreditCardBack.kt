@@ -22,6 +22,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.lyrio.ui.styles.LightGray
+import com.lyrio.ui.styles.OffWhite
+import com.lyrio.ui.styles.White
 
 
 @Composable
@@ -60,19 +63,24 @@ fun NewCreditCardBack(
                 .height(45.dp)
                 .align(Alignment.CenterEnd)
                 .padding(end = 50.dp)
-                .background(Color.White)
             ){
-                Row(
-                    modifier = Modifier.fillMaxSize(),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = cvv,
-                        color = Color.Black,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Medium
-                    )
+                Box(
+                    modifier = Modifier
+                        .background(OffWhite)
+                        .fillMaxSize()
+                ){
+                    Row(
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = cvv,
+                            color = Color.Black,
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
                 }
             }
         }

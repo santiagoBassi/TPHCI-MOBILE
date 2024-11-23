@@ -64,7 +64,7 @@ fun NewCreditCardFront(
                 Column(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.padding(top = 25.dp).padding(start = 4.dp)
+                    modifier = Modifier.padding(top = 25.dp).padding(start = 4.dp).weight(0.75f)
                 ) {
                     Text(
                         text = cardNumber,
@@ -93,7 +93,7 @@ fun NewCreditCardFront(
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxHeight().padding(bottom = 18.dp)
+                    modifier = Modifier.fillMaxHeight().padding(bottom = 18.dp).weight(0.25f)
                 ) {
                     if (logo != 0) {
                         Image(

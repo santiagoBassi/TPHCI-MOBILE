@@ -2,6 +2,7 @@ package com.lyrio.ui.pages
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -44,39 +45,58 @@ import com.lyrio.ui.styles.Red
 fun Money() {
     val configuration = LocalConfiguration.current
 
+    val maxWidth = configuration.screenWidthDp.dp
+    val maxHeight = configuration.screenHeightDp.dp
+    val isTablet = maxWidth > 1000.dp || maxHeight > 1000.dp
+
     when (configuration.orientation) {
         Configuration.ORIENTATION_LANDSCAPE -> { // Modo horizontal
-            Row(
-                modifier = Modifier.fillMaxSize().padding(25.dp,25.dp,75.dp,15.dp),
-                horizontalArrangement = Arrangement.spacedBy(20.dp),
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
             ) {
-                MoneyContent(170.dp)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(if (isTablet) 0.8f else 0.92f)
+                        .fillMaxHeight(if (isTablet) 0.8f else 0.92f),
+                    horizontalArrangement = Arrangement.spacedBy(20.dp),
+                ) {
+                    val maxBarHeight = maxHeight.div(2.5f)
+                    MoneyContent(maxMoneyWidth = if (isTablet) 375.dp else 350.dp, maxBarHeight = maxBarHeight)
+                }
             }
         }
 
         else -> { // Modo vertical u otras orientaciones
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                MoneyContent(220.dp, vertical = true)
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ){
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth(if (isTablet) 0.8f else 1f)
+                        .fillMaxHeight(if (isTablet) 0.6f else 1f)
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    val maxBarHeight = maxHeight.div(if (isTablet) 4.2f else 3.5f)
+                    MoneyContent(maxBarHeight = maxBarHeight, vertical = true)
+                }
             }
         }
     }
 }
 
 @Composable
-fun MoneyContent(maxBarHeight: Dp = 200.dp, vertical: Boolean = false) {
+fun MoneyContent(maxMoneyWidth: Dp = 500.dp, maxBarHeight: Dp = 200.dp, vertical: Boolean = false) {
     var showBalance by remember { mutableStateOf(true) }
 
     AppWindow(
         title = stringResource(R.string.money),
         modifier = Modifier
             .padding(bottom = 16.dp)
-            .widthIn(max = 375.dp),
+            .widthIn(max = maxMoneyWidth),
     ) {
         Row(
             modifier = Modifier
@@ -120,7 +140,7 @@ fun MoneyContent(maxBarHeight: Dp = 200.dp, vertical: Boolean = false) {
     AppWindow(
         modifier = Modifier
             .fillMaxHeight()
-            .widthIn(375.dp),
+            .widthIn(375.dp, 500.dp),
         title = stringResource(R.string.expenses)
     ) {
         Row(
@@ -133,14 +153,24 @@ fun MoneyContent(maxBarHeight: Dp = 200.dp, vertical: Boolean = false) {
                 color = Color.Gray
             )
             Text(
-                text = "$${expensesData[5].expense}",
+                text = " $${expensesData[5].expense}",
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
                 color = Red
             )
         }
         if(vertical) Spacer(Modifier.height(25.dp))
-        BarChart(expensesData, maxBarHeight)
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ){
+            Row(
+                modifier = Modifier.widthIn(max = 430.dp),
+                horizontalArrangement = Arrangement.Center,
+            ){
+                BarChart(expensesData, maxBarHeight)
+            }
+        }
     }
 }
 

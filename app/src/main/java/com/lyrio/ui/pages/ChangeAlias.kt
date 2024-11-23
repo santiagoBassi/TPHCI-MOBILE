@@ -27,28 +27,49 @@ fun ChangeAlias(
 
     val configuration = LocalConfiguration.current
 
+    val maxWidth = configuration.screenWidthDp.dp
+    val maxHeight = configuration.screenHeightDp.dp
+    val isTablet = maxWidth > 1000.dp || maxHeight > 1000.dp
+
     when (configuration.orientation) {
         Configuration.ORIENTATION_LANDSCAPE -> { // Modo horizontal
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(50.dp, 20.dp, 100.dp, 15.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                ChangeAliasContent(true, newAlias, { newAlias = it }, navigateChangeAliasSuccessful)
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ){
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth(if(isTablet) 0.6f else 0.7f)
+                        .fillMaxHeight(if(isTablet) 0.8f else 1f)
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    ChangeAliasContent(true, newAlias, { newAlias = it }, navigateChangeAliasSuccessful)
+                }
             }
         }
 
         else -> { // Modo vertical u otras orientaciones
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
             ) {
-                ChangeAliasContent(false, newAlias, { newAlias = it }, navigateChangeAliasSuccessful)
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth(if (isTablet) 0.7f else 1f)
+                        .fillMaxHeight(if (isTablet) 0.6f else 1f)
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    ChangeAliasContent(
+                        false,
+                        newAlias,
+                        { newAlias = it },
+                        navigateChangeAliasSuccessful
+                    )
+                }
             }
         }
     }
@@ -77,19 +98,25 @@ fun ChangeAliasContent(
             )
             Column(
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(if(landscape) 5.dp else 16.dp),
+                verticalArrangement = Arrangement.SpaceBetween,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 AppInput(value = newAlias, onValueChange = { onNewAliasChange(it) }, label = stringResource(R.string.new_alias),
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = if(landscape) 100.dp else 8.dp))
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(stringResource(R.string.rule1), color = Color.Black)
-                Text(stringResource(R.string.rule2), color = Color.Black)
-                if(landscape) {
-                    Text(stringResource(R.string.rule3), color = Color.Black)
-                } else {
-                    Column {
-                        Text(stringResource(R.string.rule3_1), color = Color.Black)
-                        Text(stringResource(R.string.rule3_2), color = Color.Black)
+                    modifier = Modifier.fillMaxWidth(if(landscape) 0.8f else 0.95f))
+                Spacer(modifier = Modifier.height(if(landscape) 30.dp else 30.dp))
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalAlignment = Alignment.Start
+                ) {
+                    Text(stringResource(R.string.rule1), color = Color.Black)
+                    Text(stringResource(R.string.rule2), color = Color.Black)
+                    if (landscape) {
+                        Text(stringResource(R.string.rule3), color = Color.Black)
+                    } else {
+                        Column {
+                            Text(stringResource(R.string.rule3_1), color = Color.Black)
+                            Text(stringResource(R.string.rule3_2), color = Color.Black)
+                        }
                     }
                 }
             }

@@ -2,9 +2,12 @@ package com.lyrio.ui.pages
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -25,38 +28,53 @@ fun AddCardSuccessful(
 ) {
     val configuration = LocalConfiguration.current
 
+    val maxWidth = configuration.screenWidthDp.dp
+    val maxHeight = configuration.screenHeightDp.dp
+    val isTablet = maxWidth > 1000.dp || maxHeight > 1000.dp
+
     when (configuration.orientation) {
         Configuration.ORIENTATION_LANDSCAPE -> { // Modo horizontal
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(50.dp,20.dp,100.dp,15.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                AddCardSuccessfulContent(height = 1f, navigateAddCardSuccessful, navigateHome)
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ){
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth(if (isTablet) 0.7f else 0.6f)
+                        .fillMaxHeight(if (isTablet) 0.6f else 1f),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    AddCardSuccessfulContent(height = 1f, navigateAddCardSuccessful, navigateHome, isTablet)
+                }
             }
         }
 
         else -> { // Modo vertical u otras orientaciones
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                AddCardSuccessfulContent(
-                    navigateAddCardSuccessful = navigateAddCardSuccessful,
-                    navigateHome = navigateHome
-                )
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ){
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth(if (isTablet) 0.7f else 1f)
+                        .fillMaxHeight(if (isTablet) 0.8f else 1f)
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    AddCardSuccessfulContent(
+                        navigateAddCardSuccessful = navigateAddCardSuccessful,
+                        navigateHome = navigateHome
+                    )
+                }
             }
         }
     }
 }
 
 @Composable
-fun AddCardSuccessfulContent(height: Float = 0.5f, navigateAddCardSuccessful: () -> Unit, navigateHome: () -> Unit) {
+fun AddCardSuccessfulContent(height: Float = 0.5f, navigateAddCardSuccessful: () -> Unit, navigateHome: () -> Unit, isTablet: Boolean = false) {
     Successful(
         message = stringResource(R.string.card_added),
         buttonLabel = stringResource(R.string.back_home),
@@ -64,7 +82,7 @@ fun AddCardSuccessfulContent(height: Float = 0.5f, navigateAddCardSuccessful: ()
         variant = "secondary",
         height = height
     ) {
-        Spacer(Modifier.height(30.dp))
+        Spacer(Modifier.height(if(isTablet) 100.dp else 30.dp))
         AppButton(text = stringResource(R.string.add_another_card), onClick = navigateAddCardSuccessful, width = if(height == 1f) 0.6f else 0.8f)
     }
 }
