@@ -76,7 +76,6 @@
 
     <!-- Transfer1 -->
     <string name="who_to_transfer">Who do you want to transfer to?</string>
-    <string name="cvu_or_alias">CVU or Alias</string>
     <string name="continue_">Continue</string>
     <string name="recent_contacts">Recent contacts</string>
 
