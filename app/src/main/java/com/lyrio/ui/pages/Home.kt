@@ -1,6 +1,5 @@
 package com.lyrio.ui.pages
 
-import android.annotation.SuppressLint
 import android.content.res.Configuration
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -31,14 +30,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.lyrio.LyrioApp
 import com.lyrio.R
 import com.lyrio.ui.components.AppWindow
 import com.lyrio.ui.components.CircularIconButton
@@ -52,11 +48,6 @@ import com.lyrio.ui.styles.LightGray
 import com.lyrio.utils.formatCurrencyWhole
 import com.lyrio.utils.getDecimalPart
 import com.lyrio.utils.stringToLocalDate
-import java.util.Calendar
-import java.util.Date
-import java.text.DecimalFormat
-import java.util.Locale
-
 
 
 
@@ -142,7 +133,7 @@ fun HomeContent(
     val paymentsState by viewModelPayments.uiStatePayments.collectAsState()
     val userState by viewModelUser.uiStateUser.collectAsState()
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(Unit, userState.isAuthenticated) {
         if (userState.isAuthenticated) {
             viewModelWallet.getBalance()
             viewModelPayments.getPayments()
@@ -247,7 +238,7 @@ fun HomeContent(
                             transactionType = if(transfer.payerEmail == userState.email) "Enviaste" else "Recibiste",
                             amount = transfer.amount,
                             recipient = if(transfer.payerEmail == userState.email) transfer.receiverName else transfer.payerName,
-                            date = stringToLocalDate(transfer.createdAt)
+                            date = transfer.createdAt//stringToLocalDate(transfer.createdAt)
                         )
                     }
                 }

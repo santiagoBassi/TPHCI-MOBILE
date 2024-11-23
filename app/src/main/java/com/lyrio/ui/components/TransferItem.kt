@@ -36,9 +36,9 @@ fun TransferItem(
     transactionType: String,
     amount: Double,
     recipient: String,
-    date: LocalDate
+    date: String
 ) {
-    val formattedDate = remember { formatDate(date) }
+    //val formattedDate = remember { formatDate(date) }
 
     Column(modifier = Modifier.fillMaxWidth()) {
         Column {
@@ -77,7 +77,7 @@ fun TransferItem(
                     style = MaterialTheme.typography.bodySmall.copy(color = Color.Gray)
                 )
                 Text(
-                    text = formattedDate,
+                    text = date,
                     style = MaterialTheme.typography.bodySmall.copy(color = Color.Gray)
                 )
             }
