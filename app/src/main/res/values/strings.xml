@@ -222,6 +222,7 @@
 
     <!-- New ones -->
     <string name="invalid_email">Invalid email</string>
+    <string name="empty_field">Required field</string>
 
 
 </resources>
