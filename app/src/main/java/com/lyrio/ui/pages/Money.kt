@@ -24,8 +24,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -33,6 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.times
 import com.lyrio.R
 import com.lyrio.ui.components.AppWindow
 import com.lyrio.ui.components.BarChart
@@ -40,7 +39,6 @@ import com.lyrio.ui.components.BarChartData
 import com.lyrio.ui.components.eyeIconPainter
 import com.lyrio.ui.components.eyeOffIconPainter
 import com.lyrio.ui.styles.Red
-
 
 @Preview(showBackground = true)
 @Composable
@@ -51,8 +49,6 @@ fun Money() {
     val maxHeight = configuration.screenHeightDp.dp
     val isTablet = maxWidth > 1000.dp || maxHeight > 1000.dp
 
-    var maxBarHeight = 200.dp
-
     when (configuration.orientation) {
         Configuration.ORIENTATION_LANDSCAPE -> { // Modo horizontal
             Box(
@@ -62,10 +58,10 @@ fun Money() {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth(if (isTablet) 0.8f else 0.92f)
-                        .fillMaxHeight(if (isTablet) 0.8f else 0.92f)
-                        .onGloballyPositioned { maxBarHeight = it.size.height.dp },
+                        .fillMaxHeight(if (isTablet) 0.8f else 0.92f),
                     horizontalArrangement = Arrangement.spacedBy(20.dp),
                 ) {
+                    val maxBarHeight = if(isTablet) 0.4 * maxHeight else 0.4 * 0.92 * maxHeight
                     MoneyContent(maxMoneyWidth = if (isTablet) 375.dp else 350.dp, maxBarHeight = maxBarHeight)
                 }
             }
@@ -80,11 +76,11 @@ fun Money() {
                     modifier = Modifier
                         .fillMaxWidth(if (isTablet) 0.8f else 1f)
                         .fillMaxHeight(if (isTablet) 0.6f else 1f)
-                        .padding(16.dp)
-                        .onGloballyPositioned { maxBarHeight = it.size.height.dp },
+                        .padding(16.dp),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    val maxBarHeight = if(isTablet) 0.2 * maxHeight else 0.225 * maxHeight
                     MoneyContent(maxBarHeight = maxBarHeight, vertical = true)
                 }
             }
@@ -162,7 +158,6 @@ fun MoneyContent(maxMoneyWidth: Dp = 500.dp, maxBarHeight: Dp = 200.dp, vertical
                 fontSize = 18.sp,
                 color = Red
             )
-            Text(maxBarHeight.toString())
         }
         if(vertical) Spacer(Modifier.height(25.dp))
         Box(

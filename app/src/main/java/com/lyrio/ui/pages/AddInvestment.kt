@@ -40,21 +40,31 @@ fun AddInvestment(
 
     val configuration = LocalConfiguration.current
 
+    val maxWidth = configuration.screenWidthDp.dp
+    val maxHeight = configuration.screenHeightDp.dp
+    val isTablet = maxWidth > 1000.dp || maxHeight > 1000.dp
+
     when (configuration.orientation) {
         Configuration.ORIENTATION_LANDSCAPE -> { // Modo horizontal
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(100.dp,20.dp,150.dp,15.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
             ) {
-                AddInvestmentContent(
-                    amount = amount,
-                    onAmountChange = { amount = it },
-                    availableBalance = availableBalance,
-                    navigateInvest = navigateInvest
-                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth(if (isTablet) 0.8f else 1f)
+                        .fillMaxHeight(if (isTablet) 0.6f else 1f)
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    AddInvestmentContent(
+                        amount = amount,
+                        onAmountChange = { amount = it },
+                        availableBalance = availableBalance,
+                        navigateInvest = navigateInvest
+                    )
+                }
             }
         }
 

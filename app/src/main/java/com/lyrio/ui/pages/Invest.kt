@@ -2,6 +2,7 @@ package com.lyrio.ui.pages
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -27,6 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.times
 import com.lyrio.R
 import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.components.AppWindow
@@ -44,32 +46,53 @@ fun Invest(
 ) {
     val configuration = LocalConfiguration.current
 
+    val maxWidth = configuration.screenWidthDp.dp
+    val maxHeight = configuration.screenHeightDp.dp
+    val isTablet = maxWidth > 1000.dp || maxHeight > 1000.dp
+
     when (configuration.orientation) {
         Configuration.ORIENTATION_LANDSCAPE -> { // Modo horizontal
-            Row(
-                modifier = Modifier.fillMaxSize().padding(25.dp,25.dp,75.dp,15.dp),
-                horizontalArrangement = Arrangement.spacedBy(20.dp),
-            ) {
-                InvestContent(
-                    maxBarHeight =  170.dp,
-                    navigateAddInvestment = navigateAddInvestment,
-                    navigateWithdrawInvestment = navigateWithdrawInvestment
-                )
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ){
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(if (isTablet) 0.8f else 0.92f)
+                        .fillMaxHeight(if (isTablet) 0.8f else 0.92f)
+                        .padding(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(20.dp),
+                ) {
+                    InvestContent(
+                        isTablet = isTablet,
+                        maxBarHeight = if(isTablet) 0.38 * maxHeight else 0.35 * maxHeight,
+                        navigateAddInvestment = navigateAddInvestment,
+                        navigateWithdrawInvestment = navigateWithdrawInvestment
+                    )
+                }
             }
         }
 
         else -> { // Modo vertical u otras orientaciones
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
             ) {
-                InvestContent(
-                    navigateAddInvestment = navigateAddInvestment,
-                    navigateWithdrawInvestment = navigateWithdrawInvestment
-                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth(if (isTablet) 0.7f else 1f)
+                        .fillMaxHeight(if (isTablet) 0.7f else 1f)
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    InvestContent(
+                        isTablet = isTablet,
+                        maxBarHeight = if (isTablet) 0.28 * maxHeight else 0.18 * maxHeight,
+                        navigateAddInvestment = navigateAddInvestment,
+                        navigateWithdrawInvestment = navigateWithdrawInvestment
+                    )
+                }
             }
         }
     }
@@ -77,6 +100,7 @@ fun Invest(
 
 @Composable
 fun InvestContent(
+    isTablet: Boolean = false,
     maxBarHeight: Dp = 200.dp,
     navigateAddInvestment: () -> Unit,
     navigateWithdrawInvestment: () -> Unit
@@ -87,7 +111,7 @@ fun InvestContent(
         title = stringResource(R.string.invested_money),
         modifier = Modifier
             .padding(bottom = 16.dp)
-            .widthIn(max = 375.dp),
+            .widthIn(max = if(isTablet) 450.dp else 375.dp),
     ) {
         Column {
             Row(
@@ -142,7 +166,7 @@ fun InvestContent(
     AppWindow(
         modifier = Modifier
             .fillMaxHeight()
-            .widthIn(375.dp),
+            .widthIn(max = 450.dp),
         title = stringResource(R.string.earnings)
     ){
         Row(
