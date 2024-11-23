@@ -208,7 +208,10 @@ fun NavigationWrapper() {
 
         composable<Screen.Movements> {
             DefaultLayout(navController) {
-                Movements()
+                Movements(
+                    viewModelPayments = paymentsViewModel,
+                    viewModelUser = userViewModel
+                )
             }
         }
 

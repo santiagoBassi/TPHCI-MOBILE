@@ -136,7 +136,7 @@ fun HomeContent(
     LaunchedEffect(Unit, userState.isAuthenticated) {
         if (userState.isAuthenticated) {
             viewModelWallet.getBalance()
-            viewModelPayments.getPayments()
+            viewModelPayments.getLastPayments()
             viewModelUser.getCurrentUser()
         }
     }
@@ -233,12 +233,12 @@ fun HomeContent(
                         .padding(vertical = 10.dp)
                         .weight(1f),
                 ) {
-                    items(paymentsState.lastTransfers) { transfer -> // Use items() here
+                    items(paymentsState.lastTransfers) { transfer ->
                         TransferItem(
                             transactionType = if(transfer.payerEmail == userState.email) "Enviaste" else "Recibiste",
                             amount = transfer.amount,
                             recipient = if(transfer.payerEmail == userState.email) transfer.receiverName else transfer.payerName,
-                            date = transfer.createdAt//stringToLocalDate(transfer.createdAt)
+                            date = transfer.createdAt
                         )
                     }
                 }

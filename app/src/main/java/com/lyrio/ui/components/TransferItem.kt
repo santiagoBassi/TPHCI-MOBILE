@@ -51,11 +51,11 @@ fun TransferItem(
             ) {
                 Icon(
                     painter = painterResource(
-                        id = if (transactionType == stringResource(R.string.received)) R.drawable.arrow_left_bold
+                        id = if (transactionType == "Recibiste") R.drawable.arrow_left_bold
                         else R.drawable.arrow_right_bold
                     ),
                     contentDescription = null,
-                    tint = if (transactionType == stringResource(R.string.received)) Green else MaterialTheme.colorScheme.error,
+                    tint = if (transactionType == "Recibiste") Green else MaterialTheme.colorScheme.error,
                     modifier = Modifier.size(24.dp)
                 )
                 Text(
@@ -63,7 +63,7 @@ fun TransferItem(
                         .format(kotlin.math.abs(amount)),
                     style = MaterialTheme.typography.bodyMedium.copy(
                         fontWeight = FontWeight.Bold,
-                        color = if (transactionType == stringResource(R.string.received)) Green else MaterialTheme.colorScheme.error
+                        color = if (transactionType == "Recibiste") Green else MaterialTheme.colorScheme.error
                     )
                 )
             }
@@ -73,7 +73,7 @@ fun TransferItem(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = "${if (transactionType == stringResource(R.string.received)) "de" else "a"} $recipient",
+                    text = "${if (transactionType == "Recibiste") "de" else "a"} $recipient",
                     style = MaterialTheme.typography.bodySmall.copy(color = Color.Gray)
                 )
                 Text(
@@ -93,19 +93,3 @@ fun TransferItem(
 }
 
 
-
-fun formatDate(localDate: LocalDate): String {
-    val zoneId = ZoneId.systemDefault()
-    val localDateTime = localDate.atStartOfDay() // Convierte LocalDate a LocalDateTime al inicio del día
-    val now = LocalDateTime.now(zoneId)
-
-    return if (ChronoUnit.DAYS.between(localDateTime, now) == 0L) {
-        if (ChronoUnit.HOURS.between(localDateTime, now) == 0L) {
-            "Recién"
-        } else {
-            "Hace ${ChronoUnit.HOURS.between(localDateTime, now)} horas"
-        }
-    } else {
-        DateTimeFormatter.ofPattern("dd-MM-yyyy").format(localDate)
-    }
-}
