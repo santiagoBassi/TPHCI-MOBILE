@@ -176,7 +176,10 @@ fun SignUp2Content(
             ) {
                 AppInput(
                     value = email,
-                    onValueChange = { onEmailChange(it) },
+                    onValueChange = {
+                        onEmailChange(it)
+                        isErrorEmail = false
+                                    },
                     label = stringResource(R.string.email),
                     error = if(errorMsgEmail != -1) stringResource(errorMsgEmail) else null,
                     isError = isErrorEmail,
@@ -185,7 +188,10 @@ fun SignUp2Content(
                 )
                 AppInput(
                     value = password,
-                    onValueChange = { onPasswordChange(it) },
+                    onValueChange = {
+                        onPasswordChange(it)
+                        isErrorPassword = false
+                                    },
                     label = stringResource(R.string.password),
                     error = if(errorMsgPassword != -1) stringResource(errorMsgPassword) else null,
                     isError = isErrorPassword,
@@ -195,7 +201,10 @@ fun SignUp2Content(
                 )
                 AppInput(
                     value = confirmPassword,
-                    onValueChange = { onConfirmPasswordChange(it) },
+                    onValueChange = {
+                        onConfirmPasswordChange(it)
+                        isErrorConfirmPassword = false
+                                    },
                     label = stringResource(R.string.confirm_pass),
                     error = if(errorMsgConfirmPassword != -1) stringResource(errorMsgConfirmPassword) else null,
                     isError = isErrorConfirmPassword,
@@ -253,6 +262,7 @@ fun validatePasswordSignUp(password: String, onInvalidPassword: (Int) -> Unit): 
         onInvalidPassword(R.string.invalid_password)
         return false
     }
+    onInvalidPassword(-1)
     return true
 }
 
@@ -265,5 +275,6 @@ fun validateConfirmPassword(confirmPassword: String, password: String, onInvalid
         onInvalidConfirmPassword(R.string.pass_not_match)
         return false
     }
+    onInvalidConfirmPassword(-1)
     return true
 }

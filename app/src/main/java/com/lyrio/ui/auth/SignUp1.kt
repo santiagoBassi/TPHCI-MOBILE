@@ -2,7 +2,6 @@ package com.lyrio.ui.auth
 
 import androidx.compose.runtime.remember
 import android.content.res.Configuration
-import android.icu.text.SimpleDateFormat
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -29,10 +28,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
-import androidx.core.net.ParseException
 import com.lyrio.R
 import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.components.AppInput
@@ -191,7 +188,10 @@ fun SignUp1Content(
             ) {
                 AppInput(
                     value = name,
-                    onValueChange = { onNameChange(it) },
+                    onValueChange = {
+                        onNameChange(it)
+                        isErrorName = false
+                                    },
                     label = stringResource(R.string.name_s),
                     error = if(nameErrorMsg != -1) stringResource(nameErrorMsg) else null,
                     isError = isErrorName,
@@ -199,7 +199,10 @@ fun SignUp1Content(
                 )
                 AppInput(
                     value = lastname,
-                    onValueChange = { onLastnameChange(it) },
+                    onValueChange = {
+                        onLastnameChange(it)
+                        isErrorLastname = false
+                                    },
                     label = stringResource(R.string.surname_s),
                     error = if(lastnameErrorMsg != -1) stringResource(lastnameErrorMsg) else null,
                     isError = isErrorLastname,
@@ -207,7 +210,10 @@ fun SignUp1Content(
                 )
                 AppInput(
                     value = birthDate,
-                    onValueChange = { onBirthDateChange(it) },
+                    onValueChange = {
+                        onBirthDateChange(it)
+                        isErrorBirthDate = false
+                                    },
                     label = stringResource(R.string.birthdate),
                     error = if(birthDateErrorMsg != -1) stringResource(birthDateErrorMsg) else null,
                     isError = isErrorBirthDate,
@@ -257,7 +263,7 @@ private fun validateQueries(birthDate: String, name: String, lastname: String, o
 }
 
 fun validateBirthDate(birthDate: String, onInvalidBirthDate: (Int) -> Unit): Boolean {
-    val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
+    val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
 
     try {
         val parsedDate = LocalDate.parse(birthDate, formatter)
@@ -266,7 +272,7 @@ fun validateBirthDate(birthDate: String, onInvalidBirthDate: (Int) -> Unit): Boo
             onInvalidBirthDate(R.string.invalid_birthdate)
             return false
         }
-
+        onInvalidBirthDate(-1)
         return true
 
     } catch (e: DateTimeParseException) {
@@ -280,6 +286,7 @@ fun validateName(name: String, onInvalidName: (Int) -> Unit): Boolean {
         onInvalidName(R.string.empty_field)
         return false
     }
+    onInvalidName(-1)
     return true
 }
 
@@ -288,6 +295,7 @@ fun validateLastname(lastname: String, onInvalidLastname: (Int) -> Unit): Boolea
         onInvalidLastname(R.string.empty_field)
         return false
     }
+    onInvalidLastname(-1)
     return true
 }
 
