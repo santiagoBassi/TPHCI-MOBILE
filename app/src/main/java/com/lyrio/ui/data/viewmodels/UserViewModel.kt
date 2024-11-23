@@ -84,7 +84,7 @@ class UserViewModel(
             dateOfBirth = response?.birthDate ?: "")}
     )
 
-    
+
 
 
 
