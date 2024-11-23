@@ -3,6 +3,7 @@ package com.lyrio.ui.pages
 import android.content.res.Configuration
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -47,10 +48,6 @@ import com.lyrio.ui.data.viewmodels.WalletViewModel
 import com.lyrio.ui.styles.LightGray
 import com.lyrio.utils.formatCurrencyWhole
 import com.lyrio.utils.getDecimalPart
-import com.lyrio.utils.stringToLocalDate
-
-
-
 
 @Composable
 fun transferIconPainter(): Painter = painterResource(id = R.drawable.transfer)
@@ -75,44 +72,62 @@ fun Home(
 ) {
     val configuration = LocalConfiguration.current
 
+    val maxHeight = configuration.screenHeightDp.dp
+    val maxWidth = configuration.screenWidthDp.dp
+    val isTablet = maxWidth > 1000.dp || maxHeight > 1000.dp
 
     when (configuration.orientation) {
         Configuration.ORIENTATION_LANDSCAPE -> { // Modo horizontal
-            Row(
-                modifier = Modifier.fillMaxSize().padding(20.dp,25.dp,55.dp,15.dp),
-                horizontalArrangement = Arrangement.spacedBy(20.dp)
-            ) {
-                HomeContent(
-                    navigateTransfer1,
-                    navigateReceiveMoney,
-                    navigateProfile,
-                    navigateMovements,
-                    navigateMoney,
-                    viewModelWallet,
-                    viewModelPayments,
-                    viewModelUser
-                )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                contentAlignment = Alignment.Center
+            ){
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(if (isTablet) 0.8f else 1f)
+                        .fillMaxHeight(),
+                    horizontalArrangement = Arrangement.spacedBy(20.dp)
+                ) {
+                    HomeContent(
+                        navigateTransfer1,
+                        navigateReceiveMoney,
+                        navigateProfile,
+                        navigateMovements,
+                        navigateMoney,
+                        viewModelWallet,
+                        viewModelPayments,
+                        viewModelUser
+                    )
+                }
             }
         }
 
         else -> {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.Top,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                HomeContent(
-                    navigateTransfer1,
-                    navigateReceiveMoney,
-                    navigateProfile,
-                    navigateMovements,
-                    navigateMoney,
-                    viewModelWallet,
-                    viewModelPayments,
-                    viewModelUser
-                )
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ){
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth(if (isTablet) 0.7f else 1f)
+                        .fillMaxHeight(if (isTablet) 0.75f else 1f)
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.Top,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    HomeContent(
+                        navigateTransfer1,
+                        navigateReceiveMoney,
+                        navigateProfile,
+                        navigateMovements,
+                        navigateMoney,
+                        viewModelWallet,
+                        viewModelPayments,
+                        viewModelUser
+                    )
+                }
             }
         }
     }
@@ -149,7 +164,7 @@ fun HomeContent(
         onChevronClick = { navigateMoney() },
         modifier = Modifier
             .padding(bottom = 16.dp)
-            .widthIn(max = 400.dp)
+            .widthIn(max = 450.dp)
     ) {
         Row(
             modifier = Modifier
@@ -211,7 +226,7 @@ fun HomeContent(
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (false) {
+            if (paymentsState.lastTransfers.isEmpty()) {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -233,7 +248,7 @@ fun HomeContent(
                         .padding(vertical = 10.dp)
                         .weight(1f),
                 ) {
-                    items(paymentsState.lastTransfers) { transfer -> // Use items() here
+                    items(paymentsState.lastTransfers) { transfer ->
                         TransferItem(
                             transactionType = if(transfer.payerEmail == userState.email) "Enviaste" else "Recibiste",
                             amount = transfer.amount,
