@@ -84,6 +84,13 @@ class WalletViewModel(
         { state, newCard -> state.copy(cards = state.cards + newCard)}
     )
 
+    fun deleteCard(cardId: Int) = runOnViewModelScope(
+        {
+            walletRepository.deleteCard(cardId)
+        },
+        { state, _ -> state.copy(cards = state.cards.filter { it.id != cardId }) }
+    )
+
     private fun <T> collectOnViewModelScope(
         flow: Flow<T>,
         updateState: (WalletUiState, T) -> WalletUiState

@@ -82,12 +82,17 @@ fun CreditCards(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    CreditCardsContent(walletUiState.cards, onCardDelete = { }, navigateAddCreditCard, true)
+                    CreditCardsContent(
+                        cards = walletUiState.cards,
+                        navigateAddCreditCard = navigateAddCreditCard,
+                        isLandscape = true,
+                        walletViewModel = walletViewModel
+                    )
                 }
             }
         }
 
-        else -> { // Modo vertical u otras orientaciones
+        else -> {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
@@ -100,7 +105,11 @@ fun CreditCards(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    CreditCardsContent(walletUiState.cards, onCardDelete = { }, navigateAddCreditCard)
+                    CreditCardsContent(
+                        cards = walletUiState.cards,
+                        navigateAddCreditCard = navigateAddCreditCard,
+                        walletViewModel = walletViewModel
+                    )
                 }
             }
         }
@@ -108,7 +117,12 @@ fun CreditCards(
 }
 
 @Composable
-fun CreditCardsContent(cards: List<Card>, onCardDelete: (CreditCardData) -> Unit, navigateAddCreditCard: () -> Unit, isLandscape: Boolean = false) {
+fun CreditCardsContent(
+    cards: List<Card>,
+    navigateAddCreditCard: () -> Unit,
+    isLandscape: Boolean = false,
+    walletViewModel: WalletViewModel
+) {
     var openAlertDialog by remember { mutableStateOf(false) }
     var cardToDelete by remember { mutableStateOf<CreditCardData?>(null) }
 
@@ -117,7 +131,7 @@ fun CreditCardsContent(cards: List<Card>, onCardDelete: (CreditCardData) -> Unit
             AlertDialog(
                 onDismissRequest = { openAlertDialog = false },
                 onConfirmation = {
-                    cardToDelete?.let(onCardDelete)
+
                     openAlertDialog = false
                 },
                 dialogTitle = stringResource(R.string.remove_card),
@@ -150,8 +164,8 @@ fun CreditCardsContent(cards: List<Card>, onCardDelete: (CreditCardData) -> Unit
                             secondaryColor = Color.Black,
                             logoSize = 80.dp
                         ), onDelete = {
-                            cardToDelete = null
-                            openAlertDialog = true })
+                            walletViewModel.deleteCard(card.id)
+                        })
                     }
                 }
             } else {
