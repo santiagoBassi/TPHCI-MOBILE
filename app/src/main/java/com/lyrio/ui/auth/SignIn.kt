@@ -218,8 +218,8 @@ fun SignInContent(
                     }
                     if(validateQueries(email, password, onInvalidEmail, onInvalidPassword)) {
                         isApiError = false
-                        viewModel.login(email, password)
-                        navigateHome()
+                        // TESTEAR ESTO
+                        viewModel.login(email, password, navigateHome)
                     }
                 }catch (e: DataSourceException){
                     when (e.code) {

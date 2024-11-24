@@ -40,11 +40,12 @@ class UserViewModel(
         { state, _ -> state.copy() }
     )
 
-    fun login(email: String, password: String) = runOnViewModelScope(
+    fun login(email: String, password: String, onSuccessfulLogin: () -> Unit) = runOnViewModelScope(
         {
             userRepository.login(email, password)
         },
-        { state, _ -> state.copy(isAuthenticated = true) }
+        { state, _ -> state.copy(isAuthenticated = true) },
+        onSuccessfulLogin
     )
 
     fun verifyEmail(code: String) = runOnViewModelScope(
@@ -100,13 +101,15 @@ class UserViewModel(
 
     private fun <R> runOnViewModelScope(
         block: suspend () -> R,
-        updateState: (UserUiState, R) -> UserUiState
+        updateState: (UserUiState, R) -> UserUiState,
+        callback: () -> Unit = { }
     ): Job = viewModelScope.launch {
         _uiStateUser.update { currentState -> currentState.copy(isFetching = true, error = null) }
         runCatching {
             block()
         }.onSuccess { response ->
             _uiStateUser.update { currentState -> updateState(currentState, response).copy(isFetching = false) }
+            callback()
         }.onFailure { e ->
             _uiStateUser.update { currentState -> currentState.copy(isFetching = false, error = handleError(e)) }
             Log.e(TAG, "Coroutine execution failed", e)
