@@ -22,13 +22,20 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.lyrio.R
+import com.lyrio.ui.data.viewmodels.ViewModel
+import com.lyrio.ui.navigation.Screen
 
 @Composable
-fun DefaultLayout(navController: NavController,content: @Composable () -> Unit) {
+fun DefaultLayout(
+    navController: NavController,
+    viewModel: ViewModel,
+    content: @Composable () -> Unit,
+) {
 
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
 
@@ -38,7 +45,7 @@ fun DefaultLayout(navController: NavController,content: @Composable () -> Unit) 
         }
         else -> {
             if(isMobile()) MobileSidebarNavigation(navController, content)
-            else TabletNavigation(navController, content)
+            else TabletNavigation(viewModel = viewModel, navController = navController, content = content)
         }
     }
 }
@@ -93,7 +100,7 @@ fun MobileBottomBarNavigation(navController: NavController, content: @Composable
 
         },
         bottomBar = {
-            BottomBar(navController)
+                BottomBar(navController)
         }
         ) { innerPadding ->
         Box(
@@ -147,7 +154,7 @@ fun MobileSidebarNavigation(navController: NavController, content: @Composable (
 
 
 @Composable
-fun TabletNavigation(navController: NavController, content: @Composable () -> Unit) {
+fun TabletNavigation(viewModel: ViewModel, navController: NavController, content: @Composable () -> Unit) {
 
     Row (
         modifier = Modifier
@@ -156,7 +163,10 @@ fun TabletNavigation(navController: NavController, content: @Composable () -> Un
             .windowInsetsPadding(WindowInsets.statusBars)
     ) {
         val screenLabel = getScreenLabel(navController, LocalContext.current) ?: "Unknown Screen"
-        LeftBarTablet()
+        LeftBarTablet(
+            navController = navController,
+            viewModel = viewModel
+        )
         Column {
             StateBar(text = screenLabel)
             content()

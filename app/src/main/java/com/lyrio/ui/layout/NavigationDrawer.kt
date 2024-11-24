@@ -57,7 +57,7 @@ val items = listOf(
     NavItem(R.drawable.currency_exchange_24dp_e8eaed_fill0_wght400_grad0_opsz24, R.string.invest, "Transfer Icon", false,
         Screen.Invest) ,
     NavItem(R.drawable.link_24dp_e8eaed_fill0_wght400_grad0_opsz24, R.string.pay_link, "Transfer Icon", false,
-        Screen.ReceiveMoney),
+        Screen.Paylink),
     NavItem(R.drawable.credit_card_24dp_e8eaed_fill0_wght400_grad0_opsz24, R.string.cards, "Transfer Icon", false,
         Screen.CreditCards),
     NavItem(R.drawable.logout_24dp_e8eaed_fill0_wght400_grad0_opsz24, R.string.logout, "Logout Icon", false,

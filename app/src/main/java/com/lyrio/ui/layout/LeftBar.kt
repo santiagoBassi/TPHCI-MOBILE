@@ -30,20 +30,29 @@ import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.NavigationRailItemColors
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.window.core.layout.WindowSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
+import com.lyrio.LyrioApp
 import com.lyrio.ui.components.AlertDialog
+import com.lyrio.ui.data.viewmodels.ViewModel
+import com.lyrio.ui.data.viewmodels.WalletViewModel
 import com.lyrio.ui.navigation.Screen
 
 
@@ -80,8 +89,6 @@ val itemsNavBar = listOf(
 
 @Composable
 fun LeftBarMobile(onButtonClick: () -> Unit, navController: NavController, state: DrawerState, windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo().windowSizeClass) {
-    var selectedItem by remember { mutableIntStateOf(0) }
-
     var showTODOModal by remember { mutableStateOf(false) }
 
     when {
@@ -160,8 +167,12 @@ fun LeftBarMobile(onButtonClick: () -> Unit, navController: NavController, state
 }
 
 @Composable
-fun LeftBarTablet( windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo().windowSizeClass) {
-    var selectedItem by remember { mutableIntStateOf(R.drawable.home_24dp_e8eaed_fill0_wght400_grad0_opsz24) }
+fun LeftBarTablet(
+    navController: NavController,
+    windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo().windowSizeClass,
+    viewModel: ViewModel
+) {
+    val uiState by viewModel.uiState.collectAsState()
 
     NavigationRail(
         modifier = Modifier
@@ -200,11 +211,17 @@ fun LeftBarTablet( windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo(
                 verticalArrangement = Arrangement.Center
             ) {
                 itemsNavBar.dropLast(1).forEach { item ->
-                    RenderRailItem(item = item, selectedItem =  selectedItem) { selectedItem = item.icon }
+                    RenderRailItem(item = item, selectedItem =  uiState.selectedItem) {
+                        viewModel.setSelectedItem(item.icon)
+                        navController.navigate(item.page)
+                    }
                 }
                 Spacer(modifier = Modifier.weight(1f))
                 itemsNavBar.lastOrNull()?.let { item ->
-                    RenderRailItem(item = item, selectedItem = selectedItem) { selectedItem = item.icon }
+                    RenderRailItem(item = item, selectedItem = uiState.selectedItem) {
+                        viewModel.setSelectedItem(item.icon)
+                        navController.navigate(item.page)
+                    }
                 }
             }
         }
@@ -233,7 +250,7 @@ fun RenderRailItem(item: NavItem, selectedItem: Int, onItemSelected: () -> Unit)
                     ItemContent(item,selectedItem)
                 }
         },
-        selected = selectedItem == item.icon,
+        selected = (selectedItem == item.icon),
         onClick = onItemSelected,
         modifier =
             if(windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.MEDIUM)
@@ -259,7 +276,12 @@ fun ItemContent(item: NavItem, selectedItem: Int){
     Icon(
         painter = painterResource(id = item.icon),
         contentDescription = stringResource(item.title),
-        modifier = Modifier.size(30.dp)
+        modifier = Modifier.size(30.dp),
+        tint = if (selectedItem == item.icon) {
+            MaterialTheme.colorScheme.primary
+        } else {
+            MaterialTheme.colorScheme.background
+        },
     )
     if (windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.EXPANDED)
         Spacer(

@@ -265,7 +265,8 @@ fun validateEmail(email: String, onInvalidEmail: (Int) -> Unit): Boolean {
         onInvalidEmail(R.string.empty_field)
         return false
     }
-    if(!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+    val emailRegex = Regex("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$")
+    if(!emailRegex.matches(email)) {
         onInvalidEmail(R.string.invalid_email)
         return false
     }
