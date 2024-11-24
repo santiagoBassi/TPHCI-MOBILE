@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.lyrio.LyrioApp
 import com.lyrio.SessionManager
 import com.lyrio.data.DataSourceException
+import com.lyrio.data.model.CardType
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,6 +18,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import com.lyrio.data.model.Error
+import com.lyrio.data.model.NewCard
 import com.lyrio.data.repository.WalletRepository
 import com.lyrio.ui.data.states.WalletUiState
 
@@ -69,6 +71,18 @@ class WalletViewModel(
         { state, response -> state.copy(alias = response.alias)}
     )
 
+    fun addCreditCard(cardNumber: String, holderName: String, expiryDate: String, cvv: String) = runOnViewModelScope(
+        {
+            walletRepository.addCard(NewCard(
+                number = cardNumber,
+                expirationDate = expiryDate,
+                fullName = holderName,
+                cvv = cvv,
+                type = CardType.CREDIT
+            ))
+        },
+        { state, newCard -> state.copy(cards = state.cards + newCard)}
+    )
 
     private fun <T> collectOnViewModelScope(
         flow: Flow<T>,

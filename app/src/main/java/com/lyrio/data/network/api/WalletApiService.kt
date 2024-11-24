@@ -8,6 +8,7 @@ import com.lyrio.data.network.model.NetworkDailyInterest
 import com.lyrio.data.network.model.NetworkDailyReturn
 import com.lyrio.data.network.model.NetworkInvestmentAmount
 import com.lyrio.data.network.model.NetworkNewBalance
+import com.lyrio.data.network.model.NetworkNewCard
 import com.lyrio.data.network.model.NetworkWalletDetails
 import retrofit2.Response
 import retrofit2.http.Body
@@ -37,7 +38,7 @@ interface WalletApiService {
     suspend fun getCards(): Response<List<NetworkCard>>
 
     @POST("wallet/cards")
-    suspend fun addCard(@Body card: NetworkCard): Response<NetworkCard>
+    suspend fun addCard(@Body card: NetworkNewCard): Response<NetworkCard>
 
     @DELETE("wallet/cards/{cardId}")
     suspend fun deleteCard(@Path("cardId") cardId: Int): Response<Unit>

@@ -2,6 +2,7 @@ package com.lyrio.data.repository
 
 import com.lyrio.data.model.Card
 import com.lyrio.data.model.DailyReturn
+import com.lyrio.data.model.NewCard
 import com.lyrio.data.model.WalletDetails
 import com.lyrio.data.network.WalletRemoteDataSource
 import kotlinx.coroutines.sync.Mutex
@@ -41,7 +42,7 @@ class WalletRepository(private val remoteDataSource: WalletRemoteDataSource) {
         return cardsMutex.withLock { this.cachedCards }
     }
 
-    suspend fun addCard(card: Card): Card {
+    suspend fun addCard(card: NewCard): Card {
         val newCard = remoteDataSource.addCard(card.asNetworkModel()).asModel()
         cardsMutex.withLock {
             cachedCards = emptyList()

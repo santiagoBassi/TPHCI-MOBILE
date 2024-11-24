@@ -316,7 +316,9 @@ fun NavigationWrapper() {
                 CreditCards(
                     navigateAddCreditCard = {
                         navController.navigate(Screen.AddCreditCard)
-                    }
+                    },
+                    walletViewModel = walletViewModel,
+                    userViewModel = userViewModel
                 )
             }
         }
@@ -326,7 +328,9 @@ fun NavigationWrapper() {
                 AddCreditCard(
                     navigateAddCardSuccessful = {
                         navController.navigate(Screen.AddCardSuccessful)
-                    }
+                    },
+                    walletViewModel = walletViewModel,
+                    userViewModel = userViewModel
                 )
             }
         }
