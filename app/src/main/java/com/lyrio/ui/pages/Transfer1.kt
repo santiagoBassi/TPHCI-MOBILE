@@ -31,6 +31,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.lyrio.R
+import com.lyrio.ui.auth.validateEmail
 import com.lyrio.ui.components.RecentContact
 import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.components.AppInput
@@ -111,6 +112,9 @@ fun Transfer1Content(
 
     var email by remember { mutableStateOf("") }
 
+    var isError by remember { mutableStateOf(false) }
+    var errorMsg by remember { mutableStateOf(-1) }
+
     AppWindow(
         modifier = Modifier
             .padding(bottom = 20.dp)
@@ -129,7 +133,10 @@ fun Transfer1Content(
             )
             AppInput(
                 value = email,
-                onValueChange = { email = it },
+                onValueChange = {
+                    email = it
+                    isError = false
+                                },
                 label = stringResource(R.string.email),
                 modifier = Modifier.fillMaxWidth(0.95f),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
@@ -137,8 +144,19 @@ fun Transfer1Content(
             AppButton(
                 text = stringResource(R.string.continue_),
                 onClick = {
-                    paymentsViewModel.setReceiver(email)
-                    navigateTransfer2()
+                    try {
+                        val onInvalidEmail: (Int) -> Unit = {
+                            errorMsg = it
+                            isError = it != -1
+                        }
+                        if(validateEmail(email, onInvalidEmail)){
+                            paymentsViewModel.setReceiver(email)
+                            navigateTransfer2()
+                        }
+                    } catch (e: Exception) {
+                        // TODO: error handling
+                    }
+
                 },
                 width = 0.8f
             )
