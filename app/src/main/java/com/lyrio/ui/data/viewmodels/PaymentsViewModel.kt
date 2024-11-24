@@ -61,7 +61,7 @@ class PaymentsViewModel(
     fun calculateExpenses(payments: List<PaymentResponse>, userViewModel: UserViewModel): List<Expense> {
         val formatter = DateTimeFormatter.ISO_DATE
         val currentDate = LocalDate.now()
-        val sixMonthsAgo = currentDate.minusMonths(6)
+        val sixMonthsAgo = currentDate.minusMonths(5) // Incluir los últimos 6 meses (actual y 5 atrás)
 
         val expensesByMonth = payments
             .filter { it.payerEmail == userViewModel.uiStateUser.value.email }
@@ -70,13 +70,18 @@ class PaymentsViewModel(
             .mapValues { (_, payments) -> payments.sumOf { it.amount } }
             .map { (month, totalAmount) -> Expense(month.monthValue - 1, totalAmount) }
 
-        val fullExpenses = (0..5).map { monthIndex ->
+        val currentMonthIndex = currentDate.monthValue - 1
+        val sixMonthRange = (currentMonthIndex - 5..currentMonthIndex).map { if (it < 0) it + 12 else it } // Asegura el rango de meses, incluso si cruza un año
+
+        val fullExpenses = sixMonthRange.map { monthIndex ->
             val existingExpense = expensesByMonth.find { it.month == monthIndex }
-            existingExpense ?: Expense(monthIndex, 0.0) // Use existing expense or create a new one with 0 expense
+            existingExpense ?: Expense(monthIndex, 0.0) // Usa el gasto existente o crea uno nuevo con 0
         }
+
         println(fullExpenses)
         return fullExpenses
     }
+
 
     fun setReceiver(email: String) {
          _uiStatePayments.value = _uiStatePayments.value.copy(receiver = email)
