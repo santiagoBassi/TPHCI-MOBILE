@@ -84,6 +84,7 @@ fun AddCreditCard(
             }
             val onInvalidName: (Int) -> Unit = {
                 nameErrorMsg = it
+                isNameError = it != -1
             }
             val onInvalidExpiry: (Int) -> Unit = {
                 expiryErrorMsg = it
@@ -452,7 +453,7 @@ fun validateCvv(cvv: String, onInvalidCvv: (Int) -> Unit): Boolean {
         onInvalidCvv(R.string.empty_field)
         return false
     }
-    if (!cvv.matches(Regex("\\d+"))) {
+    if (!cvv.matches(Regex("\\d{3}"))) {
         onInvalidCvv(R.string.invalid_cvv)
         return false
     }
@@ -465,21 +466,17 @@ fun validateExpiryDate(expiryDate: String, onInvalidExpiry: (Int) -> Unit): Bool
         onInvalidExpiry(R.string.empty_field)
         return false
     }
-    val formatter = DateTimeFormatter.ofPattern("MM/yy")
+    val regex = "^(0[1-9]|1[0-2])/(2[4-9]|[3-9][0-9])$".toRegex()
 
-    try {
-        val parsedDate = LocalDate.parse(expiryDate, formatter)
-
-        if (parsedDate.isAfter(LocalDate.now())) {
-            onInvalidExpiry(R.string.invalid_expiry)
-            return false
+    if (regex.matches(expiryDate)) {
+        val (month, year) = expiryDate.split("/")
+        if (month.toInt() <= 12 && year.toInt() > 24) {
+            onInvalidExpiry(-1)
+            return true
         }
-        onInvalidExpiry(-1)
-        return true
-    } catch (e: DateTimeParseException) {
-        onInvalidExpiry(R.string.invalid_expiry)
-        return false
     }
+    onInvalidExpiry(R.string.invalid_expiry)
+    return false
 }
 
 fun validateCardNumber(cardNumber: String, onInvalidNumber: (Int) -> Unit): Boolean {
@@ -487,7 +484,7 @@ fun validateCardNumber(cardNumber: String, onInvalidNumber: (Int) -> Unit): Bool
         onInvalidNumber(R.string.empty_field)
         return false
     }
-    if (!cardNumber.matches(Regex("\\d{16} | (\\d{4}\\s){4}"))) {
+    if (!cardNumber.matches(Regex("^(?:\\d{4}[ -]?){3}\\d{4}\$"))) {
         onInvalidNumber(R.string.invalid_card_number)
         return false
     }

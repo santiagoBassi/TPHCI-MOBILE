@@ -132,7 +132,11 @@ fun ChangeAliasContent(
                 }
             }
             AppButton(text = stringResource(R.string.change_alias), onClick = {
-                if(validateAlias(newAlias, { errorMsg = it })) {
+                val onInvalidAlias: (Int) -> Unit = {
+                    errorMsg = it
+                    isError = it != -1
+                }
+                if(validateAlias(newAlias, onInvalidAlias)) {
                     navigateChangeAliasSuccessful()
                 }
 
@@ -148,12 +152,10 @@ fun validateAlias(alias: String, onInvalidAlias: (Int) -> Unit): Boolean {
         onInvalidAlias(R.string.empty_field)
         return false
     }
-    if(!alias.contains(".")) {
+    val len = alias.length
+    if(!alias.contains(".") || len < 6 || len > 20) {
         onInvalidAlias(R.string.invalid_alias)
         return false
-    }
-    if(alias.split(".").size != 2) {
-        onInvalidAlias(R.string.invalid_alias)
     }
     onInvalidAlias(-1)
     return true

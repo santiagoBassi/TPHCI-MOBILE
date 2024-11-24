@@ -57,7 +57,7 @@ fun NavigationWrapper() {
         )
     )
 
-    NavHost(navController = navController, startDestination = Screen.WithdrawInvestment) {
+    NavHost(navController = navController, startDestination = Screen.AddCreditCard) {
 
         composable<Screen.Landing> {
             LandingPage(navigateSignIn = {

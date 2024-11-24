@@ -191,7 +191,6 @@ fun SignInContent(
                     label = stringResource(R.string.password),
                     error = if(passwordErrorMsg != -1) stringResource(passwordErrorMsg) else null,
                     isError = isErrorPassword,
-                    hint = stringResource(R.string.pass_rule),
                     modifier = Modifier.fillMaxWidth(),
                     isPassword = true
                 )
