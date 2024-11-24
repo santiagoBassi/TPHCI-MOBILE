@@ -264,7 +264,7 @@ private fun validateQueries(birthDate: String, name: String, lastname: String, o
 }
 
 fun validateBirthDate(birthDate: String, onInvalidBirthDate: (Int) -> Unit): Boolean {
-    val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
     try {
         val parsedDate = LocalDate.parse(birthDate, formatter)

@@ -22,7 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -32,7 +32,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.lyrio.R
@@ -54,10 +53,10 @@ fun CreditCards(
 ) {
 
     val walletUiState by walletViewModel.uiStateWallet.collectAsState()
-    val userViewModel by userViewModel.uiStateUser.collectAsState()
+    val uiStateUser by userViewModel.uiStateUser.collectAsState()
 
-    LaunchedEffect(Unit, userViewModel.isAuthenticated) {
-        if(userViewModel.isAuthenticated)
+    LaunchedEffect(Unit, uiStateUser.isAuthenticated) {
+        if(uiStateUser.isAuthenticated)
             walletViewModel.getCards()
     }
 
@@ -124,14 +123,14 @@ fun CreditCardsContent(
     walletViewModel: WalletViewModel
 ) {
     var openAlertDialog by remember { mutableStateOf(false) }
-    var cardToDelete by remember { mutableStateOf<CreditCardData?>(null) }
+    var cardToDelete by remember { mutableIntStateOf(0) }
 
     when {
         openAlertDialog -> {
             AlertDialog(
                 onDismissRequest = { openAlertDialog = false },
                 onConfirmation = {
-
+                    walletViewModel.deleteCard(cardToDelete)
                     openAlertDialog = false
                 },
                 dialogTitle = stringResource(R.string.remove_card),
@@ -164,7 +163,8 @@ fun CreditCardsContent(
                             secondaryColor = Color.Black,
                             logoSize = 80.dp
                         ), onDelete = {
-                            walletViewModel.deleteCard(card.id)
+                            cardToDelete = card.id
+                            openAlertDialog = true
                         })
                     }
                 }

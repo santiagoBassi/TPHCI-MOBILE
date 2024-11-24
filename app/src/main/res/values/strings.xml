@@ -128,7 +128,7 @@
     <string name="lastname">Surname</string>
     <string name="email">Email</string>
     <string name="birthdate">Birthdate</string>
-    <string name="date_format">DD/MM/YYYY</string>
+    <string name="date_format">YYYY-MM-DD</string>
     <string name="edit_profile">Edit profile</string>
     <string name="save_changes">Save changes</string>
     <string name="change_alias">Change alias</string>
