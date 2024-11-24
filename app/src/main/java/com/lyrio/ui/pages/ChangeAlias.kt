@@ -82,8 +82,8 @@ fun ChangeAliasContent(
     onNewAliasChange: (String) -> Unit,
     navigateChangeAliasSuccessful: () -> Unit = {}
 ){
-    var isError by remember { mutableStateOf(false) }
-    var errorMsg by remember { mutableIntStateOf(-1) }
+    var isError by rememberSaveable(key = "changeAlias_isError") { mutableStateOf(false) }
+    var errorMsg by rememberSaveable(key = "changeAlias_errorMsg") { mutableIntStateOf(-1) }
 
     AppWindow(
         modifier = Modifier.fillMaxHeight(if(landscape) 1f else 0.85f)

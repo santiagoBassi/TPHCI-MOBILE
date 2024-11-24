@@ -19,7 +19,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -61,7 +60,7 @@ fun AddCreditCard(
     var expiryErrorMsg by rememberSaveable(key = "addCardExpiryDateErrorMsg") { mutableIntStateOf(-1) }
     var cvvErrorMsg by rememberSaveable(key = "addCardCvvErrorMsg") { mutableIntStateOf(-1) }
 
-    var state by remember {
+    var state by rememberSaveable(key = "addCardState") {
         mutableStateOf(CardFace.Front)
     }
 

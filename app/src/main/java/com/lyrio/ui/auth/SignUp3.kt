@@ -40,7 +40,7 @@ fun SignUp3(
     navigateSignIn: () -> Unit,
     viewModel: UserViewModel
 ) {
-    var code by rememberSaveable(key = "recover2Code") { mutableStateOf("") }
+    var code by rememberSaveable(key = "validation_code") { mutableStateOf("") }
 
     val configuration = LocalConfiguration.current
 
@@ -196,7 +196,7 @@ fun SignUp3Content(
     }
 }
 
-private fun validateCode(code: String, onInvalidCode: (Int) -> Unit): Boolean {
+fun validateCode(code: String, onInvalidCode: (Int) -> Unit): Boolean {
     if(code.isEmpty()) {
         onInvalidCode(R.string.empty_field)
         return false

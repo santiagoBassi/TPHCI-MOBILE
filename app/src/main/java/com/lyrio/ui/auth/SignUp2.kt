@@ -22,6 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,9 +44,9 @@ fun SignUp2(
     viewModel: UserViewModel,
     navigateSignUp3: () -> Unit
 ){
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
+    var email by rememberSaveable(key = "signup_email") { mutableStateOf("") }
+    var password by rememberSaveable(key = "signup_password") { mutableStateOf("") }
+    var confirmPassword by rememberSaveable(key = "signup_confirmPassword") { mutableStateOf("") }
 
     val configuration = LocalConfiguration.current
 

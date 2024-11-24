@@ -207,9 +207,10 @@ fun RecoverPass3Content(
                         confirmPasswordErrorMsg = it
                         isConfirmPasswordError = it != -1
                     }
-                    if(validateQueries(newPassword, confirmPassword, onInvalidPassword, onInvalidConfirmPassword))
-                    viewModel.recoverPass2(newPassword)
-                    navigateSignIn()
+                    if(validateQueries(newPassword, confirmPassword, onInvalidPassword, onInvalidConfirmPassword)) {
+                        viewModel.recoverPass2(newPassword)
+                        navigateSignIn()
+                    }
                 }catch (e: Exception){
                     println(e.message)
                 }

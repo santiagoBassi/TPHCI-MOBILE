@@ -60,7 +60,8 @@ fun TransferSuccessful(
             ) {
                 TransferSuccessfulContent(
                     navigateHome = navigateHome,
-                    navigateTransfer1 = navigateTransfer1
+                    navigateTransfer1 = navigateTransfer1,
+                    height = if(isTablet) 0.5f else 0.7f
                 )
             }
         }

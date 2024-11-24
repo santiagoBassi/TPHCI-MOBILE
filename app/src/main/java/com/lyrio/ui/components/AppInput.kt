@@ -77,7 +77,7 @@ fun AppInput(
                         color = Red,
                     )
                 }
-                if (hint != null && isFocused && error == null) { // Solo muestra el hint si está presente
+                if (hint != null && isFocused && !isError) { // Solo muestra el hint si está presente
                     Text(
                         text = hint,
                         color = Color.Gray,

@@ -13,8 +13,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -37,7 +37,7 @@ import com.lyrio.ui.styles.Orange
 fun AddInvestment(
     navigateInvest: () -> Unit
 ) {
-    var amount by rememberSaveable(key = "investedAmount"){ mutableLongStateOf(0) }
+    var amount by rememberSaveable(key = "investedAmount"){ mutableDoubleStateOf(0.0) }
     val availableBalance = 100000.0
 
     val configuration = LocalConfiguration.current
@@ -99,8 +99,8 @@ fun AddInvestment(
 @Composable
 fun AddInvestmentContent(
     height: Float = 1f,
-    amount: Long,
-    onAmountChange: (Long) -> Unit,
+    amount: Double,
+    onAmountChange: (Double) -> Unit,
     availableBalance: Double,
     navigateInvest: () -> Unit
 ) {
@@ -143,13 +143,13 @@ fun AddInvestmentContent(
                     contentAlignment = Alignment.Center
                 ) {
                     AppInput(
-                        value = if (amount.toInt() == 0) "" else amount.toString(),
+                        value = if (amount == 0.0) "" else amount.toString(),
                         onValueChange = {
-                            onAmountChange(it.toLongOrNull() ?: 0)
+                            onAmountChange(it.toDoubleOrNull() ?: 0.0)
                             isError = false
                                         },
                         label = stringResource(R.string.amount),
-                        error = stringResource(errorMsg),
+                        error = if(errorMsg != -1) stringResource(errorMsg) else null,
                         isError = isError,
                         hint = stringResource(R.string.add_investment_note),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -165,7 +165,7 @@ fun AddInvestmentContent(
                             errorMsg = it
                             isError = it != -1
                         }
-                        if(validateInvestment(amount, onInvalidAmount)) {
+                        if(validateAmount(amount, onInvalidAmount)) {
                             navigateInvest()
                         }
                     } catch (e: Exception){
@@ -178,8 +178,8 @@ fun AddInvestmentContent(
     }
 }
 
-fun validateInvestment(amount: Long, onInvalidAmount: (Int) -> Unit): Boolean {
-    if (amount.toInt() == 0) {
+fun validateAmount(amount: Double, onInvalidAmount: (Int) -> Unit): Boolean {
+    if (amount == 0.0) {
         onInvalidAmount(R.string.empty_field)
         return false
     }

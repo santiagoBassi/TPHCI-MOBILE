@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -156,12 +157,12 @@ fun SignUp1Content(
     navigateSignIn: () -> Unit
 ){
 
-    var isErrorBirthDate by remember { mutableStateOf(false) }
-    var isErrorName by remember { mutableStateOf(false) }
-    var isErrorLastname by remember { mutableStateOf(false) }
-    var birthDateErrorMsg by remember { mutableIntStateOf(-1) }
-    var nameErrorMsg by remember { mutableIntStateOf(-1) }
-    var lastnameErrorMsg by remember { mutableIntStateOf(-1) }
+    var isErrorBirthDate by rememberSaveable(key = "signup_birthDate") { mutableStateOf(false) }
+    var isErrorName by rememberSaveable(key = "signup_name") { mutableStateOf(false) }
+    var isErrorLastname by rememberSaveable(key = "signup_lastname") { mutableStateOf(false) }
+    var birthDateErrorMsg by rememberSaveable(key = "signup_birthDateErrorMsg") { mutableIntStateOf(-1) }
+    var nameErrorMsg by rememberSaveable(key = "signup_nameErrorMsg") { mutableIntStateOf(-1) }
+    var lastnameErrorMsg by rememberSaveable(key = "signup_lastnameErrorMsg") { mutableIntStateOf(-1) }
 
 
     AppWindow(

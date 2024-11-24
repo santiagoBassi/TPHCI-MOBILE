@@ -17,6 +17,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -128,6 +129,9 @@ fun RecoverPass1Content(
     viewModel: UserViewModel,
     navigateRecoverPass2: () -> Unit
 ){
+    var isError by rememberSaveable(key = "recover1EmailError") { mutableStateOf(false) }
+    var errorMsg by rememberSaveable(key = "recover1EmailErrorMsg") { mutableIntStateOf(-1) }
+
     AppWindow(
         modifier = Modifier
             .fillMaxWidth(0.95f)
@@ -165,16 +169,27 @@ fun RecoverPass1Content(
             ) {
                 AppInput(
                     value = email,
-                    onValueChange = { onEmailChange(it) },
+                    onValueChange = {
+                        onEmailChange(it)
+                        isError = false
+                                    },
                     label = stringResource(R.string.email),
+                    error = if(errorMsg != -1) stringResource(errorMsg) else null,
+                    isError = isError,
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
                 )
             }
             AppButton(text = stringResource(R.string.send_code), onClick = {
                 try {
-                    viewModel.recoverPass1(email)
-                    navigateRecoverPass2()
+                    val onInvalidEmail: (Int) -> Unit = {
+                        errorMsg = it
+                        isError = it != -1
+                    }
+                    if(validateEmail(email, onInvalidEmail)) {
+                        viewModel.recoverPass1(email)
+                        navigateRecoverPass2()
+                    }
                 }catch (e: Exception){
                     e.printStackTrace()
                 }

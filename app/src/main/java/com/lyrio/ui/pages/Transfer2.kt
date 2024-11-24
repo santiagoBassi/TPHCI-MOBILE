@@ -30,6 +30,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -74,6 +76,32 @@ fun Transfer2(
     val walletState by walletViewModel.uiStateWallet.collectAsState()
     val userState by userViewModel.uiStateUser.collectAsState()
 
+    var isError by rememberSaveable(key = "transferError") { mutableStateOf(false) }
+    var errorMessage by rememberSaveable(key = "transferErrorMessage") { mutableIntStateOf(-1) }
+
+    val onClick: () -> Unit = {
+        try{
+            val onInvalidAmount: (Int) -> Unit = {
+                errorMessage = it
+                isError = it != -1
+            }
+            if(validateAmount(amount, onInvalidAmount)) {
+                if (paymentsUiState.selectedPaymentMethod > 0)
+                    paymentsViewModel.transfer(
+                        amount,
+                        walletState.cards[paymentsUiState.selectedPaymentMethod - 1].id
+                    )
+                else
+                    paymentsViewModel.transfer(amount, -1)
+
+                navigateTransferSuccessful()
+            }
+        } catch(e:Exception) {
+            //TODO: handle errors
+        }
+
+    }
+
     LaunchedEffect(Unit, userState.isAuthenticated) {
         if (userState.isAuthenticated) {
             walletViewModel.getCards()
@@ -105,10 +133,11 @@ fun Transfer2(
                             isTablet
                         )
                     },
-                    navigateTransferSuccessful = navigateTransferSuccessful,
                     paymentsViewModel = paymentsViewModel,
-                    walletViewModel = walletViewModel
-
+                    onClick = onClick,
+                    isError = isError,
+                    setIsError = { isError = it },
+                    errorMessage = errorMessage
                 )
             }
         }
@@ -136,9 +165,10 @@ fun Transfer2(
                             isTablet
                         )
                     },
-                    navigateTransferSuccessful = navigateTransferSuccessful,
-                    paymentsViewModel = paymentsViewModel,
-                    walletViewModel = walletViewModel
+                    onClick = onClick,
+                    isError = isError,
+                    setIsError = { isError = it },
+                    errorMessage = errorMessage
                 )
             }
         }
@@ -153,11 +183,12 @@ fun Transfer2ContentH(
     amount: Double = 0.0,
     onAmountChange: (Double) -> Unit = {},
     carousel: @Composable () -> Unit = {},
-    navigateTransferSuccessful: () -> Unit,
     paymentsViewModel: PaymentsViewModel,
-    walletViewModel: WalletViewModel
+    onClick: () -> Unit,
+    isError: Boolean,
+    setIsError: (Boolean) -> Unit,
+    errorMessage: Int
 ) {
-    val walletUiState by walletViewModel.uiStateWallet.collectAsState()
     val paymentsUiState by paymentsViewModel.uiStatePayments.collectAsState()
     AppWindow(
         modifier = Modifier
@@ -197,8 +228,13 @@ fun Transfer2ContentH(
                         )
                         AppInput(
                             value = if (amount == 0.0) "" else amount.toString(),
-                            onValueChange = { onAmountChange(it.toDoubleOrNull() ?: 0.0) },
+                            onValueChange = {
+                                onAmountChange(it.toDoubleOrNull() ?: 0.0)
+                                setIsError(false)
+                                            },
                             label = stringResource(R.string.amount),
+                            isError = isError,
+                            error = if(errorMessage != -1) stringResource(errorMessage) else null,
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         )
                         Text(
@@ -234,11 +270,7 @@ fun Transfer2ContentH(
             ) {
                 AppButton(
                     text = stringResource(R.string.transfer),
-                    onClick = {
-                        //TODO: input validations
-                        paymentsViewModel.transfer(amount, walletUiState.cards[paymentsUiState.selectedPaymentMethod - 1].id)
-                        navigateTransferSuccessful()
-                    },
+                    onClick = onClick,
                     modifier = Modifier.fillMaxWidth(0.35f)
                 )
             }
@@ -253,13 +285,11 @@ fun Transfer2ContentV(
     amount: Double = 0.0,
     onAmountChange: (Double) -> Unit = {},
     carousel: @Composable () -> Unit = {},
-    navigateTransferSuccessful: () -> Unit,
-    paymentsViewModel: PaymentsViewModel,
-    walletViewModel: WalletViewModel
+    onClick: () -> Unit,
+    isError: Boolean,
+    setIsError: (Boolean) -> Unit,
+    errorMessage: Int
 ) {
-    val walletUiState by walletViewModel.uiStateWallet.collectAsState()
-    val paymentsUiState by paymentsViewModel.uiStatePayments.collectAsState()
-
     AppWindow (
         modifier = Modifier
             .padding(vertical = 8.dp).fillMaxHeight(if(isTablet) 0.7f else 1f)
@@ -279,23 +309,21 @@ fun Transfer2ContentV(
                 Text("$$amount", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold, color = Orange)
                 AppInput(
                     value = if(amount == 0.0) "" else amount.toString(),
-                    onValueChange = { onAmountChange(it.toDoubleOrNull() ?: 0.0) },
+                    onValueChange = {
+                        onAmountChange(it.toDoubleOrNull() ?: 0.0)
+                        setIsError(false)
+                    },
                     label = stringResource(R.string.amount),
+                    isError = isError,
+                    error = if(errorMessage != -1) stringResource(errorMessage) else null,
+
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 )
                 Text("a $recipient", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold, color = Color.Gray,
                     modifier = Modifier.padding(top = 10.dp))
             }
             carousel()
-            AppButton(text = stringResource(R.string.transfer),  onClick = {
-                //TODO: input validations
-                if (paymentsUiState.selectedPaymentMethod > 0)
-                    paymentsViewModel.transfer(amount, walletUiState.cards[paymentsUiState.selectedPaymentMethod - 1].id)
-                else
-                    paymentsViewModel.transfer(amount, -1)
-
-                navigateTransferSuccessful()
-            }, modifier = Modifier.fillMaxWidth(if(isTablet) 0.6f else 0.75f))
+            AppButton(text = stringResource(R.string.transfer),  onClick = onClick, modifier = Modifier.fillMaxWidth(if(isTablet) 0.6f else 0.75f))
         }
     }
 }
