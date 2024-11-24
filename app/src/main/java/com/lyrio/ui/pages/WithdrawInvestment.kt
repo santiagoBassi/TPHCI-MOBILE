@@ -13,7 +13,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -102,6 +104,10 @@ fun WithdrawInvestmentContent(
     availableBalance: Double,
     navigateInvest: () -> Unit
 ) {
+
+    var isError by rememberSaveable(key = "withdrawAmountError"){ mutableStateOf(false) }
+    var errorMsg by rememberSaveable(key = "withdrawAmountErrorMsg"){ mutableIntStateOf(-1) }
+
     AppWindow {
         Column(
             modifier = Modifier.fillMaxHeight(height),
@@ -142,13 +148,27 @@ fun WithdrawInvestmentContent(
                         value = if (amount == 0L) "" else amount.toString(),
                         onValueChange = { onAmountChange(it.toLongOrNull() ?: 0) },
                         label = stringResource(R.string.amount),
+                        error = stringResource(errorMsg),
+                        isError = isError,
                         hint = stringResource(R.string.withdraw_note),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
             }
-            AppButton(text = stringResource(R.string.stop_investing), onClick = navigateInvest, modifier = Modifier.fillMaxWidth(if(height == 1f) 0.5f else 0.7f))
+            AppButton(text = stringResource(R.string.stop_investing), onClick = {
+                try {
+                    val onInvalidAmount: (Int) -> Unit = {
+                        errorMsg = it
+                        isError = it != -1
+                    }
+                    if(validateInvestment(amount, onInvalidAmount)) {
+                        navigateInvest()
+                    }
+                } catch (e: Exception){
+                    // TODO: handle error
+                }
+            } , modifier = Modifier.fillMaxWidth(if(height == 1f) 0.5f else 0.7f))
         }
     }
 }

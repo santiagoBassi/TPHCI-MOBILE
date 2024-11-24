@@ -13,7 +13,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -102,7 +104,8 @@ fun AddInvestmentContent(
     availableBalance: Double,
     navigateInvest: () -> Unit
 ) {
-    var isError by rememberSaveable(key = "investedAmount"){ mutableLongStateOf(0) }
+    var isError by rememberSaveable(key = "investedAmountError"){ mutableStateOf(false) }
+    var errorMsg by rememberSaveable(key = "investedAmountErrorMsg"){ mutableIntStateOf(-1) }
 
     AppWindow {
         Column(
@@ -141,8 +144,13 @@ fun AddInvestmentContent(
                 ) {
                     AppInput(
                         value = if (amount.toInt() == 0) "" else amount.toString(),
-                        onValueChange = { onAmountChange(it.toLongOrNull() ?: 0) },
+                        onValueChange = {
+                            onAmountChange(it.toLongOrNull() ?: 0)
+                            isError = false
+                                        },
                         label = stringResource(R.string.amount),
+                        error = stringResource(errorMsg),
+                        isError = isError,
                         hint = stringResource(R.string.add_investment_note),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         modifier = Modifier.fillMaxWidth()
@@ -151,9 +159,34 @@ fun AddInvestmentContent(
             }
             AppButton(
                 text = stringResource(R.string.invest),
-                onClick = navigateInvest,
+                onClick = {
+                    try {
+                        val onInvalidAmount: (Int) -> Unit = {
+                            errorMsg = it
+                            isError = it != -1
+                        }
+                        if(validateInvestment(amount, onInvalidAmount)) {
+                            navigateInvest()
+                        }
+                    } catch (e: Exception){
+                        // TODO: handle error
+                    }
+                } ,
                 modifier = Modifier.fillMaxWidth(if (height == 1f) 0.5f else 0.7f)
             )
         }
     }
+}
+
+fun validateInvestment(amount: Long, onInvalidAmount: (Int) -> Unit): Boolean {
+    if (amount.toInt() == 0) {
+        onInvalidAmount(R.string.empty_field)
+        return false
+    }
+    if (amount < 0) {
+        onInvalidAmount(R.string.invalid_amount)
+        return false
+    }
+    onInvalidAmount(-1)
+    return true
 }

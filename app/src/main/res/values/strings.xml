@@ -231,6 +231,7 @@
     <string name="invalid_expiry">Invalid expiry</string>
     <string name="invalid_card_number">Invalid card number</string>
     <string name="invalid_alias">Invalid alias</string>
+    <string name="invalid_amount">Invalid amount</string>
 
 
 </resources>
