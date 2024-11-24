@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,11 +23,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lyrio.R
 import com.lyrio.ui.components.Successful
+import com.lyrio.ui.data.viewmodels.PaymentsViewModel
+import com.lyrio.ui.data.viewmodels.WalletViewModel
 
-@Preview(showBackground = true)
+
 @Composable
 fun ChangeAliasSuccessful(
-    navigateProfile: () -> Unit = {}
+    navigateProfile: () -> Unit = {},
+    walletViewModel: WalletViewModel
 ) {
     val configuration = LocalConfiguration.current
 
@@ -46,7 +51,11 @@ fun ChangeAliasSuccessful(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    ChangeAliasSuccessfulContent(height = 1f, navigateProfile)
+                    ChangeAliasSuccessfulContent(
+                        height = 1f,
+                        navigateProfile,
+                        walletViewModel
+                    )
                 }
             }
         }
@@ -64,7 +73,8 @@ fun ChangeAliasSuccessful(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     ChangeAliasSuccessfulContent(
-                        navigateProfile = navigateProfile
+                        navigateProfile = navigateProfile,
+                        walletViewModel = walletViewModel
                     )
                 }
             }
@@ -74,8 +84,13 @@ fun ChangeAliasSuccessful(
 }
 
 @Composable
-fun ChangeAliasSuccessfulContent(height: Float = 0.5f, navigateProfile: () -> Unit = {}){
-    val fakeAlias = "mi.nuevo.alias"
+fun ChangeAliasSuccessfulContent(
+    height: Float = 0.5f,
+    navigateProfile: () -> Unit,
+    walletViewModel: WalletViewModel
+){
+
+    val walletState by walletViewModel.uiStateWallet.collectAsState()
 
     Successful(
         message = stringResource(R.string.alias_changed),
@@ -89,7 +104,7 @@ fun ChangeAliasSuccessfulContent(height: Float = 0.5f, navigateProfile: () -> Un
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(stringResource(R.string.your_new_alias), color = Color.Gray, fontWeight = FontWeight.Medium)
-                Text(" $fakeAlias", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color.Black)
+                Text(" ${walletState.alias}", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color.Black)
 
             }
         }

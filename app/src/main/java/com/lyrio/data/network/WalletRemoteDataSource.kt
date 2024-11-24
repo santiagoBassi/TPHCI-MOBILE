@@ -9,6 +9,7 @@ import com.lyrio.data.network.model.NetworkDailyInterest
 import com.lyrio.data.network.model.NetworkDailyReturn
 import com.lyrio.data.network.model.NetworkInvestmentAmount
 import com.lyrio.data.network.model.NetworkNewBalance
+import com.lyrio.data.network.model.NetworkNewCard
 import com.lyrio.data.network.model.NetworkWalletDetails
 
 class WalletRemoteDataSource(
@@ -39,7 +40,7 @@ class WalletRemoteDataSource(
         return handleApiResponse { walletApiService.getCards() }
     }
 
-    suspend fun addCard(card: NetworkCard): NetworkCard {
+    suspend fun addCard(card: NetworkNewCard): NetworkCard {
         return handleApiResponse { walletApiService.addCard(card) }
     }
 

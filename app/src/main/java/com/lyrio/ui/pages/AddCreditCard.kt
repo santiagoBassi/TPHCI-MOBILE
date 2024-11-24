@@ -41,12 +41,16 @@ import com.lyrio.ui.components.FlippableCard
 import com.lyrio.ui.components.NewCreditCardBack
 import com.lyrio.ui.components.NewCreditCardFront
 import com.lyrio.ui.components.RotationAxis
+import com.lyrio.ui.data.viewmodels.UserViewModel
+import com.lyrio.ui.data.viewmodels.WalletViewModel
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddCreditCard(
-    navigateAddCardSuccessful: () -> Unit
+    navigateAddCardSuccessful: () -> Unit,
+    walletViewModel: WalletViewModel,
+    userViewModel: UserViewModel
 ) {
     var cardNumber by rememberSaveable(key = "addCardNumber") { mutableStateOf("") }
     var holderName by rememberSaveable(key = "addCardHolderName") { mutableStateOf("") }
@@ -91,8 +95,14 @@ fun AddCreditCard(
                 isCvvError = it != -1
             }
             if(validateQueries(cardNumber, holderName, expiryDate, cvv, onInvalidNumber, onInvalidName, onInvalidExpiry, onInvalidCvv)) {
+                walletViewModel.addCreditCard(
+                    cardNumber,
+                    holderName,
+                    expiryDate,
+                    cvv
+                )
                 navigateAddCardSuccessful()
-                // TODO: api call
+
             }
         } catch (e: Exception) {
             // TODO
@@ -167,7 +177,7 @@ fun AddCreditCard(
             }
         }
 
-        else -> { // Modo vertical u otras orientaciones
+        else -> {
             Box(
                 modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
                 contentAlignment = Alignment.Center

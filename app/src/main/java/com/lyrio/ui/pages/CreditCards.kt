@@ -19,6 +19,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -34,33 +36,30 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.lyrio.R
+import com.lyrio.data.model.Card
 import com.lyrio.ui.components.AlertDialog
 import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.components.AppWindow
 import com.lyrio.ui.components.CreditCard
+import com.lyrio.ui.data.viewmodels.UserViewModel
+import com.lyrio.ui.data.viewmodels.WalletViewModel
 import com.lyrio.ui.styles.Red
 
-@Preview(showBackground = true)
+
 @Composable
 fun CreditCards(
-    navigateAddCreditCard: () -> Unit = {}
+    navigateAddCreditCard: () -> Unit,
+    walletViewModel: WalletViewModel,
+    userViewModel: UserViewModel
 ) {
-    val creditCards = remember { mutableStateListOf(
-        CreditCardData(
-            cardNumber = "4734 5678 9012 3456",
-            logo = R.drawable.visa_white,
-            primaryColor = Color(0xFF120269),
-            secondaryColor = Color(0xFF2204C6),
-            logoSize = 80.dp
-        ),
-        CreditCardData(
-            cardNumber = "2345 5678 9012 3456",
-            logo = R.drawable.mastercard,
-            primaryColor = Color(0xFF000000),
-            secondaryColor = Color(0xFF5f5f5f),
-            logoSize = 80.dp
-        ),
-    )}
+
+    val walletUiState by walletViewModel.uiStateWallet.collectAsState()
+    val userViewModel by userViewModel.uiStateUser.collectAsState()
+
+    LaunchedEffect(Unit, userViewModel.isAuthenticated) {
+        if(userViewModel.isAuthenticated)
+            walletViewModel.getCards()
+    }
 
     val configuration = LocalConfiguration.current
 
@@ -83,12 +82,17 @@ fun CreditCards(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    CreditCardsContent(creditCards, onCardDelete = { creditCards.remove(it)}, navigateAddCreditCard, true)
+                    CreditCardsContent(
+                        cards = walletUiState.cards,
+                        navigateAddCreditCard = navigateAddCreditCard,
+                        isLandscape = true,
+                        walletViewModel = walletViewModel
+                    )
                 }
             }
         }
 
-        else -> { // Modo vertical u otras orientaciones
+        else -> {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
@@ -101,7 +105,11 @@ fun CreditCards(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    CreditCardsContent(creditCards, onCardDelete = { creditCards.remove(it)}, navigateAddCreditCard)
+                    CreditCardsContent(
+                        cards = walletUiState.cards,
+                        navigateAddCreditCard = navigateAddCreditCard,
+                        walletViewModel = walletViewModel
+                    )
                 }
             }
         }
@@ -109,7 +117,12 @@ fun CreditCards(
 }
 
 @Composable
-fun CreditCardsContent(cards: List<CreditCardData>, onCardDelete: (CreditCardData) -> Unit, navigateAddCreditCard: () -> Unit, isLandscape: Boolean = false) {
+fun CreditCardsContent(
+    cards: List<Card>,
+    navigateAddCreditCard: () -> Unit,
+    isLandscape: Boolean = false,
+    walletViewModel: WalletViewModel
+) {
     var openAlertDialog by remember { mutableStateOf(false) }
     var cardToDelete by remember { mutableStateOf<CreditCardData?>(null) }
 
@@ -118,7 +131,7 @@ fun CreditCardsContent(cards: List<CreditCardData>, onCardDelete: (CreditCardDat
             AlertDialog(
                 onDismissRequest = { openAlertDialog = false },
                 onConfirmation = {
-                    cardToDelete?.let(onCardDelete)
+
                     openAlertDialog = false
                 },
                 dialogTitle = stringResource(R.string.remove_card),
@@ -144,9 +157,15 @@ fun CreditCardsContent(cards: List<CreditCardData>, onCardDelete: (CreditCardDat
                         .padding(vertical = 12.dp)
                 ) {
                     for (card in cards) {
-                        CardRow(card = card, onDelete = {
-                            cardToDelete = card
-                            openAlertDialog = true })
+                        CardRow(card = CreditCardData(
+                            cardNumber = card.number,
+                            logo = getCardType(card.number),
+                            primaryColor = Color.Black,
+                            secondaryColor = Color.Black,
+                            logoSize = 80.dp
+                        ), onDelete = {
+                            walletViewModel.deleteCard(card.id)
+                        })
                     }
                 }
             } else {

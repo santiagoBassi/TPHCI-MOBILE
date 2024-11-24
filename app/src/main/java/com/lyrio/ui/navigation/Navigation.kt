@@ -282,7 +282,9 @@ fun NavigationWrapper() {
                 ChangeAlias(
                     navigateChangeAliasSuccessful = {
                         navController.navigate(Screen.ChangeAliasSuccessful)
-                    }
+                    },
+                    walletViewModel = walletViewModel,
+                    userViewModel = userViewModel
                 )
             }
         }
@@ -292,7 +294,8 @@ fun NavigationWrapper() {
                 ChangeAliasSuccessful(
                     navigateProfile = {
                         navController.navigate(Screen.Profile)
-                    }
+                    },
+                    walletViewModel = walletViewModel
                 )
             }
         }
@@ -313,7 +316,9 @@ fun NavigationWrapper() {
                 CreditCards(
                     navigateAddCreditCard = {
                         navController.navigate(Screen.AddCreditCard)
-                    }
+                    },
+                    walletViewModel = walletViewModel,
+                    userViewModel = userViewModel
                 )
             }
         }
@@ -323,7 +328,9 @@ fun NavigationWrapper() {
                 AddCreditCard(
                     navigateAddCardSuccessful = {
                         navController.navigate(Screen.AddCardSuccessful)
-                    }
+                    },
+                    walletViewModel = walletViewModel,
+                    userViewModel = userViewModel
                 )
             }
         }

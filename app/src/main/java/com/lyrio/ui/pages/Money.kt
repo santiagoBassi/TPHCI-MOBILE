@@ -195,7 +195,7 @@ fun MoneyContent(
                 color = Color.Gray
             )
             Text(
-                text = if(uiStatePayments.expensesByMonth.isNotEmpty()) " ${formatCurrencyWhole(uiStatePayments.expensesByMonth[actualMonth].amount)}" else "",
+                text = if(uiStatePayments.expensesByMonth.isNotEmpty()) " ${formatCurrencyWhole(uiStatePayments.expensesByMonth[5].amount)}" else "",
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
                 color = Red
@@ -211,7 +211,7 @@ fun MoneyContent(
                 horizontalArrangement = Arrangement.Center,
             ){
                 if(uiStatePayments.expensesByMonth.isNotEmpty())
-                    BarChart(uiStatePayments.expensesByMonth.map {(month, qty) -> BarChartData(month, qty.toFloat()) }, maxBarHeight)
+                    BarChart(uiStatePayments.expensesByMonth.map {(month, qty) -> BarChartData(months[month], qty.toFloat()) }, maxBarHeight)
                 else
                     Text(stringResource(R.string.no_cards_associated))
             }
