@@ -17,11 +17,15 @@ import com.lyrio.R
 import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.components.AppInput
 import com.lyrio.ui.components.AppWindow
+import com.lyrio.ui.data.viewmodels.UserViewModel
+import com.lyrio.ui.data.viewmodels.WalletViewModel
 
 
 @Composable
 fun ChangeAlias(
-    navigateChangeAliasSuccessful: () -> Unit = {}
+    navigateChangeAliasSuccessful: () -> Unit,
+    walletViewModel: WalletViewModel,
+    userViewModel: UserViewModel
 ) {
     var newAlias by rememberSaveable(key = "newAlias") { mutableStateOf("") }
 
@@ -45,12 +49,18 @@ fun ChangeAlias(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    ChangeAliasContent(true, newAlias, { newAlias = it }, navigateChangeAliasSuccessful)
+                    ChangeAliasContent(
+                        landscape = true,
+                        newAlias = newAlias,
+                        onNewAliasChange = { newAlias = it },
+                        navigateChangeAliasSuccessful = navigateChangeAliasSuccessful,
+                        walletViewModel = walletViewModel
+                    )
                 }
             }
         }
 
-        else -> { // Modo vertical u otras orientaciones
+        else -> {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
@@ -64,10 +74,11 @@ fun ChangeAlias(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     ChangeAliasContent(
-                        false,
-                        newAlias,
-                        { newAlias = it },
-                        navigateChangeAliasSuccessful
+                        landscape = false,
+                        newAlias = newAlias,
+                        onNewAliasChange = { newAlias = it },
+                        navigateChangeAliasSuccessful = navigateChangeAliasSuccessful,
+                        walletViewModel = walletViewModel
                     )
                 }
             }
@@ -80,7 +91,8 @@ fun ChangeAliasContent(
     landscape: Boolean = false,
     newAlias: String,
     onNewAliasChange: (String) -> Unit,
-    navigateChangeAliasSuccessful: () -> Unit = {}
+    navigateChangeAliasSuccessful: () -> Unit = {},
+    walletViewModel: WalletViewModel
 ){
     var isError by rememberSaveable(key = "changeAlias_isError") { mutableStateOf(false) }
     var errorMsg by rememberSaveable(key = "changeAlias_errorMsg") { mutableIntStateOf(-1) }
@@ -137,6 +149,7 @@ fun ChangeAliasContent(
                     isError = it != -1
                 }
                 if(validateAlias(newAlias, onInvalidAlias)) {
+                    walletViewModel.updateAlias(newAlias)
                     navigateChangeAliasSuccessful()
                 }
 

@@ -282,7 +282,9 @@ fun NavigationWrapper() {
                 ChangeAlias(
                     navigateChangeAliasSuccessful = {
                         navController.navigate(Screen.ChangeAliasSuccessful)
-                    }
+                    },
+                    walletViewModel = walletViewModel,
+                    userViewModel = userViewModel
                 )
             }
         }
@@ -292,7 +294,8 @@ fun NavigationWrapper() {
                 ChangeAliasSuccessful(
                     navigateProfile = {
                         navController.navigate(Screen.Profile)
-                    }
+                    },
+                    walletViewModel = walletViewModel
                 )
             }
         }

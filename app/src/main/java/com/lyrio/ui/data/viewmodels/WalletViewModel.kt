@@ -62,6 +62,13 @@ class WalletViewModel(
         ) }
     )
 
+    fun updateAlias(alias: String) = runOnViewModelScope(
+        {
+            walletRepository.updateAlias(alias)
+        },
+        { state, response -> state.copy(alias = response.alias)}
+    )
+
 
     private fun <T> collectOnViewModelScope(
         flow: Flow<T>,
