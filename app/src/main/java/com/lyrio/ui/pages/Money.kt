@@ -17,6 +17,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,16 +40,27 @@ import com.lyrio.ui.components.BarChart
 import com.lyrio.ui.components.BarChartData
 import com.lyrio.ui.components.eyeIconPainter
 import com.lyrio.ui.components.eyeOffIconPainter
+import com.lyrio.ui.data.viewmodels.PaymentsViewModel
+import com.lyrio.ui.data.viewmodels.UserViewModel
+import com.lyrio.ui.data.viewmodels.WalletViewModel
 import com.lyrio.ui.styles.Red
+import com.lyrio.utils.formatCurrencyWhole
+import com.lyrio.utils.getDecimalPart
+import kotlinx.coroutines.flow.Flow
 
-@Preview(showBackground = true)
+
 @Composable
-fun Money() {
+fun Money(
+    walletViewModel: WalletViewModel,
+    userViewModel: UserViewModel,
+    paymentsViewModel: PaymentsViewModel
+) {
     val configuration = LocalConfiguration.current
 
     val maxWidth = configuration.screenWidthDp.dp
     val maxHeight = configuration.screenHeightDp.dp
     val isTablet = maxWidth > 1000.dp || maxHeight > 1000.dp
+
 
     when (configuration.orientation) {
         Configuration.ORIENTATION_LANDSCAPE -> { // Modo horizontal
@@ -62,12 +75,18 @@ fun Money() {
                     horizontalArrangement = Arrangement.spacedBy(20.dp),
                 ) {
                     val maxBarHeight = if(isTablet) 0.4 * maxHeight else 0.4 * 0.92 * maxHeight
-                    MoneyContent(maxMoneyWidth = if (isTablet) 375.dp else 350.dp, maxBarHeight = maxBarHeight)
+                    MoneyContent(
+                        maxMoneyWidth = if (isTablet) 375.dp else 350.dp,
+                        maxBarHeight = maxBarHeight,
+                        walletViewModel = walletViewModel,
+                        userViewModel = userViewModel,
+                        paymentsViewModel = paymentsViewModel
+                        )
                 }
             }
         }
 
-        else -> { // Modo vertical u otras orientaciones
+        else -> {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
@@ -81,7 +100,13 @@ fun Money() {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     val maxBarHeight = if(isTablet) 0.2 * maxHeight else 0.225 * maxHeight
-                    MoneyContent(maxBarHeight = maxBarHeight, vertical = true)
+                    MoneyContent(
+                        maxBarHeight = maxBarHeight,
+                        vertical = true,
+                        walletViewModel = walletViewModel,
+                        userViewModel = userViewModel,
+                        paymentsViewModel = paymentsViewModel
+                    )
                 }
             }
         }
@@ -89,8 +114,25 @@ fun Money() {
 }
 
 @Composable
-fun MoneyContent(maxMoneyWidth: Dp = 500.dp, maxBarHeight: Dp = 200.dp, vertical: Boolean = false) {
+fun MoneyContent(
+    maxMoneyWidth: Dp = 500.dp,
+    maxBarHeight: Dp = 200.dp,
+    vertical: Boolean = false,
+    walletViewModel: WalletViewModel,
+    userViewModel: UserViewModel,
+    paymentsViewModel : PaymentsViewModel
+) {
     var showBalance by remember { mutableStateOf(true) }
+    val uiStateWallet by walletViewModel.uiStateWallet.collectAsState()
+    val uiStateUser by userViewModel.uiStateUser.collectAsState()
+    val uiStatePayments by paymentsViewModel.uiStatePayments.collectAsState()
+
+    LaunchedEffect(Unit, uiStateUser.isAuthenticated) {
+        if(uiStateUser.isAuthenticated){
+            walletViewModel.getWalletData()
+            paymentsViewModel.getPayments(userViewModel)
+        }
+    }
 
     AppWindow(
         title = stringResource(R.string.money),
@@ -111,7 +153,7 @@ fun MoneyContent(maxMoneyWidth: Dp = 500.dp, maxBarHeight: Dp = 200.dp, vertical
                 horizontalArrangement = Arrangement.Start
             ) {
                 Text(
-                    text = if (showBalance) "$120367" else "****",
+                    text = if (showBalance) formatCurrencyWhole(uiStateWallet.balance) else "****",
                     fontWeight = FontWeight.Bold,
                     fontSize = 38.sp,
                     modifier = Modifier.padding(end = 4.dp),
@@ -119,7 +161,7 @@ fun MoneyContent(maxMoneyWidth: Dp = 500.dp, maxBarHeight: Dp = 200.dp, vertical
                 )
                 if (showBalance) {
                     Text(
-                        text = "58",
+                        text = getDecimalPart(uiStateWallet.balance),
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp,
                         modifier = Modifier.padding(top = 2.dp),
@@ -153,7 +195,7 @@ fun MoneyContent(maxMoneyWidth: Dp = 500.dp, maxBarHeight: Dp = 200.dp, vertical
                 color = Color.Gray
             )
             Text(
-                text = " $${expensesData[5].expense}",
+                text = if(uiStatePayments.expensesByMonth.isNotEmpty()) " ${formatCurrencyWhole(uiStatePayments.expensesByMonth[actualMonth].amount)}" else "",
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
                 color = Red
@@ -168,7 +210,10 @@ fun MoneyContent(maxMoneyWidth: Dp = 500.dp, maxBarHeight: Dp = 200.dp, vertical
                 modifier = Modifier.widthIn(max = 430.dp),
                 horizontalArrangement = Arrangement.Center,
             ){
-                BarChart(expensesData, maxBarHeight)
+                if(uiStatePayments.expensesByMonth.isNotEmpty())
+                    BarChart(uiStatePayments.expensesByMonth.map {(month, qty) -> BarChartData(month, qty.toFloat()) }, maxBarHeight)
+                else
+                    Text(stringResource(R.string.no_cards_associated))
             }
         }
     }
@@ -191,11 +236,3 @@ val months = arrayOf(
     R.string.dec
 )
 
-val expensesData = listOf(
-    BarChartData(months[(actualMonth - 6 + months.size) % months.size], 250f),
-    BarChartData(months[(actualMonth - 5 + months.size) % months.size], 100f),
-    BarChartData(months[(actualMonth - 4 + months.size) % months.size], 200f),
-    BarChartData(months[(actualMonth - 3 + months.size) % months.size], 150f),
-    BarChartData(months[(actualMonth - 2 + months.size) % months.size], 300f),
-    BarChartData(months[(actualMonth - 1 + months.size) % months.size], 50f)
-)

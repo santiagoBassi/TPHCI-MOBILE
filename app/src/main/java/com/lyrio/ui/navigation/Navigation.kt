@@ -57,7 +57,7 @@ fun NavigationWrapper() {
         )
     )
 
-    NavHost(navController = navController, startDestination = Screen.Invest) {
+    NavHost(navController = navController, startDestination = Screen.Landing) {
 
         composable<Screen.Landing> {
             LandingPage(navigateSignIn = {
@@ -216,7 +216,11 @@ fun NavigationWrapper() {
 
         composable<Screen.Money> {
             DefaultLayout(navController) {
-                Money()
+                Money(
+                    walletViewModel = walletViewModel,
+                    userViewModel = userViewModel,
+                    paymentsViewModel = paymentsViewModel
+                )
             }
         }
 

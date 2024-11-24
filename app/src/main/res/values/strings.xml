@@ -156,6 +156,7 @@
 
     <!-- Money -->
     <string name="expenses">Expenses</string>
+    <string name="no_data">No available data</string>
 
     <!-- Months -->
     <string name="jan">Jan</string>
@@ -170,6 +171,7 @@
     <string name="oct">Oct</string>
     <string name="nov">Nov</string>
     <string name="dec">Dec</string>
+
 
     <!-- CreditCards -->
     <string name="add_credit_card">Add new card</string>
