@@ -157,6 +157,7 @@
 
     <!-- Money -->
     <string name="expenses">Gastos</string>
+    <string name="no_data">No hay datos disponibles</string>
 
     <!-- Months -->
     <string name="jan">Ene</string>

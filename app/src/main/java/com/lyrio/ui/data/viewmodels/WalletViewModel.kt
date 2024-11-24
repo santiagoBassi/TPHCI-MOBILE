@@ -29,7 +29,6 @@ class WalletViewModel(
     private val _uiStateWallet = MutableStateFlow(WalletUiState())
     val uiStateWallet: StateFlow<WalletUiState> = _uiStateWallet.asStateFlow()
 
-
     fun getBalance() = runOnViewModelScope(
         {
             walletRepository.getBalance()

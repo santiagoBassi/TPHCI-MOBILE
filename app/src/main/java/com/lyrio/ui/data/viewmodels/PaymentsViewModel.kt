@@ -1,6 +1,7 @@
 package com.lyrio.ui.data.viewmodels
 
 import android.util.Log
+import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -17,8 +18,15 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import com.lyrio.data.model.Error
+import com.lyrio.data.model.PaymentResponse
+import com.lyrio.data.model.User
 import com.lyrio.data.repository.PaymentRepository
+import com.lyrio.ui.data.states.Expense
 import com.lyrio.ui.data.states.PaymentsUiState
+import java.time.LocalDate
+import java.time.YearMonth
+import java.time.format.DateTimeFormatter
+import kotlin.toString
 
 class PaymentsViewModel(
     sessionManager: SessionManager,
@@ -29,7 +37,8 @@ class PaymentsViewModel(
     private val _uiStatePayments = MutableStateFlow(PaymentsUiState())
     val uiStatePayments: StateFlow<PaymentsUiState> = _uiStatePayments.asStateFlow()
 
-    fun getPayments() = runOnViewModelScope(
+
+    fun getLastPayments() = runOnViewModelScope(
         {
             paymentRepository.getPayments()
                 .sortedByDescending { it.createdAt }
@@ -38,12 +47,36 @@ class PaymentsViewModel(
         { state, response -> state.copy(lastTransfers = response) }
     )
 
-    fun getLastPayments() = runOnViewModelScope(
+    fun getPayments(userViewModel : UserViewModel) = runOnViewModelScope(
         {
-            paymentRepository.getPayments()
+            paymentRepository.getPayments().sortedByDescending { it.createdAt }
         },
-        { state, response -> state.copy(lastTransfers = response) }
+        { state, response -> state.copy(
+            lastTransfers = response,
+            expensesByMonth = calculateExpenses(response, userViewModel))
+
+        }
     )
+
+    fun calculateExpenses(payments: List<PaymentResponse>, userViewModel: UserViewModel): List<Expense> {
+        val formatter = DateTimeFormatter.ISO_DATE
+        val currentDate = LocalDate.now()
+        val sixMonthsAgo = currentDate.minusMonths(6)
+
+        val expensesByMonth = payments
+            .filter { it.payerEmail == userViewModel.uiStateUser.value.email }
+            .filter { LocalDate.parse(it.createdAt, formatter) >= sixMonthsAgo }
+            .groupBy { YearMonth.from(LocalDate.parse(it.createdAt, formatter)) }
+            .mapValues { (_, payments) -> payments.sumOf { it.amount } }
+            .map { (month, totalAmount) -> Expense(month.monthValue - 1, totalAmount) }
+
+        val fullExpenses = (0..5).map { monthIndex ->
+            val existingExpense = expensesByMonth.find { it.month == monthIndex }
+            existingExpense ?: Expense(monthIndex, 0.0) // Use existing expense or create a new one with 0 expense
+        }
+        println(fullExpenses)
+        return fullExpenses
+    }
 
     fun setReceiver(email: String) {
          _uiStatePayments.value = _uiStatePayments.value.copy(receiver = email)

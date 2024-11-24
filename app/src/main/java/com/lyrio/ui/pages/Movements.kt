@@ -120,7 +120,7 @@ fun MovementsContent(
 
     LaunchedEffect(Unit, userState.isAuthenticated) {
         if (userState.isAuthenticated) {
-            viewModelPayments.getPayments()
+            viewModelPayments.getPayments(viewModelUser)
             viewModelUser.getCurrentUser()
         }
     }

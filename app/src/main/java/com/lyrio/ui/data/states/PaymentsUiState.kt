@@ -9,5 +9,11 @@ data class PaymentsUiState(
     val transfers: List<PaymentResponse> = emptyList(),
     val receiver: String = "",
     val isFetching: Boolean = false,
+    val expensesByMonth: List<Expense> = emptyList(),
     val error: Error? = null
+)
+
+data class Expense(
+    val month: Int,
+    val amount: Double
 )

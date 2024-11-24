@@ -25,6 +25,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -246,7 +247,8 @@ fun Transfer2ContentH(
                         )
                     }
                 }
-                Divider(color = Orange, modifier = Modifier.fillMaxHeight().width(1.dp).padding(vertical = 15.dp))
+
+                VerticalDivider(color = Orange, modifier = Modifier.fillMaxHeight().width(1.dp).padding(vertical = 15.dp))
                 Column(
                     modifier = Modifier.weight(1f).fillMaxHeight(if(isTablet) 0.7f else 1f),
                     verticalArrangement = Arrangement.Top,
