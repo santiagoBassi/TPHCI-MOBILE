@@ -233,5 +233,10 @@
     <string name="invalid_expiry">Vencimiento inválido</string>
     <string name="invalid_card_number">Número de tarjeta inválido</string>
     <string name="invalid_alias">Alias inválido</string>
+    <string name="invalid_amount">Monto inválido</string>
+    <string name="invalid_credentials">Email o contraseña inválido</string>
+    <string name="internal_server_error">Error interno del servidor</string>
+    <string name="connection_error">Error de conexión</string>
+    <string name="unexpected_error">Ocurrió un error inesperado</string>
 
 </resources>

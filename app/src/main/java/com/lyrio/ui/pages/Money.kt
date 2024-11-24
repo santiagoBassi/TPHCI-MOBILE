@@ -174,7 +174,7 @@ fun MoneyContent(maxMoneyWidth: Dp = 500.dp, maxBarHeight: Dp = 200.dp, vertical
     }
 }
 
-var actualMonth = 2
+var actualMonth = 11
 
 val months = arrayOf(
     R.string.jan,
