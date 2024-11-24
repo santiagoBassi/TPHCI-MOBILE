@@ -91,6 +91,26 @@ class WalletViewModel(
         { state, _ -> state.copy(cards = state.cards.filter { it.id != cardId }) }
     )
 
+    fun addInvestment(amount: Double) = runOnViewModelScope(
+        {
+            walletRepository.invest(amount)
+        },
+        { state, response -> state.copy(
+            balance = response.balance,
+            investedMoney = response.invested
+        ) }
+    )
+
+    fun withdrawInvestment(amount: Double) = runOnViewModelScope(
+        {
+            walletRepository.divest(amount)
+        },
+        { state, response -> state.copy(
+            balance = response.balance,
+            investedMoney = response.invested
+        ) }
+    )
+
     private fun <T> collectOnViewModelScope(
         flow: Flow<T>,
         updateState: (WalletUiState, T) -> WalletUiState

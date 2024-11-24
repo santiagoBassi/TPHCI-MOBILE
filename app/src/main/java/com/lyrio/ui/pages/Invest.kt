@@ -17,6 +17,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,14 +40,27 @@ import com.lyrio.ui.components.BarChart
 import com.lyrio.ui.components.BarChartData
 import com.lyrio.ui.components.eyeIconPainter
 import com.lyrio.ui.components.eyeOffIconPainter
+import com.lyrio.ui.data.viewmodels.UserViewModel
+import com.lyrio.ui.data.viewmodels.WalletViewModel
 import com.lyrio.ui.styles.Green
+import com.lyrio.utils.formatCurrencyWhole
+import com.lyrio.utils.getDecimalPart
 
 
 @Composable
 fun Invest(
     navigateAddInvestment: () -> Unit,
-    navigateWithdrawInvestment: () -> Unit
+    navigateWithdrawInvestment: () -> Unit,
+    walletViewModel: WalletViewModel,
+    userViewModel: UserViewModel
 ) {
+    val userState by userViewModel.uiStateUser.collectAsState()
+    LaunchedEffect(Unit, userState.isAuthenticated) {
+        if (userState.isAuthenticated) {
+            walletViewModel.getInvested()
+        }
+    }
+
     val configuration = LocalConfiguration.current
 
     val maxWidth = configuration.screenWidthDp.dp
@@ -69,7 +84,9 @@ fun Invest(
                         isTablet = isTablet,
                         maxBarHeight = if(isTablet) 0.38 * maxHeight else 0.5 * maxHeight,
                         navigateAddInvestment = navigateAddInvestment,
-                        navigateWithdrawInvestment = navigateWithdrawInvestment
+                        navigateWithdrawInvestment = navigateWithdrawInvestment,
+                        walletViewModel = walletViewModel
+
                     )
                 }
             }
@@ -92,7 +109,8 @@ fun Invest(
                         isTablet = isTablet,
                         maxBarHeight = if (isTablet) 0.28 * maxHeight else 0.18 * maxHeight,
                         navigateAddInvestment = navigateAddInvestment,
-                        navigateWithdrawInvestment = navigateWithdrawInvestment
+                        navigateWithdrawInvestment = navigateWithdrawInvestment,
+                        walletViewModel = walletViewModel
                     )
                 }
             }
@@ -105,9 +123,14 @@ fun InvestContent(
     isTablet: Boolean = false,
     maxBarHeight: Dp = 200.dp,
     navigateAddInvestment: () -> Unit,
-    navigateWithdrawInvestment: () -> Unit
+    navigateWithdrawInvestment: () -> Unit,
+    walletViewModel: WalletViewModel
 ){
     var showBalance by remember { mutableStateOf(true) }
+
+    val walletUiState by walletViewModel.uiStateWallet.collectAsState()
+
+
 
     AppWindow(
         title = stringResource(R.string.invested_money),
@@ -129,7 +152,7 @@ fun InvestContent(
                     horizontalArrangement = Arrangement.Start
                 ) {
                     Text(
-                        text = if (showBalance) "$120367" else "****",
+                        text = if (showBalance)  formatCurrencyWhole(walletUiState.investedMoney) else "****",
                         fontWeight = FontWeight.Bold,
                         fontSize = 38.sp,
                         modifier = Modifier.padding(end = 4.dp),
@@ -137,7 +160,7 @@ fun InvestContent(
                     )
                     if (showBalance) {
                         Text(
-                            text = "58",
+                            text = getDecimalPart(walletUiState.investedMoney),
                             fontWeight = FontWeight.Bold,
                             fontSize = 18.sp,
                             modifier = Modifier.padding(top = 2.dp),
@@ -181,7 +204,7 @@ fun InvestContent(
                 color = Color.Gray
             )
             Text(
-                text = " $${investData[5].expense}",
+                text = " ${investData[5].expense}",
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
                 color = Green

@@ -248,7 +248,9 @@ fun NavigationWrapper() {
                     },
                     navigateWithdrawInvestment = {
                         navController.navigate(Screen.WithdrawInvestment)
-                    }
+                    },
+                    walletViewModel = walletViewModel,
+                    userViewModel = userViewModel
                 )
             }
         }
@@ -258,7 +260,8 @@ fun NavigationWrapper() {
                 AddInvestment(
                     navigateInvest = {
                         navController.navigate(Screen.Invest)
-                    }
+                    },
+                    walletViewModel = walletViewModel
                 )
             }
         }
@@ -268,7 +271,8 @@ fun NavigationWrapper() {
                 WithdrawInvestment(
                     navigateInvest = {
                         navController.navigate(Screen.Invest)
-                    }
+                    },
+                    walletViewModel = walletViewModel
                 )
             }
         }
@@ -279,7 +283,8 @@ fun NavigationWrapper() {
                     navController.context,
                     navigatePaylink = {
                         navController.navigate(Screen.Paylink)
-                    }
+                    },
+                    walletViewModel
                 )
             }
         }

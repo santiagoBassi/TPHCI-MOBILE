@@ -12,6 +12,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableIntStateOf
@@ -31,14 +32,17 @@ import com.lyrio.R
 import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.components.AppInput
 import com.lyrio.ui.components.AppWindow
+import com.lyrio.ui.data.viewmodels.WalletViewModel
 import com.lyrio.ui.styles.Orange
+import com.lyrio.utils.formatCurrencyWhole
 
 @Composable
 fun WithdrawInvestment(
-    navigateInvest: () -> Unit
+    navigateInvest: () -> Unit,
+    walletViewModel: WalletViewModel
 ) {
     var amount by rememberSaveable(key = "withdrawAmount"){ mutableDoubleStateOf(0.0) }
-    val availableBalance = 100000.0
+
 
     val configuration = LocalConfiguration.current
 
@@ -63,8 +67,8 @@ fun WithdrawInvestment(
                     WithdrawInvestmentContent(
                         amount = amount,
                         onAmountChange = { amount = it },
-                        availableBalance = availableBalance,
-                        navigateInvest = navigateInvest
+                        navigateInvest = navigateInvest,
+                        walletViewModel = walletViewModel
                     )
                 }
             }
@@ -87,8 +91,8 @@ fun WithdrawInvestment(
                         0.8f,
                         amount = amount,
                         onAmountChange = { amount = it },
-                        availableBalance = availableBalance,
-                        navigateInvest = navigateInvest
+                        navigateInvest = navigateInvest,
+                        walletViewModel = walletViewModel
                     )
                 }
             }
@@ -101,12 +105,14 @@ fun WithdrawInvestmentContent(
     height: Float = 1f,
     amount: Double,
     onAmountChange: (Double) -> Unit,
-    availableBalance: Double,
-    navigateInvest: () -> Unit
+    navigateInvest: () -> Unit,
+    walletViewModel: WalletViewModel
 ) {
 
     var isError by rememberSaveable(key = "withdrawAmountError"){ mutableStateOf(false) }
     var errorMsg by rememberSaveable(key = "withdrawAmountErrorMsg"){ mutableIntStateOf(-1) }
+
+    val uiStateWallet by walletViewModel.uiStateWallet.collectAsState()
 
     AppWindow {
         Column(
@@ -132,7 +138,7 @@ fun WithdrawInvestmentContent(
                 )
             }
             Text(
-                stringResource(R.string.invested_money) + ": $$availableBalance", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold, color = Color.Gray,
+                stringResource(R.string.invested_money) + ": "+ formatCurrencyWhole(uiStateWallet.investedMoney), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold, color = Color.Gray,
                 modifier = Modifier.padding(top = 10.dp), fontSize = 18.sp)
             Column(
                 modifier = Modifier.fillMaxWidth(),
@@ -166,6 +172,7 @@ fun WithdrawInvestmentContent(
                         isError = it != -1
                     }
                     if(validateAmount(amount, onInvalidAmount)) {
+                        walletViewModel.withdrawInvestment(amount)
                         navigateInvest()
                     }
                 } catch (e: Exception){

@@ -151,6 +151,7 @@ fun HomeContent(
     LaunchedEffect(Unit, userState.isAuthenticated) {
         if (userState.isAuthenticated) {
             viewModelWallet.getBalance()
+            viewModelWallet.getWalletData()
             viewModelPayments.getLastPayments()
             viewModelUser.getCurrentUser()
         }

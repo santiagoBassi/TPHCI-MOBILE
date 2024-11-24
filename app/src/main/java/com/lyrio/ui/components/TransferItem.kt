@@ -38,7 +38,6 @@ fun TransferItem(
     recipient: String,
     date: String
 ) {
-    //val formattedDate = remember { formatDate(date) }
 
     Column(modifier = Modifier.fillMaxWidth()) {
         Column {

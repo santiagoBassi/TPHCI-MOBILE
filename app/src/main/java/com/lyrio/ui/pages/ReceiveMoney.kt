@@ -21,6 +21,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,11 +39,13 @@ import com.lyrio.R
 import com.lyrio.ui.components.AlertDialog
 import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.components.AppWindow
+import com.lyrio.ui.data.viewmodels.WalletViewModel
 
 @Composable
 fun ReceiveMoney(
     context: Context,
     navigatePaylink: () -> Unit = {},
+    walletViewModel: WalletViewModel
 ){
     val configuration = LocalConfiguration.current
 
@@ -61,8 +64,9 @@ fun ReceiveMoney(
             ) {
                 ReceiveMoneyContentH(
                     isTablet = isTablet,
-                    cvuAlias = { CVUAliasWindow(isTablet, context) },
-                    navigatePaylink = navigatePaylink
+                    cvuAlias = { CVUAliasWindow(isTablet, context, walletViewModel) },
+                    navigatePaylink = navigatePaylink,
+                    walletViewModel
                 )
             }
         }
@@ -75,8 +79,9 @@ fun ReceiveMoney(
             ) {
                 ReceiveMoneyContentV(
                     isTablet = isTablet,
-                    cvuAlias = { CVUAliasWindow(isTablet, context) },
-                    navigatePaylink = navigatePaylink
+                    cvuAlias = { CVUAliasWindow(isTablet, context, walletViewModel) },
+                    navigatePaylink = navigatePaylink,
+                    walletViewModel = walletViewModel
                 )
             }
         }
@@ -87,7 +92,8 @@ fun ReceiveMoney(
 fun ReceiveMoneyContentH(
     isTablet: Boolean = false,
     cvuAlias: @Composable () -> Unit,
-    navigatePaylink: () -> Unit = {}
+    navigatePaylink: () -> Unit = {},
+    walletViewModel: WalletViewModel
 ) {
     var showTODOModal by remember { mutableStateOf(false) }
 
@@ -155,7 +161,8 @@ fun ReceiveMoneyContentH(
 fun ReceiveMoneyContentV(
     isTablet: Boolean = false,
     cvuAlias: @Composable () -> Unit,
-    navigatePaylink: () -> Unit = {}
+    navigatePaylink: () -> Unit = {},
+    walletViewModel: WalletViewModel
 ){
     var showTODOModal by remember { mutableStateOf(false) }
 
@@ -212,9 +219,9 @@ fun ReceiveMoneyContentV(
 fun CVUAliasWindow(
     isTablet: Boolean = false,
     context: Context,
+    walletViewModel: WalletViewModel
 ){
-    val cvu = "000000123019231200"
-    val alias = "mi.alias.lyrio"
+    val uiStateWallet by walletViewModel.uiStateWallet.collectAsState()
 
     AppWindow(
         title = stringResource(R.string.cvu_alias),
@@ -237,7 +244,7 @@ fun CVUAliasWindow(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(stringResource(R.string.cvu), fontWeight = FontWeight.Bold, color = Color.Black)
-                Text(cvu, color = Color.Black)
+                Text(uiStateWallet.cbu, color = Color.Black)
             }
             Spacer(modifier = Modifier.width(8.dp))
             Row(
@@ -248,7 +255,7 @@ fun CVUAliasWindow(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(stringResource(R.string.alias), fontWeight = FontWeight.Bold, color = Color.Black)
-                Text(alias, color = Color.Black)
+                Text(uiStateWallet.alias, color = Color.Black)
             }
             Spacer(modifier = Modifier.height(15.dp))
             Row(
@@ -263,7 +270,7 @@ fun CVUAliasWindow(
                     fontWeight = FontWeight.Medium
                 )
                 IconButton(onClick = {
-                    copyCVUandAlias(context, cvu, alias)
+                    copyCVUandAlias(context, uiStateWallet.cbu, uiStateWallet.alias)
                 }) {
                     Icon(
                         painter = painterResource(id = R.drawable.copy),
