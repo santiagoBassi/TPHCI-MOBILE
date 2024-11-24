@@ -38,6 +38,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import com.lyrio.R
 import com.lyrio.ui.components.AlertDialog
+import com.lyrio.ui.data.viewmodels.UserViewModel
 import com.lyrio.ui.navigation.Screen
 
 data class NavItem(
@@ -63,14 +64,19 @@ val items = listOf(
 )
 
 @Composable
-fun NavigationDrawer(navController: NavController, modifier: Modifier = Modifier, content: @Composable () -> Unit, drawerState: DrawerState) {
+fun NavigationDrawer(
+    navController: NavController,
+    modifier: Modifier = Modifier,
+    userViewModel: UserViewModel,
+    content: @Composable () -> Unit,
+    drawerState: DrawerState) {
 
     ModalNavigationDrawer(
         drawerState = drawerState,
         modifier = modifier,
         drawerContent = {
             ModalDrawerSheet {
-                NavigationDrawerContent(navController)
+                NavigationDrawerContent(navController, userViewModel)
             }
         }
     ) {
@@ -80,7 +86,7 @@ fun NavigationDrawer(navController: NavController, modifier: Modifier = Modifier
 }
 
 @Composable
-fun NavigationDrawerContent(navController: NavController){
+fun NavigationDrawerContent(navController: NavController, userViewModel: UserViewModel){
     var openAlertDialog by remember { mutableStateOf(false) }
     val configuration = LocalConfiguration.current
     when {
@@ -89,7 +95,12 @@ fun NavigationDrawerContent(navController: NavController){
                 onDismissRequest = { openAlertDialog = false },
                 onConfirmation = {
                     openAlertDialog = false
-                    navController.navigate(Screen.Landing)
+                    userViewModel.logout()
+                    navController.navigate(Screen.Landing){
+                        popUpTo(navController.graph.startDestinationId) {
+                            inclusive = true
+                        }
+                    }
                 },
                 dialogTitle = stringResource(R.string.logout),
                 dialogText = stringResource(R.string.logout_text),

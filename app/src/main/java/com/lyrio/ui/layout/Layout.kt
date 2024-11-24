@@ -27,13 +27,16 @@ import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.lyrio.R
+import com.lyrio.ui.data.viewmodels.UserViewModel
 import com.lyrio.ui.data.viewmodels.ViewModel
 import com.lyrio.ui.navigation.Screen
+import okhttp3.internal.userAgent
 
 @Composable
 fun DefaultLayout(
     navController: NavController,
     viewModel: ViewModel,
+    userViewModel: UserViewModel,
     content: @Composable () -> Unit,
 ) {
 
@@ -41,10 +44,10 @@ fun DefaultLayout(
 
     when (windowSizeClass.windowWidthSizeClass) {
         WindowWidthSizeClass.COMPACT -> {
-            MobileBottomBarNavigation(navController,content)
+            MobileBottomBarNavigation(navController,userViewModel = userViewModel,content)
         }
         else -> {
-            if(isMobile()) MobileSidebarNavigation(navController, content)
+            if(isMobile()) MobileSidebarNavigation(navController, userViewModel,content)
             else TabletNavigation(viewModel = viewModel, navController = navController, content = content)
         }
     }
@@ -85,7 +88,11 @@ fun getScreenLabel(navController: NavController, context: Context): String? {
 
 
 @Composable
-fun MobileBottomBarNavigation(navController: NavController, content: @Composable () -> Unit) {
+fun MobileBottomBarNavigation(
+    navController: NavController,
+    userViewModel: UserViewModel,
+    content: @Composable () -> Unit
+) {
     val drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     Scaffold(
@@ -112,7 +119,11 @@ fun MobileBottomBarNavigation(navController: NavController, content: @Composable
                 .shadow(1.dp)
             ) {
             val screenLabel = getScreenLabel(navController, LocalContext.current) ?: "Unknown Screen"
-                NavigationDrawer(drawerState = drawerState, navController = navController, content = {
+                NavigationDrawer(
+                    drawerState = drawerState,
+                    navController = navController,
+                    userViewModel = userViewModel,
+                    content = {
                     Column{
                         StateBar(text = screenLabel)
                         content()
@@ -123,7 +134,10 @@ fun MobileBottomBarNavigation(navController: NavController, content: @Composable
 }
 
 @Composable
-fun MobileSidebarNavigation(navController: NavController, content: @Composable () -> Unit) {
+fun MobileSidebarNavigation(
+    navController: NavController,
+    userViewModel: UserViewModel,
+    content: @Composable () -> Unit) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
@@ -147,7 +161,8 @@ fun MobileSidebarNavigation(navController: NavController, content: @Composable (
                 Box(Modifier.fillMaxSize()) {
                     content()
                 }
-            }
+            },
+            userViewModel = userViewModel
         )
     }
 }

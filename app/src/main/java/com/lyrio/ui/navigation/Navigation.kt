@@ -64,7 +64,7 @@ fun NavigationWrapper() {
         )
     )
 
-    NavHost(navController = navController, startDestination = Screen.SignIn) {
+    NavHost(navController = navController, startDestination = Screen.Landing) {
 
         composable<Screen.Landing> {
             LandingPage(navigateSignIn = {
@@ -147,7 +147,7 @@ fun NavigationWrapper() {
         }
 
         composable<Screen.Home> {
-            DefaultLayout(navController, viewModel ) {
+            DefaultLayout(navController, viewModel, userViewModel ) {
                 Home(
                     navigateTransfer1 = {
                         navController.navigate(Screen.Transfer1)
@@ -173,7 +173,7 @@ fun NavigationWrapper() {
         }
 
         composable<Screen.Profile> {
-            DefaultLayout(navController, viewModel) {
+            DefaultLayout(navController, viewModel, userViewModel) {
                 Profile(
                     navigateChangeAlias = {
                         navController.navigate(Screen.ChangeAlias)
@@ -185,7 +185,7 @@ fun NavigationWrapper() {
         }
 
         composable<Screen.Transfer1> {
-            DefaultLayout(navController,viewModel) {
+            DefaultLayout(navController,viewModel, userViewModel) {
                 Transfer1(
                     navigateTransfer2 = {
                         navController.navigate(Screen.Transfer2)
@@ -196,7 +196,7 @@ fun NavigationWrapper() {
         }
 
         composable<Screen.Transfer2> {
-            DefaultLayout(navController, viewModel) {
+            DefaultLayout(navController, viewModel, userViewModel) {
                 Transfer2(
                     navigateTransferSuccessful = {
                     navController.navigate(Screen.TransferSuccessful)
@@ -209,7 +209,7 @@ fun NavigationWrapper() {
         }
 
         composable<Screen.TransferSuccessful> {
-            DefaultLayout(navController, viewModel) {
+            DefaultLayout(navController, viewModel, userViewModel) {
                 TransferSuccessful(
                     navigateHome = {
                         navController.navigate(Screen.Home)
@@ -222,7 +222,7 @@ fun NavigationWrapper() {
         }
 
         composable<Screen.Money> {
-            DefaultLayout(navController, viewModel) {
+            DefaultLayout(navController, viewModel, userViewModel) {
                 Money(
                     walletViewModel = walletViewModel,
                     userViewModel = userViewModel,
@@ -232,7 +232,7 @@ fun NavigationWrapper() {
         }
 
         composable<Screen.Movements> {
-            DefaultLayout(navController, viewModel) {
+            DefaultLayout(navController, viewModel, userViewModel) {
                 Movements(
                     viewModelPayments = paymentsViewModel,
                     viewModelUser = userViewModel
@@ -241,7 +241,7 @@ fun NavigationWrapper() {
         }
 
         composable<Screen.Invest> {
-            DefaultLayout(navController, viewModel) {
+            DefaultLayout(navController, viewModel, userViewModel) {
                 Invest(
                     navigateAddInvestment = {
                         navController.navigate(Screen.AddInvestment)
@@ -256,7 +256,7 @@ fun NavigationWrapper() {
         }
 
         composable<Screen.AddInvestment> {
-            DefaultLayout(navController, viewModel) {
+            DefaultLayout(navController, viewModel, userViewModel) {
                 AddInvestment(
                     navigateInvest = {
                         navController.navigate(Screen.Invest)
@@ -267,7 +267,7 @@ fun NavigationWrapper() {
         }
 
         composable<Screen.WithdrawInvestment> {
-            DefaultLayout(navController, viewModel) {
+            DefaultLayout(navController, viewModel, userViewModel) {
                 WithdrawInvestment(
                     navigateInvest = {
                         navController.navigate(Screen.Invest)
@@ -278,7 +278,7 @@ fun NavigationWrapper() {
         }
 
         composable<Screen.ReceiveMoney> {
-            DefaultLayout(navController, viewModel) {
+            DefaultLayout(navController, viewModel, userViewModel) {
                 ReceiveMoney(
                     navController.context,
                     navigatePaylink = {
@@ -290,7 +290,7 @@ fun NavigationWrapper() {
         }
 
         composable<Screen.ChangeAlias> {
-            DefaultLayout(navController, viewModel) {
+            DefaultLayout(navController, viewModel, userViewModel) {
                 ChangeAlias(
                     navigateChangeAliasSuccessful = {
                         navController.navigate(Screen.ChangeAliasSuccessful)
@@ -302,7 +302,7 @@ fun NavigationWrapper() {
         }
 
         composable<Screen.ChangeAliasSuccessful> {
-            DefaultLayout(navController, viewModel) {
+            DefaultLayout(navController, viewModel, userViewModel) {
                 ChangeAliasSuccessful(
                     navigateProfile = {
                         navController.navigate(Screen.Profile)
@@ -313,7 +313,7 @@ fun NavigationWrapper() {
         }
 
         composable<Screen.Paylink> {
-            DefaultLayout(navController, viewModel) {
+            DefaultLayout(navController, viewModel, userViewModel) {
                 Paylink(
                     navController.context,
                     navigateHome = {
@@ -324,7 +324,7 @@ fun NavigationWrapper() {
         }
 
         composable<Screen.CreditCards> {
-            DefaultLayout(navController, viewModel) {
+            DefaultLayout(navController, viewModel, userViewModel) {
                 CreditCards(
                     navigateAddCreditCard = {
                         navController.navigate(Screen.AddCreditCard)
@@ -336,7 +336,7 @@ fun NavigationWrapper() {
         }
 
         composable<Screen.AddCreditCard> {
-            DefaultLayout(navController, viewModel) {
+            DefaultLayout(navController, viewModel, userViewModel) {
                 AddCreditCard(
                     navigateAddCardSuccessful = {
                         navController.navigate(Screen.AddCardSuccessful)
@@ -348,7 +348,7 @@ fun NavigationWrapper() {
         }
 
         composable<Screen.AddCardSuccessful> {
-            DefaultLayout(navController, viewModel) {
+            DefaultLayout(navController, viewModel, userViewModel) {
                 AddCardSuccessful(
                     navigateAddCardSuccessful = {
                         navController.navigate(Screen.AddCreditCard)

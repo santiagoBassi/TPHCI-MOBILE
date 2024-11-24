@@ -85,6 +85,13 @@ class UserViewModel(
             dateOfBirth = response?.birthDate ?: "")}
     )
 
+    fun logout() = runOnViewModelScope(
+        {
+            userRepository.logout()
+        },
+        {state, _ -> state.copy(isAuthenticated = false)}
+    )
+
 
 
 

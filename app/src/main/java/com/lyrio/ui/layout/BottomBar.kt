@@ -57,7 +57,11 @@ fun BottomBar(navController: NavController){
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = { navController.navigate(Screen.Home) }) {
+            IconButton(onClick = { navController.navigate(Screen.Home){
+                popUpTo(navController.graph.startDestinationId) {
+                    inclusive = true
+                }
+            } }) {
 
                 Icon(
                     painter = painterResource(id = R.drawable.home_24dp_e8eaed_fill0_wght400_grad0_opsz24),
