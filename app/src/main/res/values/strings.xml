@@ -232,6 +232,10 @@
     <string name="invalid_card_number">Invalid card number</string>
     <string name="invalid_alias">Invalid alias</string>
     <string name="invalid_amount">Invalid amount</string>
+    <string name="invalid_credentials">Invalid email or password</string>
+    <string name="internal_server_error">Internal server error</string>
+    <string name="connection_error">Connection error</string>
+    <string name="unexpected_error">Unexpected error occurred</string>
 
 
 </resources>

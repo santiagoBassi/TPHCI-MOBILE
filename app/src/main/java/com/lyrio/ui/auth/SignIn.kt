@@ -34,6 +34,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.lyrio.R
+import com.lyrio.data.DataSourceException
 import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.components.AppInput
 import com.lyrio.ui.components.AppWindow
@@ -150,6 +151,8 @@ fun SignInContent(
     var passwordErrorMsg by rememberSaveable(key = "signin_error_msg_password") { mutableIntStateOf(-1) }
     var isErrorEmail by rememberSaveable(key = "signin_is_error_email") { mutableStateOf(false) }
     var isErrorPassword by rememberSaveable(key = "signin_is_error_pass") { mutableStateOf(false) }
+    var isApiError by rememberSaveable(key = "signin_is_api_error") { mutableStateOf(false) }
+    var apiErrorMsg by rememberSaveable(key = "signin_api_error_msg") { mutableIntStateOf((-1)) }
 
     AppWindow(
        modifier = if(height < 1f) Modifier.fillMaxWidth().fillMaxHeight(height) else Modifier.fillMaxSize(),
@@ -170,6 +173,7 @@ fun SignInContent(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(15.dp)
             ) {
+                if(isApiError && apiErrorMsg != -1) Text(stringResource(apiErrorMsg), color = MaterialTheme.colorScheme.error)
                 AppInput(
                     value = email,
                     onValueChange = {
@@ -213,11 +217,33 @@ fun SignInContent(
                         isErrorPassword = it != -1
                     }
                     if(validateQueries(email, password, onInvalidEmail, onInvalidPassword)) {
+                        isApiError = false
                         viewModel.login(email, password)
                         navigateHome()
                     }
-                }catch (e: Exception){
-                    e.printStackTrace()
+                }catch (e: DataSourceException){
+                    when (e.code) {
+                        DataSourceException.DATA_ERROR -> { // 400
+                            isApiError = true
+                            apiErrorMsg = R.string.invalid_credentials
+                        }
+                        DataSourceException.UNAUTHORIZED_ERROR_CODE -> { // 401
+                            isApiError = true
+                            apiErrorMsg = R.string.invalid_credentials
+                        }
+                        DataSourceException.INTERNAL_SERVER_ERROR_CODE -> { // 500
+                            isApiError = true
+                            apiErrorMsg = R.string.internal_server_error
+                        }
+                        DataSourceException.CONNECTION_ERROR_CODE -> { // others
+                            isApiError = true
+                            apiErrorMsg = R.string.connection_error
+                        }
+                        DataSourceException.UNEXPECTED_ERROR_CODE -> { // others
+                            isApiError = true
+                            apiErrorMsg = R.string.unexpected_error
+                        }
+                    }
                 }
 
             }, width = 0.8f)

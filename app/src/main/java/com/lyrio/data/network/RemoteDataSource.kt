@@ -39,7 +39,8 @@ abstract class RemoteDataSource {
         when (statusCode) {
             400 -> throw DataSourceException(DATA_ERROR, message)
             401 -> throw DataSourceException(UNAUTHORIZED_ERROR_CODE, message)
-            // TODO: Add more error codes if necessary
+            404 -> throw DataSourceException(NOT_FOUND_ERROR_CODE, message)
+            500 -> throw DataSourceException(INTERNAL_SERVER_ERROR_CODE, message)
             else -> throw DataSourceException(UNEXPECTED_ERROR_CODE, message)
         }
     }
@@ -47,11 +48,12 @@ abstract class RemoteDataSource {
     companion object {
         const val TAG = "Data Layer"
 
-        const val UNAUTHORIZED_ERROR_CODE = 1
-        const val DATA_ERROR = 2
-        // TODO: Add more error codes if necesssary
-        const val CONNECTION_ERROR_CODE = 98
-        const val UNEXPECTED_ERROR_CODE = 99
+        const val DATA_ERROR = 1
+        const val UNAUTHORIZED_ERROR_CODE = 2
+        const val NOT_FOUND_ERROR_CODE = 3
+        const val INTERNAL_SERVER_ERROR_CODE = 4
+        const val UNEXPECTED_ERROR_CODE = 98
+        const val CONNECTION_ERROR_CODE = 99
     }
 
     }
