@@ -1,7 +1,6 @@
 package com.lyrio.ui.pages
 
 import android.content.res.Configuration
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -40,7 +39,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -52,7 +50,6 @@ import com.lyrio.ui.data.viewmodels.UserViewModel
 import com.lyrio.ui.data.viewmodels.WalletViewModel
 import com.lyrio.ui.styles.LightGray
 import com.lyrio.ui.styles.Orange
-import com.lyrio.ui.styles.Red
 
 
 @Composable

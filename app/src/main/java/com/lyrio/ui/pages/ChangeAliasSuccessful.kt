@@ -59,8 +59,7 @@ fun ChangeAliasSuccessful(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth(if (isTablet) 0.7f else 1f)
-                        .fillMaxHeight(if (isTablet) 0.8f else 1f)
-                        .padding(16.dp),
+                        .fillMaxHeight(if (isTablet) 0.8f else 1f),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {

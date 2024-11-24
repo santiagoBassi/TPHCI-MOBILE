@@ -1,7 +1,6 @@
 package com.lyrio.ui.pages
 
 import android.content.res.Configuration
-import android.icu.util.Calendar
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,7 +30,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.core.net.ParseException
 import com.lyrio.R
 import com.lyrio.ui.auth.validateName
 import com.lyrio.ui.components.AppButton
@@ -42,9 +40,6 @@ import com.lyrio.ui.components.FlippableCard
 import com.lyrio.ui.components.NewCreditCardBack
 import com.lyrio.ui.components.NewCreditCardFront
 import com.lyrio.ui.components.RotationAxis
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeParseException
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -57,14 +52,14 @@ fun AddCreditCard(
     var expiryDate by rememberSaveable(key = "addCardExpiryDate") { mutableStateOf("") }
     var cvv by rememberSaveable(key = "addCardCvv") { mutableStateOf("") }
 
-    var isNumberError by remember { mutableStateOf(false) }
-    var isNameError by remember { mutableStateOf(false) }
-    var isExpiryError by remember { mutableStateOf(false) }
-    var isCvvError by remember { mutableStateOf(false) }
-    var numberErrorMsg by remember { mutableIntStateOf(-1) }
-    var nameErrorMsg by remember { mutableIntStateOf(-1) }
-    var expiryErrorMsg by remember { mutableIntStateOf(-1) }
-    var cvvErrorMsg by remember { mutableIntStateOf(-1) }
+    var isNumberError by rememberSaveable(key = "addCardNumberError") { mutableStateOf(false) }
+    var isNameError by rememberSaveable(key = "addCardHolderNameError") { mutableStateOf(false) }
+    var isExpiryError by rememberSaveable(key = "addCardExpiryDateError") { mutableStateOf(false) }
+    var isCvvError by rememberSaveable(key = "addCardCvvError") { mutableStateOf(false) }
+    var numberErrorMsg by rememberSaveable(key = "addCardNumberErrorMsg") { mutableIntStateOf(-1) }
+    var nameErrorMsg by rememberSaveable(key = "addCardHolderNameErrorMsg") { mutableIntStateOf(-1) }
+    var expiryErrorMsg by rememberSaveable(key = "addCardExpiryDateErrorMsg") { mutableIntStateOf(-1) }
+    var cvvErrorMsg by rememberSaveable(key = "addCardCvvErrorMsg") { mutableIntStateOf(-1) }
 
     var state by remember {
         mutableStateOf(CardFace.Front)

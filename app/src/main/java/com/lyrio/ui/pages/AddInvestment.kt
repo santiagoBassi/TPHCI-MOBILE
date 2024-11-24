@@ -102,6 +102,8 @@ fun AddInvestmentContent(
     availableBalance: Double,
     navigateInvest: () -> Unit
 ) {
+    var isError by rememberSaveable(key = "investedAmount"){ mutableLongStateOf(0) }
+
     AppWindow {
         Column(
             modifier = Modifier.fillMaxHeight(height),

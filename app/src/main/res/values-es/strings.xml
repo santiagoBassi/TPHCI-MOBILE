@@ -11,8 +11,9 @@
     <string name="pay_link">Cobrar con link de pago</string>
     <string name="add_card">Agregar tarjeta</string>
     <string name="cards">Tarjetas</string>
-    <string name="logout">Logout</string>
+    <string name="logout">Cerrar sesión</string>
     <string name="qr">QR</string>
+    <string name="user">Usuario</string>
 
 
     <!-- LandingPage -->
@@ -224,5 +225,13 @@
 
     <!-- New ones -->
     <string name="invalid_email">Email inválido</string>
+    <string name="empty_field">Campo requerido</string>
+    <string name="invalid_birthdate">Fecha inválida</string>
+    <string name="pass_not_match">Las contraseñas no coinciden</string>
+    <string name="invalid_password">Contraseña inválida</string>
+    <string name="invalid_cvv">CVV inválido</string>
+    <string name="invalid_expiry">Vencimiento inválido</string>
+    <string name="invalid_card_number">Número de tarjeta inválido</string>
+    <string name="invalid_alias">Alias inválido</string>
 
 </resources>

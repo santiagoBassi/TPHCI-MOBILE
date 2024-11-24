@@ -18,8 +18,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -110,10 +112,10 @@ fun Transfer1Content(
         )
     }
 
-    var email by remember { mutableStateOf("") }
+    var email by rememberSaveable(key = "transferEmail") { mutableStateOf("") }
 
-    var isError by remember { mutableStateOf(false) }
-    var errorMsg by remember { mutableStateOf(-1) }
+    var isError by rememberSaveable(key = "transferEmailError") { mutableStateOf(false) }
+    var errorMsg by rememberSaveable(key = "transferEmailErrorMsg") { mutableIntStateOf(-1) }
 
     AppWindow(
         modifier = Modifier
@@ -137,6 +139,8 @@ fun Transfer1Content(
                     email = it
                     isError = false
                                 },
+                error = if(errorMsg != -1) stringResource(errorMsg) else null,
+                isError = isError,
                 label = stringResource(R.string.email),
                 modifier = Modifier.fillMaxWidth(0.95f),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)

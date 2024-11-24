@@ -12,6 +12,8 @@
     <string name="cards">Cards</string>
     <string name="logout">Logout</string>
     <string name="qr">QR</string>
+    <string name="user">User</string>
+
 
     <!-- LandingPage -->
     <string name="landing_1">The new way of</string>

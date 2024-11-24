@@ -30,7 +30,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -236,6 +235,7 @@ fun Transfer2ContentH(
                 AppButton(
                     text = stringResource(R.string.transfer),
                     onClick = {
+                        //TODO: input validations
                         paymentsViewModel.transfer(amount, walletUiState.cards[paymentsUiState.selectedPaymentMethod - 1].id)
                         navigateTransferSuccessful()
                     },
@@ -283,11 +283,12 @@ fun Transfer2ContentV(
                     label = stringResource(R.string.amount),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 )
-                Text("a $recipient   ${paymentsUiState.selectedPaymentMethod}", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold, color = Color.Gray,
+                Text("a $recipient", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold, color = Color.Gray,
                     modifier = Modifier.padding(top = 10.dp))
             }
             carousel()
             AppButton(text = stringResource(R.string.transfer),  onClick = {
+                //TODO: input validations
                 if (paymentsUiState.selectedPaymentMethod > 0)
                     paymentsViewModel.transfer(amount, walletUiState.cards[paymentsUiState.selectedPaymentMethod - 1].id)
                 else
