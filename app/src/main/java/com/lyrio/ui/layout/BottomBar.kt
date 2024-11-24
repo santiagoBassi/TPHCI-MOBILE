@@ -1,4 +1,4 @@
-package com.lyrio.ui.theme.layout
+package com.lyrio.ui.layout
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -11,18 +11,40 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.lyrio.R
+import com.lyrio.ui.components.AlertDialog
 import com.lyrio.ui.navigation.Screen
 
 
 @Composable
 fun BottomBar(navController: NavController){
+    var showTODOModal by remember { mutableStateOf(false) }
+
+    when {
+        showTODOModal -> {
+            AlertDialog(
+                onDismissRequest = { showTODOModal = false },
+                onConfirmation = {
+                    showTODOModal = false
+                },
+                dialogTitle = stringResource(R.string.ups),
+                dialogText = stringResource(R.string.not_available_yet),
+                dismissText = "OK",
+            )
+        }
+    }
+
     BottomAppBar(
         modifier = Modifier.shadow(
             elevation = 15.dp,
@@ -44,7 +66,7 @@ fun BottomBar(navController: NavController){
                 )
             }
             IconButton(
-                onClick = { /* Acción del segundo icono */ },
+                onClick = { showTODOModal = true },
                 modifier = Modifier
                     .background(
                         color = MaterialTheme.colorScheme.primary,
@@ -69,3 +91,4 @@ fun BottomBar(navController: NavController){
         }
     }
 }
+

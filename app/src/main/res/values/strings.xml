@@ -238,6 +238,10 @@
     <string name="internal_server_error">Internal server error</string>
     <string name="connection_error">Connection error</string>
     <string name="unexpected_error">Unexpected error occurred</string>
+    <string name="not_available_yet">This functionality is not available yet.</string>
+    <string name="ups">Oops!</string>
+    <string name="logout_text">Are you sure you want to logout?</string>
+    <string name="user_not_found">Email or password are wrong.</string>
 
 
 </resources>

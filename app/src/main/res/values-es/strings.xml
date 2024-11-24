@@ -239,5 +239,9 @@
     <string name="internal_server_error">Error interno del servidor</string>
     <string name="connection_error">Error de conexión</string>
     <string name="unexpected_error">Ocurrió un error inesperado</string>
+    <string name="not_available_yet">Esta funcionalidad todavía no está disponible.</string>
+    <string name="ups">Ups!</string>
+    <string name="logout_text">¿Estás seguro de que querés cerrar sesión?</string>
+    <string name="user_not_found">Email o contraseña incorrecto.</string>
 
 </resources>

@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -53,7 +55,7 @@ fun Invest(
     when (configuration.orientation) {
         Configuration.ORIENTATION_LANDSCAPE -> { // Modo horizontal
             Box(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
                 contentAlignment = Alignment.Center
             ){
                 Row(
@@ -65,7 +67,7 @@ fun Invest(
                 ) {
                     InvestContent(
                         isTablet = isTablet,
-                        maxBarHeight = if(isTablet) 0.38 * maxHeight else 0.35 * maxHeight,
+                        maxBarHeight = if(isTablet) 0.38 * maxHeight else 0.5 * maxHeight,
                         navigateAddInvestment = navigateAddInvestment,
                         navigateWithdrawInvestment = navigateWithdrawInvestment
                     )
@@ -75,7 +77,7 @@ fun Invest(
 
         else -> { // Modo vertical u otras orientaciones
             Box(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
                 contentAlignment = Alignment.Center
             ) {
                 Column(

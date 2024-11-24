@@ -10,10 +10,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.lyrio.ui.styles.DarkGray
 
 @Composable
 fun StateBar(text: String){
@@ -21,14 +24,22 @@ fun StateBar(text: String){
         modifier = Modifier
             .fillMaxWidth()
             .height(40.dp)
-            .background(Color.White),
+            .background(DarkGray)
+            .drawBehind {
+                drawLine(
+                    color = Color.Gray,
+                    start = Offset(0f, 0f),
+                    end = Offset(size.width, 0f),
+                    strokeWidth = 3.dp.toPx()
+                )
+            },
         verticalAlignment = Alignment.CenterVertically
     ){
         Text(
             text = text,
             style = MaterialTheme.typography.titleMedium.copy(
                 fontSize = 16.sp,
-                color = Color.Black,
+                color = Color.White,
                 fontWeight = FontWeight.SemiBold
             ),
             modifier = Modifier

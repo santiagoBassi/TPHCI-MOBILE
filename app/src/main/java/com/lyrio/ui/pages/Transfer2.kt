@@ -20,7 +20,6 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -114,32 +113,41 @@ fun Transfer2(
 
     when (configuration.orientation) {
         Configuration.ORIENTATION_LANDSCAPE -> {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
             ) {
-                Transfer2ContentH(
-                    isTablet = isTablet,
-                    recipient = "Ezequiel Testoni",
-                    amount = amount,
-                    onAmountChange = { amount = it },
-                    carousel = {
-                        PaymentMethodsCarousel(
-                            walletState.cards,
-                            paymentsUiState.selectedPaymentMethod,
-                            onCurrentPageChanged = {  paymentsViewModel.setSelectedPaymentMethod(it) },
-                            isTablet
-                        )
-                    },
-                    paymentsViewModel = paymentsViewModel,
-                    onClick = onClick,
-                    isError = isError,
-                    setIsError = { isError = it },
-                    errorMessage = errorMessage
-                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .fillMaxWidth(if (isTablet) 0.8f else 1f)
+                        .padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Transfer2ContentH(
+                        isTablet = isTablet,
+                        recipient = "Ezequiel Testoni",
+                        amount = amount,
+                        onAmountChange = { amount = it },
+                        carousel = {
+                            PaymentMethodsCarousel(
+                                walletState.cards,
+                                paymentsUiState.selectedPaymentMethod,
+                                onCurrentPageChanged = {
+                                    paymentsViewModel.setSelectedPaymentMethod(
+                                        it
+                                    )
+                                },
+                                isTablet
+                            )
+                        },
+                        onClick = onClick,
+                        isError = isError,
+                        setIsError = { isError = it },
+                        errorMessage = errorMessage
+                    )
+                }
             }
         }
 
@@ -184,13 +192,11 @@ fun Transfer2ContentH(
     amount: Double = 0.0,
     onAmountChange: (Double) -> Unit = {},
     carousel: @Composable () -> Unit = {},
-    paymentsViewModel: PaymentsViewModel,
     onClick: () -> Unit,
     isError: Boolean,
     setIsError: (Boolean) -> Unit,
     errorMessage: Int
 ) {
-    val paymentsUiState by paymentsViewModel.uiStatePayments.collectAsState()
     AppWindow(
         modifier = Modifier
             .fillMaxWidth().fillMaxHeight(if(isTablet) 0.8f else 1f)
@@ -239,11 +245,10 @@ fun Transfer2ContentH(
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         )
                         Text(
-                            stringResource(R.string.to) + " $recipient   ${paymentsUiState.selectedPaymentMethod}",
+                            stringResource(R.string.to) + " $recipient",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = Color.Gray,
-                            modifier = Modifier.padding(top = 10.dp)
                         )
                     }
                 }

@@ -1,5 +1,6 @@
 package com.lyrio.ui.auth
 
+import android.annotation.SuppressLint
 import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -15,11 +16,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.runtime.remember
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -49,8 +50,8 @@ fun SignIn(
     navigateRecoverPass1: () -> Unit,
     viewModel: UserViewModel
 ) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    var email by rememberSaveable(key = "signin_email") { mutableStateOf("") }
+    var password by rememberSaveable(key = "signin_password") { mutableStateOf("") }
 
 
     val configuration = LocalConfiguration.current
@@ -135,6 +136,7 @@ fun SignIn(
     }
 }
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun SignInContent(
     height: Float = 1f,
@@ -151,8 +153,7 @@ fun SignInContent(
     var passwordErrorMsg by rememberSaveable(key = "signin_error_msg_password") { mutableIntStateOf(-1) }
     var isErrorEmail by rememberSaveable(key = "signin_is_error_email") { mutableStateOf(false) }
     var isErrorPassword by rememberSaveable(key = "signin_is_error_pass") { mutableStateOf(false) }
-    var isApiError by rememberSaveable(key = "signin_is_api_error") { mutableStateOf(false) }
-    var apiErrorMsg by rememberSaveable(key = "signin_api_error_msg") { mutableIntStateOf((-1)) }
+    val uiStateUser by viewModel.uiStateUser.collectAsState()
 
     AppWindow(
        modifier = if(height < 1f) Modifier.fillMaxWidth().fillMaxHeight(height) else Modifier.fillMaxSize(),
@@ -169,16 +170,24 @@ fun SignInContent(
                 fontWeight = FontWeight.SemiBold
             )
             Spacer(modifier = Modifier.height(16.dp))
+            if(uiStateUser.error != null) {
+                val errorCode = uiStateUser.error?.code ?: DataSourceException.UNEXPECTED_ERROR_CODE
+                Text(
+                    text = stringResource(errorMap[errorCode]!!),
+                    color = MaterialTheme.colorScheme.error
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+            }
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(15.dp)
             ) {
-                if(isApiError && apiErrorMsg != -1) Text(stringResource(apiErrorMsg), color = MaterialTheme.colorScheme.error)
                 AppInput(
                     value = email,
                     onValueChange = {
                         onEmailChange(it)
                         if(isErrorEmail) isErrorEmail = false
+                        viewModel.clearError()
                                     },
                     label = stringResource(R.string.email),
                     error = if(emailErrorMsg != -1) stringResource(emailErrorMsg) else null,
@@ -191,6 +200,7 @@ fun SignInContent(
                     onValueChange = {
                         onPasswordChange(it)
                         if(isErrorPassword) isErrorPassword = false
+                        viewModel.clearError()
                                     },
                     label = stringResource(R.string.password),
                     error = if(passwordErrorMsg != -1) stringResource(passwordErrorMsg) else null,
@@ -201,51 +211,24 @@ fun SignInContent(
                 Text(
                     text = stringResource(R.string.forgot_pass),
                     textDecoration = TextDecoration.Underline,
-                    modifier = Modifier.padding(start = 8.dp, top = 10.dp). clickable(onClick = navigateRecoverPass1),
+                    modifier = Modifier.padding(start = 8.dp). clickable(onClick = navigateRecoverPass1),
                     fontWeight = FontWeight.SemiBold
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
             AppButton(text = stringResource(R.string.continue_), onClick = {
-                try {
-                   val onInvalidEmail: (Int) -> Unit = {
-                        emailErrorMsg = it
-                        isErrorEmail = it != -1
-                    }
-                    val onInvalidPassword: (Int) -> Unit = {
-                        passwordErrorMsg = it
-                        isErrorPassword = it != -1
-                    }
-                    if(validateQueries(email, password, onInvalidEmail, onInvalidPassword)) {
-                        isApiError = false
-                        // TESTEAR ESTO
-                        viewModel.login(email, password, navigateHome)
-                    }
-                }catch (e: DataSourceException){
-                    when (e.code) {
-                        DataSourceException.DATA_ERROR -> { // 400
-                            isApiError = true
-                            apiErrorMsg = R.string.invalid_credentials
-                        }
-                        DataSourceException.UNAUTHORIZED_ERROR_CODE -> { // 401
-                            isApiError = true
-                            apiErrorMsg = R.string.invalid_credentials
-                        }
-                        DataSourceException.INTERNAL_SERVER_ERROR_CODE -> { // 500
-                            isApiError = true
-                            apiErrorMsg = R.string.internal_server_error
-                        }
-                        DataSourceException.CONNECTION_ERROR_CODE -> { // others
-                            isApiError = true
-                            apiErrorMsg = R.string.connection_error
-                        }
-                        DataSourceException.UNEXPECTED_ERROR_CODE -> { // others
-                            isApiError = true
-                            apiErrorMsg = R.string.unexpected_error
-                        }
-                    }
+                val onInvalidEmail: (Int) -> Unit = {
+                    emailErrorMsg = it
+                    isErrorEmail = it != -1
                 }
-
+                val onInvalidPassword: (Int) -> Unit = {
+                    passwordErrorMsg = it
+                    isErrorPassword = it != -1
+                }
+                if (validateQueries(email, password, onInvalidEmail, onInvalidPassword)) {
+                    viewModel.clearError()
+                    viewModel.login(email, password, navigateHome)
+                }
             }, width = 0.8f)
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -262,6 +245,15 @@ fun SignInContent(
         }
     }
 }
+
+val errorMap = mapOf(
+    DataSourceException.DATA_ERROR to R.string.invalid_credentials,
+    DataSourceException.UNAUTHORIZED_ERROR_CODE to R.string.invalid_credentials,
+    DataSourceException.NOT_FOUND_ERROR_CODE to R.string.user_not_found,
+    DataSourceException.INTERNAL_SERVER_ERROR_CODE to R.string.internal_server_error,
+    DataSourceException.CONNECTION_ERROR_CODE to R.string.connection_error,
+    DataSourceException.UNEXPECTED_ERROR_CODE to R.string.unexpected_error
+)
 
 private fun validateQueries(email: String, password: String, onInvalidEmail: (Int) -> Unit, onInvalidPassword: (Int) -> Unit): Boolean {
     val checkEmail = validateEmail(email, onInvalidEmail)

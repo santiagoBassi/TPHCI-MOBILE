@@ -30,6 +30,7 @@ import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.NavigationRailItemColors
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -42,6 +43,7 @@ import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import androidx.window.core.layout.WindowSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
+import com.lyrio.ui.components.AlertDialog
 import com.lyrio.ui.navigation.Screen
 
 
@@ -80,6 +82,22 @@ val itemsNavBar = listOf(
 fun LeftBarMobile(onButtonClick: () -> Unit, navController: NavController, state: DrawerState, windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo().windowSizeClass) {
     var selectedItem by remember { mutableIntStateOf(0) }
 
+    var showTODOModal by remember { mutableStateOf(false) }
+
+    when {
+        showTODOModal -> {
+            AlertDialog(
+                onDismissRequest = { showTODOModal = false },
+                onConfirmation = {
+                    showTODOModal = false
+                },
+                dialogTitle = stringResource(R.string.ups),
+                dialogText = stringResource(R.string.not_available_yet),
+                dismissText = "OK",
+            )
+        }
+    }
+
     NavigationRail(
         modifier = Modifier
             .shadow(15.dp)
@@ -115,7 +133,7 @@ fun LeftBarMobile(onButtonClick: () -> Unit, navController: NavController, state
                 )
             }
             IconButton(
-                onClick = { /* Acción del segundo icono */ },
+                onClick = { showTODOModal = true },
                 modifier = Modifier
                     .background(
                         color = MaterialTheme.colorScheme.primary,

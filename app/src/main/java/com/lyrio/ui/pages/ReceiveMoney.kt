@@ -21,6 +21,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,6 +35,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lyrio.R
+import com.lyrio.ui.components.AlertDialog
 import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.components.AppWindow
 
@@ -48,7 +53,9 @@ fun ReceiveMoney(
     when (configuration.orientation) {
         Configuration.ORIENTATION_LANDSCAPE -> { // Modo horizontal
             Column(
-                modifier = Modifier.fillMaxSize().padding(16.dp),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
@@ -82,11 +89,27 @@ fun ReceiveMoneyContentH(
     cvuAlias: @Composable () -> Unit,
     navigatePaylink: () -> Unit = {}
 ) {
+    var showTODOModal by remember { mutableStateOf(false) }
+
+    when {
+        showTODOModal -> {
+            AlertDialog(
+                onDismissRequest = { showTODOModal = false },
+                onConfirmation = {
+                    showTODOModal = false
+                },
+                dialogTitle = stringResource(R.string.ups),
+                dialogText = stringResource(R.string.not_available_yet),
+                dismissText = "OK",
+            )
+        }
+    }
+
     AppWindow(
         title = stringResource(R.string.receive_money),
         modifier = Modifier
-            .fillMaxWidth(if(isTablet) 0.8f else 1f)
-            .fillMaxHeight(if(isTablet) 0.65f else 1f)
+            .fillMaxWidth(if (isTablet) 0.8f else 1f)
+            .fillMaxHeight(if (isTablet) 0.65f else 1f)
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -101,7 +124,9 @@ fun ReceiveMoneyContentH(
                 color = Color.Black
             )
             Row(
-                modifier = Modifier.fillMaxWidth().padding(start = 15.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 15.dp),
                 horizontalArrangement = Arrangement.spacedBy(10.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -117,7 +142,7 @@ fun ReceiveMoneyContentH(
                 ) {
                     AppButton(
                         text = stringResource(R.string.generate_link),
-                        onClick = navigatePaylink,
+                        onClick = { showTODOModal = true },
                         width = 0.8f
                     )
                 }
@@ -132,10 +157,27 @@ fun ReceiveMoneyContentV(
     cvuAlias: @Composable () -> Unit,
     navigatePaylink: () -> Unit = {}
 ){
+    var showTODOModal by remember { mutableStateOf(false) }
+
+    when {
+        showTODOModal -> {
+            AlertDialog(
+                onDismissRequest = { showTODOModal = false },
+                onConfirmation = {
+                    showTODOModal = false
+                },
+                dialogTitle = stringResource(R.string.ups),
+                dialogText = stringResource(R.string.not_available_yet),
+                dismissText = "OK",
+            )
+        }
+    }
+
     Column(
         modifier = Modifier
-            .fillMaxWidth().padding(16.dp)
-            .fillMaxHeight(if(isTablet) 0.6f else 1f),
+            .fillMaxWidth()
+            .padding(16.dp)
+            .fillMaxHeight(if (isTablet) 0.6f else 1f),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -158,7 +200,7 @@ fun ReceiveMoneyContentV(
                 cvuAlias()
                 AppButton(
                     text = stringResource(R.string.generate_link),
-                    onClick = navigatePaylink,
+                    onClick = { showTODOModal = true },
                     width = if(isTablet) 0.6f else 0.8f
                 )
             }
@@ -176,13 +218,15 @@ fun CVUAliasWindow(
 
     AppWindow(
         title = stringResource(R.string.cvu_alias),
-        modifier = Modifier.padding(bottom = 16.dp).padding(top = if(!isTablet) 12.dp else 0.dp)
+        modifier = Modifier
+            .padding(bottom = 16.dp)
+            .padding(top = if (!isTablet) 12.dp else 0.dp)
             .widthIn(max = 450.dp),
         background = Color(0xFFF5F5F5)
     ) {
         Column(
             modifier = Modifier
-                .padding(12.dp,12.dp,12.dp,0.dp)
+                .padding(12.dp, 12.dp, 12.dp, 0.dp)
                 .fillMaxWidth(),
         ) {
             Row(

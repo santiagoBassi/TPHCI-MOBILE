@@ -20,13 +20,11 @@ import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import androidx.window.core.layout.WindowWidthSizeClass
-import com.lyrio.ui.theme.layout.BottomBar
 import com.lyrio.R
 
 @Composable
@@ -108,7 +106,7 @@ fun MobileBottomBarNavigation(navController: NavController, content: @Composable
             ) {
             val screenLabel = getScreenLabel(navController, LocalContext.current) ?: "Unknown Screen"
                 NavigationDrawer(drawerState = drawerState, navController = navController, content = {
-                    Column {
+                    Column{
                         StateBar(text = screenLabel)
                         content()
                     }

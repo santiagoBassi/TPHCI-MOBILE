@@ -93,10 +93,10 @@ fun NavigationDrawerContent(navController: NavController){
                     openAlertDialog = false
                     navController.navigate(Screen.Landing)
                 },
-                dialogTitle = "Cerrar sesión",
-                dialogText = "¿Estás seguro de que querés cerrar sesión?",
-                dismissText = "Cancelar",
-                confirmText = "Cerrar sesión"
+                dialogTitle = stringResource(R.string.logout),
+                dialogText = stringResource(R.string.logout_text),
+                dismissText = stringResource(R.string.cancel),
+                confirmText = stringResource(R.string.logout)
             )
         }
     }

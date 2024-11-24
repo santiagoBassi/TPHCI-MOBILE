@@ -5,6 +5,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import com.lyrio.R
 import com.lyrio.ui.styles.DarkGray
 import com.lyrio.ui.styles.OffWhite
 import com.lyrio.ui.styles.Red
@@ -15,8 +17,8 @@ fun AlertDialog(
     onConfirmation: () -> Unit,
     dialogTitle: String,
     dialogText: String,
-    dismissText: String = "Cancelar",
-    confirmText: String = "Confirmar"
+    dismissText: String = stringResource(R.string.cancel),
+    confirmText: String = ""
 ) {
     AlertDialog(
         title = {
@@ -29,12 +31,14 @@ fun AlertDialog(
             onDismissRequest()
         },
         confirmButton = {
-            TextButton(
-                onClick = {
-                    onConfirmation()
+            if(confirmText.isNotEmpty()) {
+                TextButton(
+                    onClick = {
+                        onConfirmation()
+                    }
+                ) {
+                    Text(confirmText, color = Red)
                 }
-            ) {
-                Text(confirmText, color = Red)
             }
         },
         dismissButton = {

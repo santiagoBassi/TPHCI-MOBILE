@@ -118,11 +118,17 @@ class UserViewModel(
 
     private fun handleError(e: Throwable): Error {
         return (if (e is DataSourceException) {
-            Error(e.code, e.message.toString())
+            Log.e(TAG, "Este es el error" + e.code.toString(), e)
+            Error(e.code, e.message ?: "")
         } else {
-            Error(null, e)
-        }) as Error
+            Error(null, e.message ?: "")
+        })
     }
+
+    fun clearError() {
+        _uiStateUser.update { currentState -> currentState.copy(error = null) }
+    }
+
 
     companion object {
         const val TAG = "UI Layer"

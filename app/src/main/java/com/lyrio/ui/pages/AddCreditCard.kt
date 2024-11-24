@@ -11,7 +11,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -100,7 +102,7 @@ fun AddCreditCard(
     when (configuration.orientation) {
         Configuration.ORIENTATION_LANDSCAPE -> { // Modo horizontal
             Box(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
                 contentAlignment = Alignment.Center
             ) {
                 Column(
@@ -167,7 +169,7 @@ fun AddCreditCard(
 
         else -> { // Modo vertical u otras orientaciones
             Box(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
                 contentAlignment = Alignment.Center
             ) {
                 Column(
@@ -252,6 +254,7 @@ fun AddCardContentH(
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold
             )
+            Spacer(Modifier.height(10.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(15.dp),
@@ -274,6 +277,7 @@ fun AddCardContentH(
                     cardInputs()
                 }
             }
+            Spacer(Modifier.height(10.dp))
             AppButton(text = stringResource(R.string.continue_), width = 0.5f, onClick = handleOnClick)
         }
     }
@@ -311,7 +315,7 @@ fun AddCardContentV(
                 }
                 cardInputs()
             }
-            Spacer(Modifier.height(6.dp))
+            Spacer(Modifier.height(10.dp))
             AppButton(text = stringResource(R.string.add), width = 0.8f, onClick = handleOnClick)
         }
     }
@@ -381,7 +385,7 @@ fun CardInputs(
                 onExpiryDateChange(it)
                 setIsExpiryError(false)
             } },
-            modifier = Modifier.fillMaxWidth(0.6f),
+            modifier = Modifier.fillMaxWidth(0.55f),
             placeholder = stringResource(R.string.expiry_format),
             onFocusAction = { onStateChange(if (it) CardFace.Front else CardFace.Back) }
         )
