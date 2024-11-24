@@ -16,6 +16,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -133,6 +134,12 @@ fun RecoverPass3Content(
     viewModel: UserViewModel,
     navigateSignIn: () -> Unit
 ){
+
+    var isPasswordError by rememberSaveable(key = "recoverPass3Error"){ mutableStateOf(false) }
+    var isConfirmPasswordError by rememberSaveable(key = "confirmRecoverPass3ErrorMsg"){ mutableStateOf(false) }
+    var passwordErrorMsg by rememberSaveable(key = "recoverPass3ErrorMsg"){ mutableIntStateOf(-1) }
+    var confirmPasswordErrorMsg by rememberSaveable(key = "confirmRecoverPass3ErrorMsg"){ mutableIntStateOf(-1) }
+
     AppWindow(
         modifier = Modifier
             .fillMaxWidth(0.95f)
@@ -166,22 +173,41 @@ fun RecoverPass3Content(
                 }
                 AppInput(
                     value = newPassword,
-                    onValueChange = { onNewPasswordChange(it) },
+                    onValueChange = {
+                        onNewPasswordChange(it)
+                        isPasswordError = false
+                                    },
                     label = stringResource(R.string.password),
+                    error = if(passwordErrorMsg != -1) stringResource(passwordErrorMsg) else null,
+                    isError = isPasswordError,
                     hint = stringResource(R.string.pass_rule),
                     modifier = Modifier.fillMaxWidth(),
                     isPassword = true
                 )
                 AppInput(
                     value = confirmPassword,
-                    onValueChange = { onConfirmPasswordChange(it) },
+                    onValueChange = {
+                        onConfirmPasswordChange(it)
+                        isConfirmPasswordError = false
+                                    },
                     label = stringResource(R.string.confirm_pass),
+                    error = if(confirmPasswordErrorMsg != -1) stringResource(confirmPasswordErrorMsg) else null,
+                    isError = isConfirmPasswordError,
                     modifier = Modifier.fillMaxWidth(),
                     isPassword = true
                 )
             }
             AppButton(text = stringResource(R.string.save_pass), onClick = {
                 try {
+                    val onInvalidPassword: (Int) -> Unit = {
+                        passwordErrorMsg = it
+                        isPasswordError = it != -1
+                    }
+                    val onInvalidConfirmPassword: (Int) -> Unit = {
+                        confirmPasswordErrorMsg = it
+                        isConfirmPasswordError = it != -1
+                    }
+                    if(validateQueries(newPassword, confirmPassword, onInvalidPassword, onInvalidConfirmPassword))
                     viewModel.recoverPass2(newPassword)
                     navigateSignIn()
                 }catch (e: Exception){
@@ -192,3 +218,7 @@ fun RecoverPass3Content(
     }
 }
 
+private fun validateQueries(newPassword: String, confirmPassword: String, onInvalidPassword: (Int) -> Unit, onInvalidConfirmPassword: (Int) -> Unit): Boolean {
+    val checkPass = validatePasswordSignUp(newPassword, onInvalidPassword)
+    return validateConfirmPassword(newPassword, confirmPassword, onInvalidConfirmPassword) && checkPass
+}

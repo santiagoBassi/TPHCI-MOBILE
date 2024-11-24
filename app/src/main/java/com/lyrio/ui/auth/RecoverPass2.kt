@@ -17,6 +17,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -127,6 +128,10 @@ fun RecoverPass2Content(
     navigateRecoverPass3: () -> Unit,
     viewModel: UserViewModel
 ){
+
+    var isError by rememberSaveable(key = "recoverPass2Error"){ mutableStateOf(false) }
+    var errorMsg by rememberSaveable(key = "recoverPass2ErrorMsg"){ mutableIntStateOf(-1) }
+
     AppWindow(
         modifier = Modifier
             .fillMaxWidth(0.95f)
@@ -163,16 +168,28 @@ fun RecoverPass2Content(
             ) {
                 AppInput(
                     value = code,
-                    onValueChange = { onCodeChange(it) },
+                    onValueChange = {
+                        onCodeChange(it)
+                        isError = false
+                                    },
                     label = stringResource(R.string.verification_code),
+                    error = if(errorMsg != -1) stringResource(errorMsg) else null,
+                    isError = isError,
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
             AppButton(text = stringResource(R.string.continue_), onClick = {
                 try {
-                    viewModel.saveCode(code)
-                    navigateRecoverPass3()
-                }catch (e: Exception){
+                    val onInvalidCode: (Int) -> Unit = {
+                        errorMsg = it
+                        isError = it != -1
+                    }
+                    if(validateCode(code, onInvalidCode)) {
+                        viewModel.saveCode(code)
+                        navigateRecoverPass3()
+                    }
+                } catch (e: Exception){
+                    // TODO: handle error
                     e.printStackTrace()
                 }
             }, width = 0.8f)
