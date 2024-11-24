@@ -1,6 +1,7 @@
 package com.lyrio.ui.pages
 
 import android.content.res.Configuration
+import android.icu.util.Calendar
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,6 +18,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -29,7 +31,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.core.net.ParseException
 import com.lyrio.R
+import com.lyrio.ui.auth.validateName
 import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.components.AppInput
 import com.lyrio.ui.components.AppWindow
@@ -38,17 +42,29 @@ import com.lyrio.ui.components.FlippableCard
 import com.lyrio.ui.components.NewCreditCardBack
 import com.lyrio.ui.components.NewCreditCardFront
 import com.lyrio.ui.components.RotationAxis
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddCreditCard(
     navigateAddCardSuccessful: () -> Unit
-){
-    var cardNumber by rememberSaveable(key = "addCardNumber"){ mutableStateOf("") }
-    var holderName by rememberSaveable(key = "addCardHolderName"){ mutableStateOf("") }
-    var expiryDate by rememberSaveable(key = "addCardExpiryDate"){ mutableStateOf("") }
-    var cvv by rememberSaveable(key = "addCardCvv"){ mutableStateOf("") }
+) {
+    var cardNumber by rememberSaveable(key = "addCardNumber") { mutableStateOf("") }
+    var holderName by rememberSaveable(key = "addCardHolderName") { mutableStateOf("") }
+    var expiryDate by rememberSaveable(key = "addCardExpiryDate") { mutableStateOf("") }
+    var cvv by rememberSaveable(key = "addCardCvv") { mutableStateOf("") }
+
+    var isNumberError by remember { mutableStateOf(false) }
+    var isNameError by remember { mutableStateOf(false) }
+    var isExpiryError by remember { mutableStateOf(false) }
+    var isCvvError by remember { mutableStateOf(false) }
+    var numberErrorMsg by remember { mutableIntStateOf(-1) }
+    var nameErrorMsg by remember { mutableIntStateOf(-1) }
+    var expiryErrorMsg by remember { mutableIntStateOf(-1) }
+    var cvvErrorMsg by remember { mutableIntStateOf(-1) }
 
     var state by remember {
         mutableStateOf(CardFace.Front)
@@ -59,6 +75,32 @@ fun AddCreditCard(
     val maxWidth = configuration.screenWidthDp.dp
     val maxHeight = configuration.screenHeightDp.dp
     val isTablet = maxWidth > 1000.dp || maxHeight > 1000.dp
+
+    val handleOnClick: () -> Unit = {
+        try {
+            val onInvalidNumber: (Int) -> Unit = {
+                numberErrorMsg = it
+                isNumberError = it != -1
+            }
+            val onInvalidName: (Int) -> Unit = {
+                nameErrorMsg = it
+            }
+            val onInvalidExpiry: (Int) -> Unit = {
+                expiryErrorMsg = it
+                isExpiryError = it != -1
+            }
+            val onInvalidCvv: (Int) -> Unit = {
+                cvvErrorMsg = it
+                isCvvError = it != -1
+            }
+            if(validateQueries(cardNumber, holderName, expiryDate, cvv, onInvalidNumber, onInvalidName, onInvalidExpiry, onInvalidCvv)) {
+                navigateAddCardSuccessful()
+                // TODO: api call
+            }
+        } catch (e: Exception) {
+            // TODO
+    }
+}
 
     when (configuration.orientation) {
         Configuration.ORIENTATION_LANDSCAPE -> { // Modo horizontal
@@ -104,11 +146,24 @@ fun AddCreditCard(
                                 onExpiryDateChange = { expiryDate = it },
                                 cvv = cvv,
                                 onCvvChange = { cvv = it },
-                                onStateChange = { state = it }
+                                onStateChange = { state = it },
+                                isNameError = isNameError,
+                                isNumberError = isNumberError,
+                                isExpiryError = isExpiryError,
+                                isCvvError = isCvvError,
+                                nameErrorMsg = nameErrorMsg,
+                                numberErrorMsg = numberErrorMsg,
+                                expiryErrorMsg = expiryErrorMsg,
+                                cvvErrorMsg = cvvErrorMsg,
+                                setIsNameError = { isNameError = it },
+                                setIsNumberError = { isNumberError = it },
+                                setIsExpiryError = { isExpiryError = it },
+                                setIsCvvError = { isCvvError = it }
+
                             )
                         },
-                        navigateAddCardSuccessful = navigateAddCardSuccessful,
-                        isTablet = isTablet
+                        isTablet = isTablet,
+                        handleOnClick = handleOnClick
                     )
 
                 }
@@ -157,10 +212,22 @@ fun AddCreditCard(
                                 onExpiryDateChange = { expiryDate = it },
                                 cvv = cvv,
                                 onCvvChange = { cvv = it },
-                                onStateChange = { state = it }
+                                onStateChange = { state = it },
+                                isNameError = isNameError,
+                                isNumberError = isNumberError,
+                                isExpiryError = isExpiryError,
+                                isCvvError = isCvvError,
+                                nameErrorMsg = nameErrorMsg,
+                                numberErrorMsg = numberErrorMsg,
+                                expiryErrorMsg = expiryErrorMsg,
+                                cvvErrorMsg = cvvErrorMsg,
+                                setIsNameError = { isNameError = it },
+                                setIsNumberError = { isNumberError = it },
+                                setIsExpiryError = { isExpiryError = it },
+                                setIsCvvError = { isCvvError = it }
                             )
                         },
-                        navigateAddCardSuccessful = navigateAddCardSuccessful
+                        handleOnClick = handleOnClick
                     )
                 }
             }
@@ -172,14 +239,16 @@ fun AddCreditCard(
 fun AddCardContentH(
     flippableCard: @Composable () -> Unit = {},
     cardInputs: @Composable () -> Unit = {},
-    navigateAddCardSuccessful: () -> Unit,
-    isTablet: Boolean = false
+    isTablet: Boolean = false,
+    handleOnClick: () -> Unit
 ) {
     AppWindow (
         modifier = Modifier.fillMaxSize()
     ){
         Column(
-            modifier = Modifier.fillMaxSize().padding(vertical = if(isTablet) 16.dp else 0.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(vertical = if (isTablet) 16.dp else 0.dp),
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -194,20 +263,23 @@ fun AddCardContentH(
             ) {
                 Box(
                     modifier = Modifier
-                        .fillMaxWidth().weight(1f)
+                        .fillMaxWidth()
+                        .weight(1f)
                         .height(200.dp),
                 ) {
                     flippableCard()
                 }
                 Column(
-                    modifier = Modifier.fillMaxWidth().weight(1f),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     cardInputs()
                 }
             }
-            AppButton(text = stringResource(R.string.continue_), width = 0.5f, onClick = navigateAddCardSuccessful)
+            AppButton(text = stringResource(R.string.continue_), width = 0.5f, onClick = handleOnClick)
         }
     }
 }
@@ -216,7 +288,7 @@ fun AddCardContentH(
 fun AddCardContentV(
     flippableCard: @Composable () -> Unit = {},
     cardInputs: @Composable () -> Unit = {},
-    navigateAddCardSuccessful: () -> Unit
+    handleOnClick: () -> Unit
 ) {
     AppWindow {
         Column(
@@ -245,7 +317,7 @@ fun AddCardContentV(
                 cardInputs()
             }
             Spacer(Modifier.height(6.dp))
-            AppButton(text = stringResource(R.string.add), width = 0.8f, onClick = navigateAddCardSuccessful)
+            AppButton(text = stringResource(R.string.add), width = 0.8f, onClick = handleOnClick)
         }
     }
 }
@@ -261,20 +333,43 @@ fun CardInputs(
     onExpiryDateChange: (String) -> Unit,
     cvv: String,
     onCvvChange: (String) -> Unit,
-    onStateChange: (CardFace) -> Unit
-){
+    onStateChange: (CardFace) -> Unit,
+    isNameError: Boolean,
+    isNumberError: Boolean,
+    isExpiryError: Boolean,
+    isCvvError: Boolean,
+    nameErrorMsg: Int,
+    numberErrorMsg: Int,
+    expiryErrorMsg: Int,
+    cvvErrorMsg: Int,
+    setIsNameError: (Boolean) -> Unit,
+    setIsNumberError: (Boolean) -> Unit,
+    setIsExpiryError: (Boolean) -> Unit,
+    setIsCvvError: (Boolean) -> Unit
+) {
+
     AppInput(
         label = stringResource(R.string.card_number),
+        error = if(numberErrorMsg != -1) stringResource(numberErrorMsg) else null,
+        isError = isNumberError,
         value = cardNumber,
-        onValueChange = { if (it.length <= 16) onCardNumberChange(it) },
+        onValueChange = { if (it.length <= 16) {
+            onCardNumberChange(it)
+            setIsNumberError(false)
+        } },
         modifier = Modifier.fillMaxWidth(),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         onFocusAction = {onStateChange(if(it) CardFace.Front else CardFace.Back)}
     )
     AppInput(
         label = stringResource(R.string.holder_name),
+        error = if(nameErrorMsg != -1) stringResource(nameErrorMsg) else null,
+        isError = isNameError,
         value = holderName,
-        onValueChange = {if (it.length <= 35) onHolderNameChange(it)},
+        onValueChange = {if (it.length <= 35) {
+            onHolderNameChange(it)
+            setIsNameError(false)
+        }},
         modifier = Modifier.fillMaxWidth(),
         onFocusAction = {onStateChange(if(it) CardFace.Front else CardFace.Back)}
     )
@@ -284,16 +379,26 @@ fun CardInputs(
     ) {
         AppInput(
             label = stringResource(R.string.expiry),
+            error = if(expiryErrorMsg != -1) stringResource(expiryErrorMsg) else null,
+            isError = isExpiryError,
             value = expiryDate,
-            onValueChange = { if (it.length <= 5) onExpiryDateChange(it) },
+            onValueChange = { if (it.length <= 5) {
+                onExpiryDateChange(it)
+                setIsExpiryError(false)
+            } },
             modifier = Modifier.fillMaxWidth(0.6f),
             placeholder = stringResource(R.string.expiry_format),
             onFocusAction = { onStateChange(if (it) CardFace.Front else CardFace.Back) }
         )
         AppInput(
             label = stringResource(R.string.cvv),
+            error = if(cvvErrorMsg != -1) stringResource(cvvErrorMsg) else null,
+            isError = isCvvError,
             value = cvv,
-            onValueChange = { if (it.length <= 3) onCvvChange(it) },
+            onValueChange = { if (it.length <= 3) {
+                onCvvChange(it)
+                setIsCvvError(false)
+            } },
             modifier = Modifier.fillMaxWidth(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             onFocusAction = { onStateChange(if (it) CardFace.Back else CardFace.Front) }
@@ -334,4 +439,61 @@ fun getCardType(cardNumber: String): Int {
 
     return 0
 }
+
+private fun validateQueries(cardNumber: String, holderName: String, expiryDate: String, cvv: String, onInvalidNumber: (Int) -> Unit, onInvalidName: (Int) -> Unit, onInvalidExpiry: (Int) -> Unit, onInvalidCvv: (Int) -> Unit): Boolean {
+    val checkNumber = validateCardNumber(cardNumber, onInvalidNumber)
+    val checkName = validateName(holderName, onInvalidName)
+    val checkExpiry = validateExpiryDate(expiryDate, onInvalidExpiry)
+    return validateCvv(cvv, onInvalidCvv) && checkNumber && checkName && checkExpiry
+}
+
+fun validateCvv(cvv: String, onInvalidCvv: (Int) -> Unit): Boolean {
+    if (cvv.isEmpty()) {
+        onInvalidCvv(R.string.empty_field)
+        return false
+    }
+    if (!cvv.matches(Regex("\\d+"))) {
+        onInvalidCvv(R.string.invalid_cvv)
+        return false
+    }
+    onInvalidCvv(-1)
+    return true
+}
+
+fun validateExpiryDate(expiryDate: String, onInvalidExpiry: (Int) -> Unit): Boolean {
+    if (expiryDate.isEmpty()) {
+        onInvalidExpiry(R.string.empty_field)
+        return false
+    }
+    val formatter = DateTimeFormatter.ofPattern("MM/yy")
+
+    try {
+        val parsedDate = LocalDate.parse(expiryDate, formatter)
+
+        if (parsedDate.isAfter(LocalDate.now())) {
+            onInvalidExpiry(R.string.invalid_expiry)
+            return false
+        }
+        onInvalidExpiry(-1)
+        return true
+    } catch (e: DateTimeParseException) {
+        onInvalidExpiry(R.string.invalid_expiry)
+        return false
+    }
+}
+
+fun validateCardNumber(cardNumber: String, onInvalidNumber: (Int) -> Unit): Boolean {
+    if (cardNumber.isEmpty()) {
+        onInvalidNumber(R.string.empty_field)
+        return false
+    }
+    if (!cardNumber.matches(Regex("\\d{16} | (\\d{4}\\s){4}"))) {
+        onInvalidNumber(R.string.invalid_card_number)
+        return false
+    }
+    onInvalidNumber(-1)
+    return true
+}
+
+
 

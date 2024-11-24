@@ -126,6 +126,10 @@ fun SignUp3Content(
     navigateSignIn: () -> Unit,
     viewModel: UserViewModel
 ){
+
+    var isError by rememberSaveable { mutableStateOf(false) }
+    var errorMsg by rememberSaveable { mutableStateOf(-1) }
+
     AppWindow(
         modifier = Modifier
             .fillMaxWidth(0.95f)
@@ -162,15 +166,26 @@ fun SignUp3Content(
             ) {
                 AppInput(
                     value = code,
-                    onValueChange = { onCodeChange(it) },
+                    onValueChange = {
+                        onCodeChange(it)
+                        isError = false
+                                    },
                     label = stringResource(R.string.verification_code),
+                    error = if(errorMsg != -1) stringResource(errorMsg) else null,
+                    isError = isError,
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
             AppButton(text = stringResource(R.string.verify_account), onClick = {
                 try {
-                    viewModel.verifyEmail(code)
-                    navigateSignIn()
+                    val onInvalidCode: (Int) -> Unit = {
+                        errorMsg = it
+                        isError = it != -1
+                    }
+                    if(validateCode(code, onInvalidCode)) {
+                        viewModel.verifyEmail(code)
+                        navigateSignIn()
+                    }
                 }catch (e : Exception){
                     println(e) //TODO()
                 }
@@ -179,6 +194,15 @@ fun SignUp3Content(
             }, width = 0.8f)
         }
     }
+}
+
+private fun validateCode(code: String, onInvalidCode: (Int) -> Unit): Boolean {
+    if(code.isEmpty()) {
+        onInvalidCode(R.string.empty_field)
+        return false
+    }
+    onInvalidCode(-1)
+    return true
 }
 
 

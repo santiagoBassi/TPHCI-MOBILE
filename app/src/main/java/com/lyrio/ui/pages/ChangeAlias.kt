@@ -18,7 +18,7 @@ import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.components.AppInput
 import com.lyrio.ui.components.AppWindow
 
-@Preview(showBackground = true)
+
 @Composable
 fun ChangeAlias(
     navigateChangeAliasSuccessful: () -> Unit = {}
@@ -82,6 +82,9 @@ fun ChangeAliasContent(
     onNewAliasChange: (String) -> Unit,
     navigateChangeAliasSuccessful: () -> Unit = {}
 ){
+    var isError by remember { mutableStateOf(false) }
+    var errorMsg by remember { mutableIntStateOf(-1) }
+
     AppWindow(
         modifier = Modifier.fillMaxHeight(if(landscape) 1f else 0.85f)
     ) {
@@ -101,7 +104,15 @@ fun ChangeAliasContent(
                 verticalArrangement = Arrangement.SpaceBetween,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                AppInput(value = newAlias, onValueChange = { onNewAliasChange(it) }, label = stringResource(R.string.new_alias),
+                AppInput(
+                    value = newAlias,
+                    onValueChange = {
+                        onNewAliasChange(it)
+                        isError = false
+                                    },
+                    label = stringResource(R.string.new_alias),
+                    error = if(errorMsg != -1) stringResource(errorMsg) else null,
+                    isError = isError,
                     modifier = Modifier.fillMaxWidth(if(landscape) 0.8f else 0.95f))
                 Spacer(modifier = Modifier.height(if(landscape) 30.dp else 30.dp))
                 Column(
@@ -120,8 +131,30 @@ fun ChangeAliasContent(
                     }
                 }
             }
-            AppButton(text = stringResource(R.string.change_alias), onClick = navigateChangeAliasSuccessful, width = if(landscape) 0.6f else 0.8f)
+            AppButton(text = stringResource(R.string.change_alias), onClick = {
+                if(validateAlias(newAlias, { errorMsg = it })) {
+                    navigateChangeAliasSuccessful()
+                }
+
+            }, width = if(landscape) 0.6f else 0.8f)
         }
 
     }
+}
+
+fun validateAlias(alias: String, onInvalidAlias: (Int) -> Unit): Boolean {
+    //TODO: Implementar validación de alias con las limitaciones correctas
+    if(alias.isEmpty()) {
+        onInvalidAlias(R.string.empty_field)
+        return false
+    }
+    if(!alias.contains(".")) {
+        onInvalidAlias(R.string.invalid_alias)
+        return false
+    }
+    if(alias.split(".").size != 2) {
+        onInvalidAlias(R.string.invalid_alias)
+    }
+    onInvalidAlias(-1)
+    return true
 }
