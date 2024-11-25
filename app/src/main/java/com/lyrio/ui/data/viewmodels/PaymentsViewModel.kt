@@ -98,7 +98,9 @@ class PaymentsViewModel(
             else
                 paymentRepository.makePaymentWithCard(amount,"-","CARD",cardId,_uiStatePayments.value.receiver)
         },
-        { state, _ -> state.copy() }
+        { state, _ -> state.copy(
+            amount = amount
+        ) }
     )
 
 

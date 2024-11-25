@@ -16,6 +16,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -29,6 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lyrio.R
+import com.lyrio.data.DataSourceException
 import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.components.AppInput
 import com.lyrio.ui.components.AppWindow
@@ -131,6 +133,9 @@ fun RecoverPass2Content(
     var isError by rememberSaveable(key = "recoverPass2Error"){ mutableStateOf(false) }
     var errorMsg by rememberSaveable(key = "recoverPass2ErrorMsg"){ mutableIntStateOf(-1) }
 
+    val uiStateUser by viewModel.uiStateUser.collectAsState()
+
+
     AppWindow(
         modifier = Modifier
             .fillMaxWidth(0.95f)
@@ -150,6 +155,14 @@ fun RecoverPass2Content(
                 fontWeight = FontWeight.SemiBold,
                 fontSize = if(landscape) 26.sp else 22.sp
             )
+            if(uiStateUser.error != null) {
+                val errorCode = uiStateUser.error?.code ?: DataSourceException.UNEXPECTED_ERROR_CODE
+                Text(
+                    text = stringResource(errorMap[errorCode]!!),
+                    color = MaterialTheme.colorScheme.error
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+            }
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -184,8 +197,9 @@ fun RecoverPass2Content(
                         isError = it != -1
                     }
                     if(validateCode(code, onInvalidCode)) {
-                        viewModel.saveCode(code)
-                        navigateRecoverPass3()
+                        viewModel.clearError()
+                        viewModel.saveCode(code, navigateRecoverPass3)
+
                     }
                 } catch (e: Exception){
                     // TODO: handle error
@@ -195,5 +209,13 @@ fun RecoverPass2Content(
         }
     }
 }
+
+private val errorMap = mapOf(
+    DataSourceException.DATA_ERROR to R.string.invalid_code,
+    DataSourceException.UNAUTHORIZED_ERROR_CODE to R.string.unauthorized,
+    DataSourceException.INTERNAL_SERVER_ERROR_CODE to R.string.internal_server_error,
+    DataSourceException.CONNECTION_ERROR_CODE to R.string.connection_error,
+    DataSourceException.UNEXPECTED_ERROR_CODE to R.string.unexpected_error
+)
 
 

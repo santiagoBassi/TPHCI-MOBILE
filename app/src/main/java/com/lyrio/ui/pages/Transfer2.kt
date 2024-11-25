@@ -139,7 +139,8 @@ fun Transfer2(
                                         it
                                     )
                                 },
-                                isTablet
+                                isTablet,
+                                walletViewModel
                             )
                         },
                         onClick = onClick,
@@ -171,7 +172,8 @@ fun Transfer2(
                             onCurrentPageChanged = {
                                 paymentsViewModel.setSelectedPaymentMethod(it)
                             },
-                            isTablet
+                            isTablet,
+                            walletViewModel
                         )
                     },
                     onClick = onClick,
@@ -335,9 +337,18 @@ fun Transfer2ContentV(
     }
 }
 @Composable
-fun PaymentMethodsCarousel(cards: List<Card>, initialPage: Int = 0, onCurrentPageChanged: (Int) -> Unit = {}, isTablet: Boolean = false) {
+fun PaymentMethodsCarousel(
+    cards: List<Card>,
+    initialPage: Int = 0,
+    onCurrentPageChanged: (Int) -> Unit = {},
+    isTablet: Boolean = false,
+    walletViewModel: WalletViewModel
+
+) {
     val pagerState = rememberPagerState(initialPage = initialPage ){ cards.size + 1 }
     val coroutineScope = rememberCoroutineScope()
+    val walletUiState by walletViewModel.uiStateWallet.collectAsState()
+
 
     Column (
         modifier = Modifier.fillMaxWidth(if(isTablet) 0.8f else 1f),
@@ -351,7 +362,7 @@ fun PaymentMethodsCarousel(cards: List<Card>, initialPage: Int = 0, onCurrentPag
             pageSpacing = 8.dp
         ) { page ->
             if (page == 0) {
-                AccountBalanceOption()
+                AccountBalanceOption(walletUiState.balance)
             } else {
                 CreditCard(
                     cardNumber = cards[page - 1].number,
@@ -383,7 +394,7 @@ fun PaymentMethodsCarousel(cards: List<Card>, initialPage: Int = 0, onCurrentPag
 
 @Composable
 fun AccountBalanceOption(
-    balance: Double = 100000.0,
+    balance: Double,
 ) {
     Card(
         modifier = Modifier

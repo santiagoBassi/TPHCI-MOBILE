@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,6 +16,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -28,6 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lyrio.R
+import com.lyrio.data.DataSourceException
 import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.components.AppInput
 import com.lyrio.ui.components.AppWindow
@@ -134,6 +137,8 @@ fun RecoverPass3Content(
     viewModel: UserViewModel,
     navigateSignIn: () -> Unit
 ){
+    val uiStateUser by viewModel.uiStateUser.collectAsState()
+
 
     var isPasswordError by rememberSaveable(key = "recoverPass3Error"){ mutableStateOf(false) }
     var isConfirmPasswordError by rememberSaveable(key = "confirmRecoverPass3ErrorMsg"){ mutableStateOf(false) }
@@ -159,6 +164,14 @@ fun RecoverPass3Content(
                 fontWeight = FontWeight.SemiBold,
                 fontSize = if(landscape) 26.sp else 22.sp
             )
+            if(uiStateUser.error != null) {
+                val errorCode = uiStateUser.error?.code ?: DataSourceException.UNEXPECTED_ERROR_CODE
+                Text(
+                    text = stringResource(errorMap[errorCode]!!),
+                    color = MaterialTheme.colorScheme.error
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+            }
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(15.dp),
@@ -208,8 +221,8 @@ fun RecoverPass3Content(
                         isConfirmPasswordError = it != -1
                     }
                     if(validateQueries(newPassword, confirmPassword, onInvalidPassword, onInvalidConfirmPassword)) {
-                        viewModel.recoverPass2(newPassword)
-                        navigateSignIn()
+                        viewModel.clearError()
+                        viewModel.recoverPass2(newPassword, navigateSignIn)
                     }
                 }catch (e: Exception){
                     println(e.message)
@@ -223,3 +236,11 @@ private fun validateQueries(newPassword: String, confirmPassword: String, onInva
     val checkPass = validatePasswordSignUp(newPassword, onInvalidPassword)
     return validateConfirmPassword(newPassword, confirmPassword, onInvalidConfirmPassword) && checkPass
 }
+
+private val errorMap = mapOf(
+    DataSourceException.DATA_ERROR to R.string.invalid_password,
+    DataSourceException.UNAUTHORIZED_ERROR_CODE to R.string.unauthorized,
+    DataSourceException.INTERNAL_SERVER_ERROR_CODE to R.string.internal_server_error,
+    DataSourceException.CONNECTION_ERROR_CODE to R.string.connection_error,
+    DataSourceException.UNEXPECTED_ERROR_CODE to R.string.unexpected_error
+)

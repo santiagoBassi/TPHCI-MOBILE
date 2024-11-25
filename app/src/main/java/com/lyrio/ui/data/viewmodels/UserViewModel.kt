@@ -64,16 +64,17 @@ class UserViewModel(
         onSuccessfulRecover
     )
 
-    fun recoverPass2(password: String) = runOnViewModelScope(
+    fun recoverPass2(password: String, navigateSignIn: () -> Unit) = runOnViewModelScope(
         {
             userRepository.resetPassword(_uiStateUser.value.code, password)
         },
-        {state, _ -> state.copy()}
+        {state, _ -> state.copy()},
+        navigateSignIn
     )
 
-    fun saveCode(code: String) {
+    fun saveCode(code: String, navigateRecoverPass3: () -> Unit) {
         _uiStateUser.value = _uiStateUser.value.copy(code = code)
-
+        navigateRecoverPass3
     }
 
     fun getCurrentUser() = runOnViewModelScope(

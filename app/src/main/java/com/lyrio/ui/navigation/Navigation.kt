@@ -64,6 +64,8 @@ fun NavigationWrapper() {
         )
     )
 
+    val startDestination =
+
     NavHost(navController = navController, startDestination = Screen.Landing) {
 
         composable<Screen.Landing> {
@@ -80,7 +82,11 @@ fun NavigationWrapper() {
                     navController.navigate(Screen.SignUp1)
                 },
                 navigateHome = {
-                    navController.navigate(Screen.Home)
+                    navController.navigate(Screen.Home){
+                        popUpTo(navController.graph.startDestinationId) {
+                            inclusive = true
+                        }
+                    }
                 },
                 navigateRecoverPass1 = {
                     navController.navigate(Screen.RecoverPass1)
@@ -216,7 +222,8 @@ fun NavigationWrapper() {
                     },
                     navigateTransfer1 = {
                         navController.navigate(Screen.Transfer1)
-                    }
+                    },
+                    paymentsViewModel = paymentsViewModel
                 )
             }
         }

@@ -8,6 +8,7 @@ data class PaymentsUiState(
     val lastTransfers: List<PaymentResponse> = emptyList(),
     val transfers: List<PaymentResponse> = emptyList(),
     val receiver: String = "",
+    val amount: Double = 0.0,
     val isFetching: Boolean = false,
     val expensesByMonth: List<Expense> = emptyList(),
     val error: Error? = null
