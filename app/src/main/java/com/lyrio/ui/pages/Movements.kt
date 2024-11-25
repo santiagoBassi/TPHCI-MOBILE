@@ -61,7 +61,7 @@ fun Movements(
     val isTablet = maxWidth > 1000.dp || maxHeight > 1000.dp
 
     when (configuration.orientation) {
-        Configuration.ORIENTATION_LANDSCAPE -> { // Modo horizontal
+        Configuration.ORIENTATION_LANDSCAPE -> {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
@@ -179,7 +179,7 @@ fun MovementsContent(
                             transactionType = if (transfer.payerEmail == userState.email) "Enviaste" else "Recibiste",
                             amount = transfer.amount,
                             recipient = if (transfer.payerEmail == userState.email) transfer.receiverName else transfer.payerName,
-                            date = transfer.createdAt.toString()
+                            date = transfer.createdAt
                         )
                     }
                 }
@@ -203,3 +203,4 @@ fun MovementsContent(
         }
     }
 }
+

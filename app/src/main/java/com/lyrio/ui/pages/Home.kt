@@ -248,12 +248,12 @@ fun HomeContent(
                         .padding(vertical = 10.dp)
                         .weight(1f),
                 ) {
-                    items(paymentsState.lastTransfers) { transfer ->
+                  items(paymentsState.lastTransfers) { transfer ->
                         TransferItem(
                             transactionType = if(transfer.payerEmail == userState.email) "Enviaste" else "Recibiste",
                             amount = transfer.amount,
                             recipient = if(transfer.payerEmail == userState.email) transfer.receiverName else transfer.payerName,
-                            date = transfer.createdAt.toString()
+                            date = transfer.createdAt
                         )
                     }
                 }
@@ -265,7 +265,9 @@ fun HomeContent(
                         stringResource(R.string.see_all_movements),
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
-                        modifier = Modifier.padding(start = 4.dp).clickable { navigateMovements() },
+                        modifier = Modifier
+                            .padding(start = 4.dp)
+                            .clickable { navigateMovements() },
                         color = Color.Gray,
                     )
                     Icon(

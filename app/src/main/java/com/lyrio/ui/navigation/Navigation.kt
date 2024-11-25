@@ -64,9 +64,7 @@ fun NavigationWrapper() {
         )
     )
 
-    val startDestination =
-
-    NavHost(navController = navController, startDestination = Screen.Landing) {
+    NavHost(navController = navController, startDestination = Screen.SignIn) {
 
         composable<Screen.Landing> {
             LandingPage(navigateSignIn = {

@@ -22,6 +22,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,7 +30,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -43,10 +43,10 @@ import com.lyrio.ui.components.eyeOffIconPainter
 import com.lyrio.ui.data.viewmodels.PaymentsViewModel
 import com.lyrio.ui.data.viewmodels.UserViewModel
 import com.lyrio.ui.data.viewmodels.WalletViewModel
+import com.lyrio.ui.styles.LightGray
 import com.lyrio.ui.styles.Red
 import com.lyrio.utils.formatCurrencyWhole
 import com.lyrio.utils.getDecimalPart
-import kotlinx.coroutines.flow.Flow
 
 
 @Composable
@@ -63,7 +63,7 @@ fun Money(
 
 
     when (configuration.orientation) {
-        Configuration.ORIENTATION_LANDSCAPE -> { // Modo horizontal
+        Configuration.ORIENTATION_LANDSCAPE -> {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
@@ -123,6 +123,7 @@ fun MoneyContent(
     paymentsViewModel : PaymentsViewModel
 ) {
     var showBalance by remember { mutableStateOf(true) }
+    var hasData by rememberSaveable(key = "has_data") { mutableStateOf(false) }
     val uiStateWallet by walletViewModel.uiStateWallet.collectAsState()
     val uiStateUser by userViewModel.uiStateUser.collectAsState()
     val uiStatePayments by paymentsViewModel.uiStatePayments.collectAsState()
@@ -210,10 +211,18 @@ fun MoneyContent(
                 modifier = Modifier.widthIn(max = 430.dp),
                 horizontalArrangement = Arrangement.Center,
             ){
-                if(uiStatePayments.expensesByMonth.isNotEmpty())
+                for((month, amount) in uiStatePayments.expensesByMonth){
+                    if(amount != 0.0){
+                        hasData = true
+                    }
+                }
+                if(hasData)
                     BarChart(uiStatePayments.expensesByMonth.map {(month, qty) -> BarChartData(months[month], qty.toFloat()) }, maxBarHeight)
                 else
-                    Text(stringResource(R.string.no_cards_associated))
+                    Text(stringResource(R.string.no_data_available), fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp,
+                        modifier = Modifier.padding(start = 4.dp),
+                        color = LightGray)
             }
         }
     }

@@ -156,11 +156,24 @@ fun CreditCardsContent(
                         .padding(vertical = 12.dp)
                 ) {
                     for (card in cards) {
+                        val logo = getCardType(card.number)
+                        val primary =
+                            when (logo) {
+                                R.drawable.visa -> Color(0xFF120269)
+                                R.drawable.amex -> Color(0xFFC98A0C)
+                                else -> Color(0xFF000000)
+                            }
+                        val secondary =
+                            when (logo) {
+                                R.drawable.visa -> Color(0xFF2204C6)
+                                R.drawable.amex -> Color(0xFFDAA201)
+                                else -> Color(0xFF5f5f5f)
+                            }
                         CardRow(card = CreditCardData(
                             cardNumber = card.number,
-                            logo = getCardType(card.number),
-                            primaryColor = Color.Black,
-                            secondaryColor = Color.Black,
+                            logo = if ( logo == R.drawable.visa) R.drawable.visa_white else logo,
+                            primaryColor = primary,
+                            secondaryColor = secondary,
                             logoSize = 80.dp
                         ), onDelete = {
                             cardToDelete = card.id

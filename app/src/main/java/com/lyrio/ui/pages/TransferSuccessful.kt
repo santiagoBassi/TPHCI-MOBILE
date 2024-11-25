@@ -18,7 +18,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.lyrio.R
 import com.lyrio.ui.components.Successful
@@ -81,7 +80,6 @@ fun TransferSuccessfulContent(
     navigateTransfer1: () -> Unit = {},
     paymentsViewModel: PaymentsViewModel
 ) {
-    val amount = 1000
     val paymentsUiState by paymentsViewModel.uiStatePayments.collectAsState()
 
     Successful(message = stringResource(R.string.transfer_sent), buttonLabel = stringResource(R.string.back_home), onClick = navigateHome, variant = "secondary", height = height){
