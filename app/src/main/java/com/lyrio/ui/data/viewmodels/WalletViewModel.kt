@@ -73,7 +73,7 @@ class WalletViewModel(
         onSuccessfulUpdate
     )
 
-    fun addCreditCard(cardNumber: String, holderName: String, expiryDate: String, cvv: String) = runOnViewModelScope(
+    fun addCreditCard(cardNumber: String, holderName: String, expiryDate: String, cvv: String, onSuccessfulAdd: () -> Unit) = runOnViewModelScope(
         {
             walletRepository.addCard(NewCard(
                 number = cardNumber,
@@ -83,7 +83,8 @@ class WalletViewModel(
                 type = CardType.CREDIT
             ))
         },
-        { state, newCard -> state.copy(cards = state.cards + newCard)}
+        { state, newCard -> state.copy(cards = state.cards + newCard)},
+        onSuccessfulAdd
     )
 
     fun deleteCard(cardId: Int) = runOnViewModelScope(

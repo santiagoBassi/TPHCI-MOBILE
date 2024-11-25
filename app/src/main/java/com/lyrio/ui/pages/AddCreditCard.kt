@@ -18,6 +18,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -32,6 +33,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.lyrio.R
+import com.lyrio.data.DataSourceException
 import com.lyrio.ui.auth.validateName
 import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.components.AppInput
@@ -41,7 +43,6 @@ import com.lyrio.ui.components.FlippableCard
 import com.lyrio.ui.components.NewCreditCardBack
 import com.lyrio.ui.components.NewCreditCardFront
 import com.lyrio.ui.components.RotationAxis
-import com.lyrio.ui.data.viewmodels.UserViewModel
 import com.lyrio.ui.data.viewmodels.WalletViewModel
 import java.util.Locale
 
@@ -49,8 +50,7 @@ import java.util.Locale
 @Composable
 fun AddCreditCard(
     navigateAddCardSuccessful: () -> Unit,
-    walletViewModel: WalletViewModel,
-    userViewModel: UserViewModel
+    walletViewModel: WalletViewModel
 ) {
     var cardNumber by rememberSaveable(key = "addCardNumber") { mutableStateOf("") }
     var holderName by rememberSaveable(key = "addCardHolderName") { mutableStateOf("") }
@@ -77,37 +77,44 @@ fun AddCreditCard(
     val isTablet = maxWidth > 1000.dp || maxHeight > 1000.dp
 
     val handleOnClick: () -> Unit = {
-        try {
-            val onInvalidNumber: (Int) -> Unit = {
-                numberErrorMsg = it
-                isNumberError = it != -1
-            }
-            val onInvalidName: (Int) -> Unit = {
-                nameErrorMsg = it
-                isNameError = it != -1
-            }
-            val onInvalidExpiry: (Int) -> Unit = {
-                expiryErrorMsg = it
-                isExpiryError = it != -1
-            }
-            val onInvalidCvv: (Int) -> Unit = {
-                cvvErrorMsg = it
-                isCvvError = it != -1
-            }
-            if(validateQueries(cardNumber, holderName, expiryDate, cvv, onInvalidNumber, onInvalidName, onInvalidExpiry, onInvalidCvv)) {
-                walletViewModel.addCreditCard(
-                    cardNumber,
-                    holderName,
-                    expiryDate,
-                    cvv
-                )
-                navigateAddCardSuccessful()
+        val onInvalidNumber: (Int) -> Unit = {
+            numberErrorMsg = it
+            isNumberError = it != -1
+        }
+        val onInvalidName: (Int) -> Unit = {
+            nameErrorMsg = it
+            isNameError = it != -1
+        }
+        val onInvalidExpiry: (Int) -> Unit = {
+            expiryErrorMsg = it
+            isExpiryError = it != -1
+        }
+        val onInvalidCvv: (Int) -> Unit = {
+            cvvErrorMsg = it
+            isCvvError = it != -1
+        }
+        if (validateQueries(
+                cardNumber,
+                holderName,
+                expiryDate,
+                cvv,
+                onInvalidNumber,
+                onInvalidName,
+                onInvalidExpiry,
+                onInvalidCvv
+            )
+        ) {
+            walletViewModel.clearError()
+            walletViewModel.addCreditCard(
+                cardNumber,
+                holderName,
+                expiryDate,
+                cvv,
+                navigateAddCardSuccessful
+            )
+        }
 
-            }
-        } catch (e: Exception) {
-            // TODO
     }
-}
 
     when (configuration.orientation) {
         Configuration.ORIENTATION_LANDSCAPE -> { // Modo horizontal
@@ -170,7 +177,8 @@ fun AddCreditCard(
                             )
                         },
                         isTablet = isTablet,
-                        handleOnClick = handleOnClick
+                        handleOnClick = handleOnClick,
+                        viewModel = walletViewModel
                     )
 
                 }
@@ -234,7 +242,8 @@ fun AddCreditCard(
                                 setIsCvvError = { isCvvError = it }
                             )
                         },
-                        handleOnClick = handleOnClick
+                        handleOnClick = handleOnClick,
+                        walletViewModel = walletViewModel
                     )
                 }
             }
@@ -247,8 +256,11 @@ fun AddCardContentH(
     flippableCard: @Composable () -> Unit = {},
     cardInputs: @Composable () -> Unit = {},
     isTablet: Boolean = false,
-    handleOnClick: () -> Unit
+    handleOnClick: () -> Unit,
+    viewModel: WalletViewModel
 ) {
+    val uiStateWallet by viewModel.uiStateWallet.collectAsState()
+
     AppWindow (
         modifier = Modifier.fillMaxSize()
     ){
@@ -288,6 +300,14 @@ fun AddCardContentH(
                 }
             }
             Spacer(Modifier.height(10.dp))
+            if(uiStateWallet.error != null) {
+                val errorCode = uiStateWallet.error?.code ?: DataSourceException.UNEXPECTED_ERROR_CODE
+                Text(
+                    text = stringResource(errorMap[errorCode]!!),
+                    color = MaterialTheme.colorScheme.error
+                )
+                Spacer(modifier = Modifier.height(18.dp))
+            }
             AppButton(text = stringResource(R.string.continue_), width = 0.5f, onClick = handleOnClick)
         }
     }
@@ -297,8 +317,11 @@ fun AddCardContentH(
 fun AddCardContentV(
     flippableCard: @Composable () -> Unit = {},
     cardInputs: @Composable () -> Unit = {},
-    handleOnClick: () -> Unit
+    handleOnClick: () -> Unit,
+    walletViewModel: WalletViewModel
 ) {
+    val uiStateWallet by walletViewModel.uiStateWallet.collectAsState()
+
     AppWindow {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -326,6 +349,14 @@ fun AddCardContentV(
                 cardInputs()
             }
             Spacer(Modifier.height(10.dp))
+            if(uiStateWallet.error != null) {
+                val errorCode = uiStateWallet.error?.code ?: DataSourceException.UNEXPECTED_ERROR_CODE
+                Text(
+                    text = stringResource(errorMap[errorCode]!!),
+                    color = MaterialTheme.colorScheme.error
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+            }
             AppButton(text = stringResource(R.string.add), width = 0.8f, onClick = handleOnClick)
         }
     }
@@ -500,5 +531,13 @@ fun validateCardNumber(cardNumber: String, onInvalidNumber: (Int) -> Unit): Bool
     return true
 }
 
+private val errorMap = mapOf(
+    DataSourceException.DATA_ERROR to R.string.invalid_data,
+    DataSourceException.UNAUTHORIZED_ERROR_CODE to R.string.unauthorized,
+    DataSourceException.NOT_FOUND_ERROR_CODE to R.string.card_not_found,
+    DataSourceException.INTERNAL_SERVER_ERROR_CODE to R.string.internal_server_error,
+    DataSourceException.CONNECTION_ERROR_CODE to R.string.connection_error,
+    DataSourceException.UNEXPECTED_ERROR_CODE to R.string.unexpected_error
+)
 
 

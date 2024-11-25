@@ -347,7 +347,6 @@ fun NavigationWrapper() {
                         navController.navigate(Screen.AddCardSuccessful)
                     },
                     walletViewModel = walletViewModel,
-                    userViewModel = userViewModel
                 )
             }
         }

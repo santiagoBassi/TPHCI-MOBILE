@@ -50,7 +50,7 @@ data class NavItem(
 )
 
 val items = listOf(
-    NavItem(R.drawable.send_money_24dp_e8eaed_fill0_wght400_grad0_opsz24, R.string.transfer, "Transfer Icon", false,Screen.Transfer1),
+    NavItem(R.drawable.transfer, R.string.transfer, "Transfer Icon", false,Screen.Transfer1),
     NavItem(R.drawable.account_balance_wallet_24dp_e8eaed_fill0_wght400_grad0_opsz24, R.string.money, "Transfer Icon", false,
         Screen.Money) ,
     NavItem(R.drawable.list_alt_24dp_e8eaed_fill0_wght400_grad0_opsz24, R.string.movements, "Transfer Icon", false,

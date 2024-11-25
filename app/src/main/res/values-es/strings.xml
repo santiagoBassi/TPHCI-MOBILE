@@ -246,6 +246,7 @@
     <string name="no_data_available">No hay datos disponibles</string>
     <string name="invalid_data">Datos inválidos</string>
     <string name="email_not_found">El email ingresado no está registrado</string>
+    <string name="card_not_found">Tarjeta no encontrada</string>
     <string name="unauthorized">No está autorizado</string>
 
 </resources>

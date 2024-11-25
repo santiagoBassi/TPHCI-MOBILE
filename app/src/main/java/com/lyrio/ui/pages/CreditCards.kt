@@ -5,10 +5,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
@@ -35,6 +37,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.lyrio.R
+import com.lyrio.data.DataSourceException
 import com.lyrio.data.model.Card
 import com.lyrio.ui.components.AlertDialog
 import com.lyrio.ui.components.AppButton
@@ -75,7 +78,7 @@ fun CreditCards(
             ){
                 Column(
                     modifier = Modifier
-                        .fillMaxWidth(if (isTablet) 0.8f else 0.85f)
+                        .fillMaxWidth(if (isTablet) 0.8f else 0.65f)
                         .fillMaxHeight(if (isTablet) 0.7f else 0.85f)
                         .padding(16.dp),
                     verticalArrangement = Arrangement.Center,
@@ -124,12 +127,14 @@ fun CreditCardsContent(
 ) {
     var openAlertDialog by remember { mutableStateOf(false) }
     var cardToDelete by remember { mutableIntStateOf(0) }
+    val uiStateWallet by walletViewModel.uiStateWallet.collectAsState()
 
     when {
         openAlertDialog -> {
             AlertDialog(
                 onDismissRequest = { openAlertDialog = false },
                 onConfirmation = {
+                    walletViewModel.clearError()
                     walletViewModel.deleteCard(cardToDelete)
                     openAlertDialog = false
                 },
@@ -195,6 +200,14 @@ fun CreditCardsContent(
                     )
                 }
             }
+            if(uiStateWallet.error != null) {
+                val errorCode = uiStateWallet.error?.code ?: DataSourceException.UNEXPECTED_ERROR_CODE
+                Text(
+                    text = stringResource(errorMap[errorCode]!!),
+                    color = MaterialTheme.colorScheme.error
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+            }
             AppButton(text = stringResource(R.string.add_card), width = if(isLandscape) 0.5f else 0.8f,
                 onClick = navigateAddCreditCard, modifier = Modifier.padding(vertical = 15.dp))
         }
@@ -231,6 +244,15 @@ class CreditCardData(
     val primaryColor: Color,
     val secondaryColor: Color,
     val logoSize: Dp,
+)
+
+private val errorMap = mapOf(
+    DataSourceException.DATA_ERROR to R.string.invalid_data,
+    DataSourceException.UNAUTHORIZED_ERROR_CODE to R.string.unauthorized,
+    DataSourceException.NOT_FOUND_ERROR_CODE to R.string.card_not_found,
+    DataSourceException.INTERNAL_SERVER_ERROR_CODE to R.string.internal_server_error,
+    DataSourceException.CONNECTION_ERROR_CODE to R.string.connection_error,
+    DataSourceException.UNEXPECTED_ERROR_CODE to R.string.unexpected_error
 )
 
 
