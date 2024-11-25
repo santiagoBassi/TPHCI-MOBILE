@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,6 +17,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -30,6 +32,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lyrio.R
+import com.lyrio.data.DataSourceException
 import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.components.AppInput
 import com.lyrio.ui.components.AppWindow
@@ -131,6 +134,7 @@ fun RecoverPass1Content(
 ){
     var isError by rememberSaveable(key = "recover1EmailError") { mutableStateOf(false) }
     var errorMsg by rememberSaveable(key = "recover1EmailErrorMsg") { mutableIntStateOf(-1) }
+    val uiStateUser by viewModel.uiStateUser.collectAsState()
 
     AppWindow(
         modifier = Modifier
@@ -151,6 +155,14 @@ fun RecoverPass1Content(
                 fontWeight = FontWeight.SemiBold,
                 fontSize = if(landscape) 26.sp else 22.sp
             )
+            if(uiStateUser.error != null) {
+                val errorCode = uiStateUser.error?.code ?: DataSourceException.UNEXPECTED_ERROR_CODE
+                Text(
+                    text = stringResource(errorMap[errorCode]!!),
+                    color = MaterialTheme.colorScheme.error
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+            }
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -187,8 +199,9 @@ fun RecoverPass1Content(
                         isError = it != -1
                     }
                     if(validateEmail(email, onInvalidEmail)) {
-                        viewModel.recoverPass1(email)
-                        navigateRecoverPass2()
+                        viewModel.clearError()
+                        viewModel.recoverPass1(email, navigateRecoverPass2)
+
                     }
                 }catch (e: Exception){
                     e.printStackTrace()
@@ -198,4 +211,11 @@ fun RecoverPass1Content(
     }
 }
 
-
+private val errorMap = mapOf(
+    DataSourceException.DATA_ERROR to R.string.invalid_credentials,
+    DataSourceException.UNAUTHORIZED_ERROR_CODE to R.string.unauthorized,
+    DataSourceException.NOT_FOUND_ERROR_CODE to R.string.email_not_found,
+    DataSourceException.INTERNAL_SERVER_ERROR_CODE to R.string.internal_server_error,
+    DataSourceException.CONNECTION_ERROR_CODE to R.string.connection_error,
+    DataSourceException.UNEXPECTED_ERROR_CODE to R.string.unexpected_error
+)

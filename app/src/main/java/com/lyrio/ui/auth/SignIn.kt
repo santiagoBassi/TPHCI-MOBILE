@@ -246,7 +246,7 @@ fun SignInContent(
     }
 }
 
-val errorMap = mapOf(
+private val errorMap = mapOf(
     DataSourceException.DATA_ERROR to R.string.invalid_credentials,
     DataSourceException.UNAUTHORIZED_ERROR_CODE to R.string.invalid_credentials,
     DataSourceException.NOT_FOUND_ERROR_CODE to R.string.user_not_found,

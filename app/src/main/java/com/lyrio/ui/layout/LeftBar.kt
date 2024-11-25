@@ -79,7 +79,6 @@ val itemsNavBar = listOf(
     NavItem(R.drawable.account_balance_wallet_24dp_e8eaed_fill0_wght400_grad0_opsz24, R.string.money, "Money Icon", false, Screen.Money),
     NavItem(R.drawable.list_alt_24dp_e8eaed_fill0_wght400_grad0_opsz24, R.string.movements, "Movements Icon", false, Screen.Movements) ,
     NavItem(R.drawable.currency_exchange_24dp_e8eaed_fill0_wght400_grad0_opsz24, R.string.investments, "Invest Icon", false, Screen.Invest) ,
-    NavItem(R.drawable.link_24dp_e8eaed_fill0_wght400_grad0_opsz24, R.string.pay_link, "Link Icon", false, Screen.Home),
     NavItem(R.drawable.credit_card_24dp_e8eaed_fill0_wght400_grad0_opsz24, R.string.cards, "Card Icon", false,
         Screen.CreditCards) ,
     NavItem(R.drawable.logout_24dp_e8eaed_fill0_wght400_grad0_opsz24, R.string.logout, "Logout Icon", false,

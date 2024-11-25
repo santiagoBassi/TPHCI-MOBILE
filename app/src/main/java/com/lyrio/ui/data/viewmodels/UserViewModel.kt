@@ -33,11 +33,12 @@ class UserViewModel(
         _uiStateUser.value = _uiStateUser.value.copy(firstName = firstName, lastName = lastName, dateOfBirth = birthDate)
     }
 
-    fun register(firstName: String, lastName: String, dateOfBirth: String, email: String, password: String) = runOnViewModelScope(
+    fun register(firstName: String, lastName: String, dateOfBirth: String, email: String, password: String, onSuccessfulRegister: () -> Unit) = runOnViewModelScope(
         {
             userRepository.register(firstName, lastName, dateOfBirth, email, password)
         },
-        { state, _ -> state.copy() }
+        { state, _ -> state.copy() },
+        onSuccessfulRegister
     )
 
     fun login(email: String, password: String, onSuccessfulLogin: () -> Unit) = runOnViewModelScope(
@@ -55,11 +56,12 @@ class UserViewModel(
         { state, _ -> state.copy() }
     )
 
-    fun recoverPass1(email: String) = runOnViewModelScope(
+    fun recoverPass1(email: String, onSuccessfulRecover: () -> Unit) = runOnViewModelScope(
         {
             userRepository.recoverPassword(email)
         },
-        {state, _ -> state.copy()}
+        {state, _ -> state.copy()},
+        onSuccessfulRecover
     )
 
     fun recoverPass2(password: String) = runOnViewModelScope(

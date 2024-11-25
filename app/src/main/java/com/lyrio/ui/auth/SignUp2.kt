@@ -32,6 +32,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.lyrio.R
+import com.lyrio.data.DataSourceException
 import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.components.AppInput
 import com.lyrio.ui.components.AppWindow
@@ -144,7 +145,7 @@ fun SignUp2Content(
     viewModel: UserViewModel,
     navigateSignUp3: () -> Unit
 ) {
-    val signUpUiState by viewModel.uiStateUser.collectAsState()
+    val userUiState by viewModel.uiStateUser.collectAsState()
 
     var isErrorEmail by remember { mutableStateOf(false) }
     var isErrorPassword by remember { mutableStateOf(false) }
@@ -171,6 +172,14 @@ fun SignUp2Content(
                 fontWeight = FontWeight.SemiBold
             )
             Spacer(modifier = Modifier.height(16.dp))
+            if(userUiState.error != null) {
+                val errorCode = userUiState.error?.code ?: DataSourceException.UNEXPECTED_ERROR_CODE
+                Text(
+                    text = stringResource(errorMap[errorCode]!!),
+                    color = MaterialTheme.colorScheme.error
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+            }
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(15.dp)
@@ -216,37 +225,40 @@ fun SignUp2Content(
             Spacer(modifier = Modifier.height(16.dp))
 
             AppButton(text = stringResource(R.string.continue_), onClick = {
-                try {
-                    val onInvalidEmail: (Int) -> Unit = {
-                        errorMsgEmail = it
-                        isErrorEmail = it != -1
-                    }
-                    val onInvalidPassword: (Int) -> Unit = {
-                        errorMsgPassword = it
-                        isErrorPassword = it != -1
-                    }
-                    val onInvalidConfirmPassword: (Int) -> Unit = {
-                        errorMsgConfirmPassword = it
-                        isErrorConfirmPassword = it != -1
-                    }
-                    if(validateQueries(email, password, confirmPassword, onInvalidEmail, onInvalidPassword, onInvalidConfirmPassword)) {
-                        viewModel.register(
-                            firstName = signUpUiState.firstName,
-                            lastName = signUpUiState.lastName,
-                            dateOfBirth = signUpUiState.dateOfBirth,
-                            email = email,
-                            password = password
-                        )
-                        navigateSignUp3()
-                    }
-                }catch (e : Exception){
-                    e.printStackTrace()
+                val onInvalidEmail: (Int) -> Unit = {
+                    errorMsgEmail = it
+                    isErrorEmail = it != -1
                 }
-
+                val onInvalidPassword: (Int) -> Unit = {
+                    errorMsgPassword = it
+                    isErrorPassword = it != -1
+                }
+                val onInvalidConfirmPassword: (Int) -> Unit = {
+                    errorMsgConfirmPassword = it
+                    isErrorConfirmPassword = it != -1
+                }
+                if(validateQueries(email, password, confirmPassword, onInvalidEmail, onInvalidPassword, onInvalidConfirmPassword)) {
+                    viewModel.clearError()
+                    viewModel.register(
+                        firstName = userUiState.firstName,
+                        lastName = userUiState.lastName,
+                        dateOfBirth = userUiState.dateOfBirth,
+                        email = email,
+                        password = password,
+                        onSuccessfulRegister = navigateSignUp3
+                    )
+                }
             }, width = 0.8f)
         }
     }
 }
+
+private val errorMap = mapOf(
+    DataSourceException.DATA_ERROR to R.string.invalid_data,
+    DataSourceException.INTERNAL_SERVER_ERROR_CODE to R.string.internal_server_error,
+    DataSourceException.CONNECTION_ERROR_CODE to R.string.connection_error,
+    DataSourceException.UNEXPECTED_ERROR_CODE to R.string.unexpected_error
+)
 
 private fun validateQueries(email: String, password: String, confirmPassword: String, onInvalidEmail: (Int) -> Unit, onInvalidPassword: (Int) -> Unit, onInvalidConfirmPassword: (Int) -> Unit): Boolean {
     val checkEmail = validateEmail(email, onInvalidEmail)

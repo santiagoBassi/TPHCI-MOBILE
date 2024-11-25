@@ -71,13 +71,12 @@ fun Home(
     viewModelUser: UserViewModel
 ) {
     val configuration = LocalConfiguration.current
-
     val maxHeight = configuration.screenHeightDp.dp
     val maxWidth = configuration.screenWidthDp.dp
     val isTablet = maxWidth > 1000.dp || maxHeight > 1000.dp
 
     when (configuration.orientation) {
-        Configuration.ORIENTATION_LANDSCAPE -> { // Modo horizontal
+        Configuration.ORIENTATION_LANDSCAPE -> {
             Box(
                 modifier = Modifier
                     .fillMaxSize()

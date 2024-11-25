@@ -127,7 +127,7 @@ fun Transfer2(
                 ) {
                     Transfer2ContentH(
                         isTablet = isTablet,
-                        recipient = "Ezequiel Testoni",
+                        recipient = paymentsUiState.receiver,
                         amount = amount,
                         onAmountChange = { amount = it },
                         carousel = {
@@ -161,7 +161,7 @@ fun Transfer2(
             ) {
                 Transfer2ContentV(
                     isTablet = isTablet,
-                    recipient = "Ezequiel Testoni",
+                    recipient = paymentsUiState.receiver,
                     amount = amount,
                     onAmountChange = { amount = it },
                     carousel = {
