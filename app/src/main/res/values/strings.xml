@@ -246,6 +246,6 @@
     <string name="email_not_found">Email not found</string>
     <string name="unauthorized">Unauthorized</string>
     <string name="invalid_code">Invalid code</string>
-
+    <string name="no_data_available">No data available</string>
 
 </resources>

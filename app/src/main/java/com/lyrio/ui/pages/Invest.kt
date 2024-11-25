@@ -204,7 +204,7 @@ fun InvestContent(
                 color = Color.Gray
             )
             Text(
-                text = " ${investData[5].expense}",
+                text = " $${investData[5].expense}",
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
                 color = Green

@@ -364,10 +364,24 @@ fun PaymentMethodsCarousel(
             if (page == 0) {
                 AccountBalanceOption(walletUiState.balance)
             } else {
+                val logo = getCardType(cards[page - 1].number)
+                val primary =
+                    when (logo) {
+                        R.drawable.visa -> Color(0xFF120269)
+                        R.drawable.amex -> Color(0xFFC98A0C)
+                        else -> Color(0xFF000000)
+                    }
+                val secondary =
+                    when (logo) {
+                        R.drawable.visa -> Color(0xFF2204C6)
+                        R.drawable.amex -> Color(0xFFDAA201)
+                        else -> Color(0xFF5f5f5f)
+                    }
                 CreditCard(
                     cardNumber = cards[page - 1].number,
-                    logo = getCardType(cards[page - 1].number),
-
+                    logo = if ( logo == R.drawable.visa) R.drawable.visa_white else logo,
+                    primaryColor = primary,
+                    secondaryColor = secondary
                 )
             }
         }

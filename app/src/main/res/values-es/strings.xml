@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">Lyrio</string>
     <string name="home">Inicio</string>
     <string name="profile">Perfil</string>
     <string name="transfer">Transferir</string>
@@ -243,8 +242,10 @@
     <string name="ups">Ups!</string>
     <string name="logout_text">¿Estás seguro de que querés cerrar sesión?</string>
     <string name="user_not_found">Email o contraseña incorrecto.</string>
+    <string name="invalid_code">Código inválido</string>
+    <string name="no_data_available">No hay datos disponibles</string>
     <string name="invalid_data">Datos inválidos</string>
-    <string name="email_not_found">El email ingresado no esta registrado</string>
+    <string name="email_not_found">El email ingresado no está registrado</string>
     <string name="unauthorized">No está autorizado</string>
 
 </resources>
