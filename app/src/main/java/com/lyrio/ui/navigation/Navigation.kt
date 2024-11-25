@@ -64,7 +64,7 @@ fun NavigationWrapper() {
         )
     )
 
-    NavHost(navController = navController, startDestination = Screen.SignIn) {
+    NavHost(navController = navController, startDestination = Screen.Landing) {
 
         composable<Screen.Landing> {
             LandingPage(navigateSignIn = {

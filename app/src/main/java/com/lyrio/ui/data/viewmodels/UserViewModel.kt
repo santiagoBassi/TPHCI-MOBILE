@@ -49,11 +49,12 @@ class UserViewModel(
         onSuccessfulLogin
     )
 
-    fun verifyEmail(code: String) = runOnViewModelScope(
+    fun verifyEmail(code: String, navigateSignIn: () -> Unit) = runOnViewModelScope(
         {
             userRepository.verifyEmail(code)
         },
-        { state, _ -> state.copy() }
+        { state, _ -> state.copy() },
+        navigateSignIn
     )
 
     fun recoverPass1(email: String, onSuccessfulRecover: () -> Unit) = runOnViewModelScope(

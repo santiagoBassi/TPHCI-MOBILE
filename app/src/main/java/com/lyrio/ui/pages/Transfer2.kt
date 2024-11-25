@@ -46,6 +46,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.lyrio.R
+import com.lyrio.data.DataSourceException
 import com.lyrio.data.model.Card
 import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.components.AppInput
@@ -80,26 +81,21 @@ fun Transfer2(
     var errorMessage by rememberSaveable(key = "transferErrorMessage") { mutableIntStateOf(-1) }
 
     val onClick: () -> Unit = {
-        try{
-            val onInvalidAmount: (Int) -> Unit = {
-                errorMessage = it
-                isError = it != -1
-            }
-            if(validateAmount(amount, onInvalidAmount)) {
-                if (paymentsUiState.selectedPaymentMethod > 0)
-                    paymentsViewModel.transfer(
-                        amount,
-                        walletState.cards[paymentsUiState.selectedPaymentMethod - 1].id
-                    )
-                else
-                    paymentsViewModel.transfer(amount, -1)
-
-                navigateTransferSuccessful()
-            }
-        } catch(e:Exception) {
-            //TODO: handle errors
+        val onInvalidAmount: (Int) -> Unit = {
+            errorMessage = it
+            isError = it != -1
         }
-
+        if(validateAmount(amount, onInvalidAmount)) {
+            paymentsViewModel.clearError()
+            if (paymentsUiState.selectedPaymentMethod > 0)
+                paymentsViewModel.transfer(
+                    amount,
+                    walletState.cards[paymentsUiState.selectedPaymentMethod - 1].id,
+                    navigateTransferSuccessful
+                )
+            else
+                paymentsViewModel.transfer(amount, -1, navigateTransferSuccessful)
+        }
     }
 
     LaunchedEffect(Unit, userState.isAuthenticated) {
@@ -146,7 +142,8 @@ fun Transfer2(
                         onClick = onClick,
                         isError = isError,
                         setIsError = { isError = it },
-                        errorMessage = errorMessage
+                        errorMessage = errorMessage,
+                        paymentsViewModel = paymentsViewModel
                     )
                 }
             }
@@ -179,7 +176,8 @@ fun Transfer2(
                     onClick = onClick,
                     isError = isError,
                     setIsError = { isError = it },
-                    errorMessage = errorMessage
+                    errorMessage = errorMessage,
+                    paymentsViewModel = paymentsViewModel
                 )
             }
         }
@@ -197,8 +195,10 @@ fun Transfer2ContentH(
     onClick: () -> Unit,
     isError: Boolean,
     setIsError: (Boolean) -> Unit,
-    errorMessage: Int
+    errorMessage: Int,
+    paymentsViewModel: PaymentsViewModel
 ) {
+    val uiStatePayments by paymentsViewModel.uiStatePayments.collectAsState()
     AppWindow(
         modifier = Modifier
             .fillMaxWidth().fillMaxHeight(if(isTablet) 0.8f else 1f)
@@ -224,6 +224,14 @@ fun Transfer2ContentH(
                         fontWeight = FontWeight.SemiBold,
                         color = Color.Black
                     )
+                    if(uiStatePayments.error != null) {
+                        val errorCode = uiStatePayments.error?.code ?: DataSourceException.UNEXPECTED_ERROR_CODE
+                        Text(
+                            text = stringResource(errorMap[errorCode]!!),
+                            color = MaterialTheme.colorScheme.error
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
                     Spacer(modifier = Modifier.height(if(isTablet) 50.dp else 30.dp))
                     Column(
                         verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -297,8 +305,10 @@ fun Transfer2ContentV(
     onClick: () -> Unit,
     isError: Boolean,
     setIsError: (Boolean) -> Unit,
-    errorMessage: Int
+    errorMessage: Int,
+    paymentsViewModel: PaymentsViewModel
 ) {
+    val paymentsUiState by paymentsViewModel.uiStatePayments.collectAsState()
     AppWindow (
         modifier = Modifier
             .padding(vertical = 8.dp).fillMaxHeight(if(isTablet) 0.7f else 1f)
@@ -310,6 +320,14 @@ fun Transfer2ContentV(
             horizontalAlignment = Alignment.CenterHorizontally
         ){
             Text(stringResource(R.string.how_much_to_transfer), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold, color = Color.Black)
+            if(paymentsUiState.error != null) {
+                val errorCode = paymentsUiState.error?.code ?: DataSourceException.UNEXPECTED_ERROR_CODE
+                Text(
+                    text = stringResource(errorMap[errorCode]!!),
+                    color = MaterialTheme.colorScheme.error
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+            }
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -441,3 +459,14 @@ fun AccountBalanceOption(
         }
     }
 }
+
+
+private val errorMap = mapOf(
+    DataSourceException.DATA_ERROR to R.string.invalid_data,
+    DataSourceException.UNAUTHORIZED_ERROR_CODE to R.string.invalid_email,
+    DataSourceException.NOT_FOUND_ERROR_CODE to R.string.user_not_found,
+    DataSourceException.INTERNAL_SERVER_ERROR_CODE to R.string.internal_server_error,
+    DataSourceException.CONNECTION_ERROR_CODE to R.string.connection_error,
+    DataSourceException.UNEXPECTED_ERROR_CODE to R.string.unexpected_error
+)
+

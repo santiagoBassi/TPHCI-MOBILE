@@ -23,6 +23,7 @@ import com.lyrio.data.model.User
 import com.lyrio.data.repository.PaymentRepository
 import com.lyrio.ui.data.states.Expense
 import com.lyrio.ui.data.states.PaymentsUiState
+import com.lyrio.ui.data.states.UserUiState
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
@@ -91,7 +92,7 @@ class PaymentsViewModel(
         _uiStatePayments.value = _uiStatePayments.value.copy(selectedPaymentMethod = index)
     }
 
-    fun transfer(amount: Double, cardId: Int) = runOnViewModelScope(
+    fun transfer(amount: Double, cardId: Int, navigateTransferSuccessful: () -> Unit) = runOnViewModelScope(
         {
             if(_uiStatePayments.value.selectedPaymentMethod == 0)
                 paymentRepository.makePaymentWithBalance(amount,"-","BALANCE",_uiStatePayments.value.receiver)
@@ -100,7 +101,8 @@ class PaymentsViewModel(
         },
         { state, _ -> state.copy(
             amount = amount
-        ) }
+        ) },
+        navigateTransferSuccessful
     )
 
     fun clearError() {
@@ -119,16 +121,18 @@ class PaymentsViewModel(
 
     private fun <R> runOnViewModelScope(
         block: suspend () -> R,
-        updateState: (PaymentsUiState, R) -> PaymentsUiState
+        updateState: (PaymentsUiState, R) -> PaymentsUiState,
+        callback: () -> Unit = { }
     ): Job = viewModelScope.launch {
         _uiStatePayments.update { currentState -> currentState.copy(isFetching = true, error = null) }
         runCatching {
             block()
         }.onSuccess { response ->
             _uiStatePayments.update { currentState -> updateState(currentState, response).copy(isFetching = false) }
+            callback()
         }.onFailure { e ->
             _uiStatePayments.update { currentState -> currentState.copy(isFetching = false, error = handleError(e)) }
-            Log.e(TAG, "Coroutine execution failed", e)
+            Log.e(UserViewModel.Companion.TAG, "Coroutine execution failed", e)
         }
     }
 
