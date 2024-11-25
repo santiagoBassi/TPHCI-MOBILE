@@ -103,6 +103,9 @@ class PaymentsViewModel(
         ) }
     )
 
+    fun clearError() {
+        _uiStatePayments.update { currentState -> currentState.copy(error = null) }
+    }
 
     private fun <T> collectOnViewModelScope(
         flow: Flow<T>,

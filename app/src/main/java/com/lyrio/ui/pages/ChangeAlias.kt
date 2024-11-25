@@ -11,9 +11,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.lyrio.R
+import com.lyrio.data.DataSourceException
 import com.lyrio.ui.components.AppButton
 import com.lyrio.ui.components.AppInput
 import com.lyrio.ui.components.AppWindow
@@ -97,6 +97,8 @@ fun ChangeAliasContent(
     var isError by rememberSaveable(key = "changeAlias_isError") { mutableStateOf(false) }
     var errorMsg by rememberSaveable(key = "changeAlias_errorMsg") { mutableIntStateOf(-1) }
 
+    val uiStateWallet by walletViewModel.uiStateWallet.collectAsState()
+
     AppWindow(
         modifier = Modifier.fillMaxHeight(if(landscape) 1f else 0.85f)
     ) {
@@ -111,6 +113,14 @@ fun ChangeAliasContent(
                 fontWeight = FontWeight.SemiBold,
                 color = Color.Black
             )
+            if(uiStateWallet.error != null) {
+                val errorCode = uiStateWallet.error?.code ?: DataSourceException.UNEXPECTED_ERROR_CODE
+                Text(
+                    text = stringResource(errorMap[errorCode]!!),
+                    color = MaterialTheme.colorScheme.error
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+            }
             Column(
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
                 verticalArrangement = Arrangement.SpaceBetween,
@@ -149,8 +159,9 @@ fun ChangeAliasContent(
                     isError = it != -1
                 }
                 if(validateAlias(newAlias, onInvalidAlias)) {
-                    walletViewModel.updateAlias(newAlias)
-                    navigateChangeAliasSuccessful()
+                    walletViewModel.clearError()
+                    walletViewModel.updateAlias(newAlias, onSuccessfulUpdate =  navigateChangeAliasSuccessful)
+
                 }
 
             }, width = if(landscape) 0.6f else 0.8f)
@@ -173,3 +184,12 @@ fun validateAlias(alias: String, onInvalidAlias: (Int) -> Unit): Boolean {
     onInvalidAlias(-1)
     return true
 }
+
+private val errorMap = mapOf(
+    DataSourceException.DATA_ERROR to R.string.invalid_alias,
+    DataSourceException.UNAUTHORIZED_ERROR_CODE to R.string.invalid_credentials,
+    DataSourceException.NOT_FOUND_ERROR_CODE to R.string.user_not_found,
+    DataSourceException.INTERNAL_SERVER_ERROR_CODE to R.string.internal_server_error,
+    DataSourceException.CONNECTION_ERROR_CODE to R.string.connection_error,
+    DataSourceException.UNEXPECTED_ERROR_CODE to R.string.unexpected_error
+)

@@ -20,6 +20,7 @@ import kotlinx.coroutines.launch
 import com.lyrio.data.model.Error
 import com.lyrio.data.model.NewCard
 import com.lyrio.data.repository.WalletRepository
+import com.lyrio.ui.data.states.UserUiState
 import com.lyrio.ui.data.states.WalletUiState
 
 class WalletViewModel(
@@ -64,11 +65,12 @@ class WalletViewModel(
         ) }
     )
 
-    fun updateAlias(alias: String) = runOnViewModelScope(
+    fun updateAlias(alias: String, onSuccessfulUpdate: () -> Unit) = runOnViewModelScope(
         {
             walletRepository.updateAlias(alias)
         },
-        { state, response -> state.copy(alias = response.alias)}
+        { state, response -> state.copy(alias = response.alias)},
+        onSuccessfulUpdate
     )
 
     fun addCreditCard(cardNumber: String, holderName: String, expiryDate: String, cvv: String) = runOnViewModelScope(
@@ -111,6 +113,10 @@ class WalletViewModel(
         ) }
     )
 
+    fun clearError() {
+        _uiStateWallet.update { currentState -> currentState.copy(error = null) }
+    }
+
     private fun <T> collectOnViewModelScope(
         flow: Flow<T>,
         updateState: (WalletUiState, T) -> WalletUiState
@@ -123,16 +129,18 @@ class WalletViewModel(
 
     private fun <R> runOnViewModelScope(
         block: suspend () -> R,
-        updateState: (WalletUiState, R) -> WalletUiState
+        updateState: (WalletUiState, R) -> WalletUiState,
+        callback: () -> Unit = { }
     ): Job = viewModelScope.launch {
         _uiStateWallet.update { currentState -> currentState.copy(isFetching = true, error = null) }
         runCatching {
             block()
         }.onSuccess { response ->
             _uiStateWallet.update { currentState -> updateState(currentState, response).copy(isFetching = false) }
+            callback()
         }.onFailure { e ->
             _uiStateWallet.update { currentState -> currentState.copy(isFetching = false, error = handleError(e)) }
-            Log.e(TAG, "Coroutine execution failed", e)
+            Log.e(UserViewModel.Companion.TAG, "Coroutine execution failed", e)
         }
     }
 
