@@ -464,7 +464,7 @@ fun AccountBalanceOption(
 private val errorMap = mapOf(
     DataSourceException.DATA_ERROR to R.string.invalid_data,
     DataSourceException.UNAUTHORIZED_ERROR_CODE to R.string.invalid_email,
-    DataSourceException.NOT_FOUND_ERROR_CODE to R.string.user_not_found,
+    DataSourceException.NOT_FOUND_ERROR_CODE to R.string.email_not_found,
     DataSourceException.INTERNAL_SERVER_ERROR_CODE to R.string.internal_server_error,
     DataSourceException.CONNECTION_ERROR_CODE to R.string.connection_error,
     DataSourceException.UNEXPECTED_ERROR_CODE to R.string.unexpected_error
