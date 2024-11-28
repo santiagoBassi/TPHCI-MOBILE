@@ -174,7 +174,12 @@ fun MovementsContent(
 
             if(paymentsState.lastTransfers.isNotEmpty()) {
                 LazyColumn {
-                    items(paymentsState.lastTransfers) { transfer ->
+                    items(paymentsState.lastTransfers.filter { transfer ->
+                        transfer.receiverName.contains(searchText, ignoreCase = true) ||
+                                transfer.amount.toString().contains(searchText, ignoreCase = true) ||
+                                transfer.createdAt.contains(searchText, ignoreCase = true) ||
+                                transfer.receiverEmail.contains(searchText, ignoreCase = true)
+                    }) { transfer ->
                         TransferItem(
                             transactionType = if (transfer.payerEmail == userState.email) "Enviaste" else "Recibiste",
                             amount = transfer.amount,
